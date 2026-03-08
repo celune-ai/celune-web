@@ -1,0 +1,20 @@
+{
+  "name": "celune-web",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "dev:site": "turbo dev --filter=site",
+    "dev:docs": "turbo dev --filter=docs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "turbo": "^2.5.0"
+  },
+  "packageManager": "pnpm@9.15.4"
+}

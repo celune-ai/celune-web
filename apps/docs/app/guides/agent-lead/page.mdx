@@ -1,0 +1,159 @@
+# Agent Lead
+
+Your Agent Lead is the AI collaborator at the center of Celune. This guide walks through how to configure them, shape their personality, and get the most out of working with them every day.
+
+---
+
+## What Is the Agent Lead?
+
+Every Celune workspace has exactly one Agent Lead. They are your primary AI teammate — the one you talk to, delegate work to, and ask questions of. The Lead handles orchestration: when a task requires a specialist, they route it to the right agent and track progress on your behalf.
+
+Unlike a generic chatbot, your Agent Lead is persistent. They remember context from past sessions, know your preferences, and stay aligned with how your team works. You configure them once during onboarding, and they grow with you from there.
+
+---
+
+## Naming Your Agent
+
+The first thing you do during onboarding is give your Agent Lead a name. This name appears throughout the dashboard, in voice responses, and in task metadata.
+
+Pick something you'd actually say out loud — you'll use it constantly. Teams typically use short names (RICK, SAGE, ARIA, etc.) that are easy to address in conversation.
+
+You can rename your Agent Lead at any time from **Settings → Agent → General**.
+
+---
+
+## Personality Traits
+
+Personality traits shape how your Agent Lead communicates. You select 2–3 traits during onboarding. These inform the system prompt that drives every response.
+
+| Trait        | What it means                                                 |
+| ------------ | ------------------------------------------------------------- |
+| **Direct**   | Short answers, no filler. Gets to the point immediately.      |
+| **Thorough** | Explains reasoning, surfaces edge cases, doesn't cut corners. |
+| **Casual**   | Relaxed tone, occasional humor, less formal framing.          |
+| **Precise**  | Technically exact language, formal register, no ambiguity.    |
+| **Warm**     | Supportive, encouraging, collaborative.                       |
+| **Analytical** | Data-driven, structured, favors explicit tradeoffs.         |
+
+You can update your Agent Lead's traits at any time from **Settings → Agent → Personality**.
+
+> Traits are not hard constraints — they guide tone and style. Your Agent Lead will still adapt to the context of the conversation.
+
+---
+
+## Voice Mode
+
+Your Agent Lead can speak. Voice mode uses ElevenLabs text-to-speech to deliver responses out loud — updates, summaries, alerts, and conversational replies.
+
+### Choosing a Voice
+
+During onboarding, you'll see a list of available voices with a play button to preview each. Pick the one that sounds right for your agent's personality.
+
+You can switch voices later from **Settings → Agent → Voice**.
+
+### How Voice Works
+
+When you send a message in voice mode (microphone button in the dashboard), your Agent Lead responds with both text and audio. The audio plays in full before the next input is accepted — this prevents cut-off responses and feedback loops.
+
+> Voice mode is available on Pro, Team, and Enterprise plans. It is not available on the Spark (free) tier.
+
+### Disabling Voice
+
+If you prefer text-only responses, turn off voice in **Settings → Agent → Voice** by toggling **Enable Voice Responses** off. Your Agent Lead continues to respond — just silently.
+
+---
+
+## Persona Prompt
+
+Under the hood, each Agent Lead has a **persona prompt** — a system-level instruction that defines how they think, what they prioritize, and how they present themselves.
+
+During onboarding, this prompt is generated automatically based on the name, personality traits, and voice you selected. It lives at **Settings → Agent → Persona**.
+
+### Editing the Persona Prompt
+
+You can edit the persona prompt directly. This is a power-user feature — it lets you precisely control how your Agent Lead behaves without being limited to trait presets.
+
+Common customizations:
+
+- **Communication constraints** — e.g., "Always include a confidence level (high/medium/low) at the end of analysis responses."
+- **Domain emphasis** — e.g., "This team focuses on TypeScript and React. Treat frontend performance as a first-class concern."
+- **Response format** — e.g., "When creating a task list, always format it as a numbered list with estimated effort."
+
+> Changes to the persona prompt take effect immediately on the next message. They do not retroactively change previous conversations.
+
+---
+
+## Parameters
+
+Parameters are numerical sliders that fine-tune your Agent Lead's behavior on a scale of 0.0 to 1.0. They are sent to the underlying model as contextual metadata.
+
+| Parameter      | What It Controls                                 |
+| -------------- | ------------------------------------------------ |
+| `directness`   | How blunt vs. diplomatic responses are           |
+| `humor`        | Frequency of light moments and wit               |
+| `warmth`       | Empathy and encouragement in responses           |
+| `confidence`   | Assertiveness when making recommendations        |
+| `thoroughness` | Depth of explanation before reaching conclusions |
+
+Parameters are accessible at **Settings → Agent → Parameters** and can be adjusted any time.
+
+---
+
+## Model Selection
+
+Your Agent Lead runs on an underlying AI model. The default is the most capable option in your plan. You can change this from **Settings → Agent → Model**.
+
+| Model               | Best For                                           |
+| ------------------- | -------------------------------------------------- |
+| `claude-opus-4-6`   | Complex engineering, orchestration, deep reasoning |
+| `claude-sonnet-4-6` | General tasks, writing, analysis, code review      |
+| `claude-haiku-4-5`  | Fast responses, high-volume queries                |
+
+> Model availability depends on your plan. Pro and above have access to the full model tier list.
+
+---
+
+## Working With Your Agent Lead
+
+### Starting a Conversation
+
+Open the **Chat** view in your Celune dashboard. Your Agent Lead is always at the top of the conversation list. Type or speak your message.
+
+Your Agent Lead maintains context across the session. You don't need to re-explain the project — they know what's in flight.
+
+### Assigning Tasks
+
+You can assign tasks directly in chat:
+
+```
+"Create a task for NOVA to write unit tests for the auth module. Priority: high."
+```
+
+Your Agent Lead creates the task, sets the priority and assignee, and confirms the details back to you.
+
+### Asking About Ongoing Work
+
+```
+"What's the status of the RBAC migration project?"
+```
+
+Your Agent Lead reads the current task and project state from your workspace and gives you a summary.
+
+### Delegating to Specialists
+
+When a request falls outside the Lead's domain, they route it:
+
+```
+"SCAN needs to review the PR before we merge."
+```
+
+The Lead delegates to SCAN (the code review agent), tracks the handoff, and notifies you when the review is complete.
+
+---
+
+## Related Pages
+
+- [Agents](/concepts/agents) — How the full agent system works, types, and lifecycle.
+- [Memory](/guides/memory) — How your Agent Lead stores and recalls context across sessions.
+- [API Keys (BYOK)](/guides/api-keys) — Bring your own Anthropic or OpenAI key for agent model calls.
+- [MCP Setup](/guides/mcp-setup) — Connect your Agent Lead to Claude Code for codebase integration.

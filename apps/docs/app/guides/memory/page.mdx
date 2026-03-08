@@ -1,0 +1,163 @@
+# Memory (Second Brain)
+
+Celune's memory system gives your agents durable context that persists across sessions. Instead of starting cold every time, your Agent Lead can recall relevant information from past work — decisions made, patterns noted, context shared — and use it to give better, faster responses.
+
+---
+
+## How Memory Works
+
+When your Agent Lead (or any agent) encounters something worth retaining, they write a **memory entry** to a persistent store. This is separate from the conversation history — memory entries are structured notes that survive session resets and can be retrieved at any time.
+
+Memory is:
+
+- **Scoped to your workspace** — entries are never shared across workspaces.
+- **Searchable by meaning** — Celune uses semantic search (vector embeddings) to find relevant memories even when the exact words don't match.
+- **Persistent** — entries remain until explicitly deleted or until the plan limit is reached.
+
+---
+
+## What Gets Stored
+
+Memory entries are created in several ways:
+
+### Agent-Generated Memories
+
+During a task or conversation, your Agent Lead can create a memory when they encounter something worth retaining:
+
+- A decision that should inform future work ("The team uses tabs, not spaces.")
+- A pattern or recurring issue ("Auth middleware breaks when a new route doesn't include workspace scoping.")
+- Explicit instructions you've given ("Always surface a confidence level with architectural recommendations.")
+
+The agent decides when something is memory-worthy. You can also prompt them explicitly.
+
+### Manual Memories (via MCP)
+
+If you're using Celune via Claude Code, you can create memories directly with the `celune_remember` MCP tool:
+
+```
+celune_remember: "The staging environment uses a separate Supabase project. Always check NEXT_PUBLIC_SUPABASE_URL before running migrations."
+```
+
+This stores the entry immediately with your Agent Lead as the source.
+
+### Task CLI (Developer Workflow)
+
+In development workflows, you can create memories via the task CLI:
+
+```bash
+node packages/db/scripts/task-cli.mjs remember "Supabase MCP execute_sql bypasses RLS — only use for migrations and analytics."
+```
+
+---
+
+## Memory Entry Structure
+
+Each memory entry contains:
+
+| Field        | Description                                                      |
+| ------------ | ---------------------------------------------------------------- |
+| `content`    | The text of the memory                                           |
+| `source`     | Who created it: `agent`, `task-cli`, or `mcp`                   |
+| `category`   | Classification: `technical`, `preference`, `decision`, `context` |
+| `agent_id`   | Which agent created or owns the memory                           |
+| `created_at` | When the entry was created                                       |
+
+---
+
+## Searching Memory
+
+Your Agent Lead searches memory automatically when responding to questions that might benefit from past context. You don't need to trigger this manually.
+
+### Semantic Search
+
+Celune uses vector embeddings (384-dimensional, via the `gte-small` model) to power semantic search. This means:
+
+- Searching for "auth problems" returns memories about "authentication middleware failures."
+- Searching for "team code style" returns memories about formatting preferences, lint rules, and review feedback.
+
+Semantic search finds meaning, not just keywords.
+
+### Via MCP
+
+You can query memory explicitly from Claude Code using the `celune_recall` MCP tool:
+
+```
+celune_recall: "How does staging environment differ from production?"
+```
+
+Returns the most relevant memory entries above the relevance threshold.
+
+### Via the Dashboard
+
+In the Celune dashboard, navigate to **Memory** in the sidebar to browse, search, and manage entries directly.
+
+---
+
+## Memory Limits by Plan
+
+| Plan           | Memory Entries |
+| -------------- | -------------- |
+| Spark (Free)   | 1,000          |
+| Pro ($49/mo)   | 50,000         |
+| Team ($149/mo) | Unlimited      |
+| Enterprise     | Unlimited      |
+
+When you reach the limit, new entries are blocked. Existing entries remain intact and searchable. To free up capacity, delete old entries from the **Memory** page in the dashboard, or upgrade your plan.
+
+> Celune does not automatically delete old memories when the limit is reached. Your data is preserved — you just cannot add more until you create space.
+
+---
+
+## Editing and Deleting Memories
+
+All memory entries are visible in the **Memory** section of your Celune dashboard. From here you can:
+
+- **Browse** — view all entries sorted by creation date.
+- **Search** — find relevant entries by typing a query.
+- **Edit** — update the content of an entry (useful if something changes).
+- **Delete** — remove entries that are no longer accurate or relevant.
+
+You can also delete all memories for a specific agent from **Settings → Agent → Danger Zone**.
+
+---
+
+## Memory Categories
+
+When creating a memory (manually or via CLI), you can specify a category to make search more precise:
+
+| Category      | What It's For                                               |
+| ------------- | ----------------------------------------------------------- |
+| `technical`   | Architecture decisions, stack choices, environment config   |
+| `preference`  | Team style preferences, communication patterns              |
+| `decision`    | Resolved debates, tradeoff choices, direction calls         |
+| `context`     | Background info, project history, stakeholder relationships |
+
+If no category is specified, the entry is stored without one and is still fully searchable.
+
+---
+
+## Backfilling Embeddings
+
+If you have existing memory entries without embeddings (e.g., migrated from an older version), you can regenerate them:
+
+```bash
+node packages/db/scripts/task-cli.mjs backfill-embeddings
+```
+
+This processes all entries without an embedding and generates new vectors. This is a one-time operation for data migrations.
+
+---
+
+## Privacy and Isolation
+
+Memory is scoped to your workspace and stored in your Supabase database with Row Level Security enforced. No memory is shared across workspaces, and no Celune employee has access to the content of your entries without explicit authorization from your workspace owner.
+
+API key access to memory requires the `write` scope or higher. Read-only API keys cannot create or modify memory entries.
+
+---
+
+## Related Pages
+
+- [Agent Lead](/guides/agent-lead) — How your Agent Lead uses memory to give better responses.
+- [MCP Setup](/guides/mcp-setup) — Use `celune_remember` and `celune_recall` from Claude Code.
+- [Concepts: Agents](/concepts/agents) — Agent roles, types, and capabilities.

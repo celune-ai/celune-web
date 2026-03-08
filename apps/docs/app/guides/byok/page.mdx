@@ -1,0 +1,91 @@
+# BYOK: Bring Your Own Key
+
+Celune supports **Bring Your Own Key (BYOK)** — the ability to route AI model calls through your own Anthropic or OpenAI account instead of Celune's managed access.
+
+---
+
+## Why Use BYOK?
+
+There are a few reasons to connect your own provider keys:
+
+- **Billing control** — Inference costs hit your provider account directly, separate from your Celune subscription.
+- **Compliance** — Some organizations require all AI API calls to go through credentials they control.
+- **Usage caps** — Apply your own rate limits and spend caps at the provider level.
+- **Existing contracts** — Teams with enterprise agreements with Anthropic or OpenAI can route through those contracts.
+
+---
+
+## Supported Providers
+
+| Provider  | Available Models                                       |
+| --------- | ------------------------------------------------------ |
+| Anthropic | claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5  |
+| OpenAI    | gpt-4o, gpt-4o-mini, o1, o3-mini _(coming soon)_      |
+
+---
+
+## Adding a Provider Key
+
+1. Open the Celune dashboard and go to **Settings → Integrations → AI Providers**.
+2. Click **Add Provider Key**.
+3. Select the provider: **Anthropic** or **OpenAI**.
+4. Paste your API key from the provider's dashboard.
+5. Click **Save**.
+
+Once saved, Celune routes all agent model inference through your key for this workspace.
+
+> Your key is encrypted at rest. Celune does not expose the plaintext key in any API response or dashboard view after it has been saved. If you need to rotate it, delete the existing entry and add a new key.
+
+---
+
+## How BYOK Affects Billing
+
+BYOK does **not** change your Celune subscription. You are still billed by Celune for platform access (agents, tasks, workspaces, memory) at your plan rate.
+
+Model inference costs — the actual token usage for each agent response — are billed separately by the provider (Anthropic or OpenAI) to your account there.
+
+Without BYOK, inference costs are included in Celune's managed access. With BYOK, those costs move to your provider account instead.
+
+---
+
+## Getting Provider API Keys
+
+### Anthropic
+
+1. Go to [console.anthropic.com](https://console.anthropic.com).
+2. Navigate to **API Keys** in the left sidebar.
+3. Click **Create Key**.
+4. Copy the key — it is shown only once.
+
+### OpenAI
+
+1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+2. Click **Create new secret key**.
+3. Give it a name and click **Create secret key**.
+4. Copy the key — it is shown only once.
+
+---
+
+## Removing a Provider Key
+
+To stop using BYOK and return to Celune's managed inference:
+
+1. Go to **Settings → Integrations → AI Providers**.
+2. Click the trash icon next to the provider you want to remove.
+3. Confirm the deletion.
+
+Model calls will route through Celune's managed access on the next agent request.
+
+---
+
+## Plan Availability
+
+BYOK is available on **Pro**, **Team**, and **Enterprise** plans. It is not available on the Spark (free) tier.
+
+---
+
+## Related Pages
+
+- [API Keys](/guides/api-keys) — Celune platform API keys for MCP, CI/CD, and integrations.
+- [Agent Lead](/guides/agent-lead) — How to configure which model your Agent Lead uses.
+- [Billing & Plans](/guides/billing) — Plan tiers and what's included at each level.

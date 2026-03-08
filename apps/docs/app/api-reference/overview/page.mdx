@@ -1,0 +1,135 @@
+# API Overview
+
+Everything you need to make your first request to the Celune API.
+
+---
+
+## Base URL
+
+All API requests go to:
+
+```
+https://app.celune.ai/api
+```
+
+Use this as the prefix for every endpoint in this reference.
+
+---
+
+## Authentication
+
+The Celune API supports two authentication methods depending on how you're accessing it:
+
+| Method           | Use Case                                                 |
+| ---------------- | -------------------------------------------------------- |
+| **API Key**      | Programmatic access, MCP connections, CI/CD integrations |
+| **Supabase JWT** | Web application (browser sessions)                       |
+
+For API keys and JWT details, see the [Authentication](/api-reference/authentication) page.
+
+---
+
+## Request Format
+
+All requests that include a body must send JSON with the appropriate content type header:
+
+```bash
+Content-Type: application/json
+```
+
+Query parameters are used for filtering and resource scoping (e.g., `?workspace_id=<uuid>`).
+
+---
+
+## Response Format
+
+All responses return JSON. Successful responses include the resource data directly:
+
+```json
+{
+  "id": "uuid",
+  "workspace_id": "uuid",
+  "display_name": "RICK",
+  "created_at": "2026-03-01T00:00:00Z"
+}
+```
+
+List endpoints return a JSON array:
+
+```json
+[
+  { "id": "...", "display_name": "RICK" },
+  { "id": "...", "display_name": "SAGE" }
+]
+```
+
+---
+
+## Error Format
+
+Errors follow a consistent shape:
+
+```json
+{
+  "error": "Human-readable error message"
+}
+```
+
+### HTTP Status Codes
+
+| Status | Meaning                                                    |
+| ------ | ---------------------------------------------------------- |
+| `200`  | Success                                                    |
+| `201`  | Created                                                    |
+| `400`  | Bad request — missing or invalid parameters                |
+| `401`  | Unauthorized — missing or invalid credentials              |
+| `403`  | Forbidden — valid credentials but insufficient permissions |
+| `404`  | Not found                                                  |
+| `409`  | Conflict — resource already exists                         |
+| `422`  | Unprocessable — validation failed                          |
+| `429`  | Rate limit exceeded                                        |
+| `500`  | Internal server error                                      |
+
+---
+
+## Rate Limiting
+
+API keys have a configurable rate limit. The default is **100 requests per minute** per key. When exceeded, the API returns:
+
+```json
+HTTP 429 Too Many Requests
+
+{
+  "error": "Rate limit exceeded"
+}
+```
+
+Rate limit headers are included in responses:
+
+| Header                  | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `X-RateLimit-Limit`     | Maximum requests per minute              |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset`     | Unix timestamp when the window resets    |
+
+You can configure a custom rate limit per key when creating it via the dashboard.
+
+---
+
+## Pagination
+
+List endpoints do not currently use cursor-based pagination. All results for a given workspace are returned in a single response, ordered by `created_at` ascending unless otherwise noted.
+
+Future endpoints may add `limit` and `offset` query parameters. The response shape will remain consistent — arrays of objects.
+
+---
+
+## Workspaces
+
+Most endpoints are scoped to a workspace via the `workspace_id` query parameter (a UUID). You can find your workspace ID in **Settings → General** in the Celune dashboard.
+
+```bash
+GET /api/agents/configs?workspace_id=<uuid>
+```
+
+Requests without a valid `workspace_id` where one is required will return a `400` error.

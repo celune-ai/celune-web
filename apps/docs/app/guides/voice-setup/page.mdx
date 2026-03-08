@@ -1,0 +1,124 @@
+# Voice Setup
+
+Celune's voice mode lets your Agent Lead speak out loud — delivering updates, summaries, and responses using text-to-speech powered by ElevenLabs. This guide covers how to enable voice, choose a voice, and troubleshoot common issues.
+
+---
+
+## Requirements
+
+Before enabling voice mode:
+
+- **Plan**: Voice mode is available on **Pro**, **Team**, and **Enterprise** plans. It is not available on Spark (free).
+- **Browser**: A modern browser with Web Audio API support — Chrome, Firefox, Edge, or Safari 15+.
+- **Microphone** (optional): Required only if you want to speak to your Agent Lead. Text input works without a microphone.
+
+---
+
+## Choosing a Voice
+
+You choose a voice during onboarding. To change it later:
+
+1. Go to **Settings → Agent → Voice**.
+2. Click the play button next to each voice to preview it.
+3. Select the one you want.
+4. Click **Save**.
+
+The change takes effect on the next response.
+
+### Available Voices
+
+Celune offers a curated set of voices from the ElevenLabs library, organized by character style:
+
+| Voice Style | Characteristics                          |
+| ----------- | ---------------------------------------- |
+| Neutral     | Clear, professional, broadly accessible  |
+| Warm        | Friendly, conversational, approachable   |
+| Authoritative | Confident, structured, deliberate      |
+| Calm        | Measured, thoughtful, low-stress tone    |
+
+Within each style, voices vary by gender, accent, and tempo. Preview each to find the one that feels right for your Agent Lead's personality.
+
+---
+
+## How Voice Responses Work
+
+When you send a message via voice mode, your Agent Lead:
+
+1. Processes your input (text or transcribed speech).
+2. Generates a text response.
+3. Converts the full response to audio via ElevenLabs.
+4. Plays the audio in your browser.
+
+The response plays in full before the next input is accepted. This prevents cut-off audio and feedback loops.
+
+> Voice responses are streamed through Celune's server. Your browser does not connect directly to ElevenLabs.
+
+---
+
+## Using Your Microphone
+
+To speak to your Agent Lead instead of typing:
+
+1. Click the **microphone button** in the chat input area.
+2. Allow browser microphone access when prompted (one-time prompt).
+3. Speak your message. The input auto-submits when you stop speaking.
+
+After your Agent Lead finishes responding, the microphone activates again automatically (600ms delay to prevent feedback). You can also click the microphone button manually.
+
+### Browser Microphone Permissions
+
+If microphone access was previously denied:
+
+**Chrome**: Click the lock icon in the address bar → **Site settings** → **Microphone** → Allow.
+
+**Firefox**: Click the microphone icon in the address bar → **Allow**.
+
+**Safari**: Go to **Safari → Settings → Websites → Microphone** → set `app.celune.ai` to Allow.
+
+---
+
+## Toggling Voice On and Off
+
+To disable audio responses while keeping microphone input:
+
+1. Go to **Settings → Agent → Voice**.
+2. Toggle **Enable Voice Responses** off.
+
+Your Agent Lead continues responding normally — responses just appear as text without audio playback.
+
+To disable voice mode entirely:
+
+- Use the **text input** field instead of the microphone button. Voice mode does not activate unless you click the microphone.
+
+---
+
+## Troubleshooting
+
+### Audio doesn't play
+
+- Check your browser volume and system volume.
+- Make sure the browser tab is not muted (right-click the tab in Chrome to unmute).
+- Try a different browser.
+- Confirm your plan includes voice mode — Spark (free) does not.
+
+### Microphone not detected
+
+- Confirm microphone access is granted for `app.celune.ai` in your browser settings.
+- Try refreshing the page after granting permissions.
+- Make sure no other application has exclusive control of the microphone.
+
+### Response cuts off mid-sentence
+
+- This can happen if the browser tab loses focus during audio playback. Keep the tab active while audio plays.
+- If the problem persists, report it to [hello@celune.ai](mailto:hello@celune.ai) with your browser version and OS.
+
+### Voice changed unexpectedly
+
+- Check **Settings → Agent → Voice** — the voice setting is workspace-level, so an admin may have changed it.
+
+---
+
+## Related Pages
+
+- [Agent Lead](/guides/agent-lead) — Full guide on configuring your Agent Lead, including personality and persona.
+- [Billing & Plans](/guides/billing) — Voice mode availability by plan tier.

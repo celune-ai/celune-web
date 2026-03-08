@@ -1,0 +1,343 @@
+# Agents API
+
+Create, read, update, and delete agent configurations in your workspace.
+
+---
+
+## The Agent Config Object
+
+Every agent in Celune is backed by a config record stored in the `agent_configs` table.
+
+| Field            | Type                     | Description                                                         |
+| ---------------- | ------------------------ | ------------------------------------------------------------------- |
+| `id`             | `string (uuid)`          | Unique record ID                                                    |
+| `workspace_id`   | `string (uuid)`          | Workspace this agent belongs to                                     |
+| `agent_id`       | `string`                 | Unique agent identifier within the workspace (e.g., `rick`, `sage`) |
+| `display_name`   | `string`                 | Human-readable name shown in the UI                                 |
+| `role`           | `string \| null`         | Agent's role title (e.g., `Lead Engineer`)                          |
+| `description`    | `string \| null`         | What this agent does                                                |
+| `agent_type`     | `"ai" \| "human"`        | Whether this is an AI or human team member                          |
+| `model`          | `string \| null`         | Model ID (e.g., `claude-opus-4-6`)                                  |
+| `color`          | `string \| null`         | Hex color for the agent's avatar                                    |
+| `persona_prompt` | `string \| null`         | System prompt that defines the agent's personality                  |
+| `capabilities`   | `string[]`               | List of capability tags                                             |
+| `parameters`     | `Record<string, number>` | Personality sliders (e.g., `{ humor: 0.3, directness: 0.9 }`)       |
+| `is_active`      | `boolean`                | Whether the agent is currently active                               |
+| `created_at`     | `string (ISO 8601)`      | Creation timestamp                                                  |
+| `updated_at`     | `string (ISO 8601)`      | Last update timestamp                                               |
+
+---
+
+## List Agents
+
+Retrieve all active agent configurations for a workspace.
+
+```
+GET /api/agents/configs?workspace_id=<uuid>
+```
+
+**Required permission:** `agents:read`
+
+### Query Parameters
+
+| Parameter      | Type            | Required | Description                      |
+| -------------- | --------------- | -------- | -------------------------------- |
+| `workspace_id` | `string (uuid)` | Yes      | The workspace to list agents for |
+
+### Example Request
+
+```bash
+curl https://app.celune.ai/api/agents/configs \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -G \
+  --data-urlencode "workspace_id=3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c"
+```
+
+### Example Response
+
+```json
+[
+  {
+    "id": "a1b2c3d4-0000-0000-0000-000000000001",
+    "workspace_id": "3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+    "agent_id": "rick",
+    "display_name": "RICK",
+    "role": "Lead Engineer",
+    "description": "Lead coder and orchestrator. Direct, outcome-focused.",
+    "agent_type": "ai",
+    "model": "claude-opus-4-6",
+    "color": "#6366f1",
+    "persona_prompt": "You are RICK...",
+    "capabilities": ["coding", "architecture", "orchestration"],
+    "parameters": {
+      "humor": 0.3,
+      "directness": 0.9,
+      "warmth": 0.4,
+      "confidence": 0.95
+    },
+    "is_active": true,
+    "created_at": "2026-01-15T10:00:00Z",
+    "updated_at": "2026-03-01T14:30:00Z"
+  }
+]
+```
+
+### Status Codes
+
+| Code  | Meaning                                  |
+| ----- | ---------------------------------------- |
+| `200` | Success — returns array of agent configs |
+| `400` | `workspace_id` is missing                |
+| `401` | Missing or invalid credentials           |
+| `403` | Insufficient permissions                 |
+
+---
+
+## Create Agent
+
+Add a new agent configuration to a workspace.
+
+```
+POST /api/agents/configs
+```
+
+**Required permission:** `agents:configure`
+
+### Request Body
+
+| Field            | Type                     | Required | Description                                                                        |
+| ---------------- | ------------------------ | -------- | ---------------------------------------------------------------------------------- |
+| `workspace_id`   | `string (uuid)`          | Yes      | Workspace to create the agent in                                                   |
+| `agent_id`       | `string`                 | Yes      | Unique identifier: lowercase letters, numbers, hyphens, underscores. Max 50 chars. |
+| `display_name`   | `string`                 | Yes      | Human-readable name. Max 100 chars.                                                |
+| `role`           | `string`                 | No       | Role title. Max 100 chars.                                                         |
+| `description`    | `string`                 | No       | Agent description. Max 2000 chars.                                                 |
+| `agent_type`     | `"ai" \| "human"`        | No       | Defaults to `"ai"`                                                                 |
+| `model`          | `string`                 | No       | Model identifier. Max 100 chars.                                                   |
+| `color`          | `string`                 | No       | Hex color code. Max 20 chars.                                                      |
+| `persona_prompt` | `string`                 | No       | System prompt. Max 5000 chars.                                                     |
+| `capabilities`   | `string[]`               | No       | Array of capability tags                                                           |
+| `parameters`     | `Record<string, number>` | No       | Personality parameters as key-value pairs                                          |
+
+### Example Request
+
+```bash
+curl -X POST https://app.celune.ai/api/agents/configs \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "workspace_id": "3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+    "agent_id": "nova",
+    "display_name": "NOVA",
+    "role": "QA Engineer",
+    "description": "Automated testing and code quality review.",
+    "agent_type": "ai",
+    "model": "claude-sonnet-4-6",
+    "color": "#10b981",
+    "capabilities": ["testing", "code-review"],
+    "parameters": {
+      "directness": 0.8,
+      "thoroughness": 0.95
+    }
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "id": "b2c3d4e5-0000-0000-0000-000000000002",
+  "workspace_id": "3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+  "agent_id": "nova",
+  "display_name": "NOVA",
+  "role": "QA Engineer",
+  "description": "Automated testing and code quality review.",
+  "agent_type": "ai",
+  "model": "claude-sonnet-4-6",
+  "color": "#10b981",
+  "persona_prompt": null,
+  "capabilities": ["testing", "code-review"],
+  "parameters": {
+    "directness": 0.8,
+    "thoroughness": 0.95
+  },
+  "is_active": true,
+  "created_at": "2026-03-07T09:00:00Z",
+  "updated_at": "2026-03-07T09:00:00Z"
+}
+```
+
+### Status Codes
+
+| Code  | Meaning                                                       |
+| ----- | ------------------------------------------------------------- |
+| `201` | Agent created successfully                                    |
+| `400` | Validation error — see `error` field for details              |
+| `401` | Missing or invalid credentials                                |
+| `403` | Insufficient permissions                                      |
+| `409` | An agent with this `agent_id` already exists in the workspace |
+| `422` | Plan limit reached — upgrade to add more agents               |
+
+---
+
+## Update Agent
+
+Update an existing agent configuration. All fields are optional — only send what you want to change.
+
+```
+PATCH /api/agents/configs?agent_id=<agent_id>
+```
+
+> Note: `agent_id` here refers to the string identifier (e.g., `rick`), not the record UUID. Pass it as a query parameter.
+
+**Required permission:** `agents:configure`
+
+### Query Parameters
+
+| Parameter  | Type     | Required | Description                   |
+| ---------- | -------- | -------- | ----------------------------- |
+| `agent_id` | `string` | Yes      | The agent's string identifier |
+
+### Request Body
+
+Any subset of the fields from [Create Agent](#create-agent). `workspace_id` and `agent_id` cannot be changed after creation.
+
+### Example Request
+
+```bash
+curl -X PATCH "https://app.celune.ai/api/agents/configs?agent_id=nova" \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "NOVA v2",
+    "persona_prompt": "You are NOVA, a precise QA engineer...",
+    "parameters": {
+      "directness": 0.85,
+      "thoroughness": 0.98,
+      "humor": 0.1
+    }
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "id": "b2c3d4e5-0000-0000-0000-000000000002",
+  "workspace_id": "3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+  "agent_id": "nova",
+  "display_name": "NOVA v2",
+  "role": "QA Engineer",
+  "description": "Automated testing and code quality review.",
+  "agent_type": "ai",
+  "model": "claude-sonnet-4-6",
+  "color": "#10b981",
+  "persona_prompt": "You are NOVA, a precise QA engineer...",
+  "capabilities": ["testing", "code-review"],
+  "parameters": {
+    "directness": 0.85,
+    "thoroughness": 0.98,
+    "humor": 0.1
+  },
+  "is_active": true,
+  "created_at": "2026-03-07T09:00:00Z",
+  "updated_at": "2026-03-07T11:15:00Z"
+}
+```
+
+### Status Codes
+
+| Code  | Meaning                                            |
+| ----- | -------------------------------------------------- |
+| `200` | Agent updated successfully                         |
+| `400` | Missing `agent_id` query parameter or invalid body |
+| `401` | Missing or invalid credentials                     |
+| `403` | Insufficient permissions                           |
+| `404` | Agent not found                                    |
+
+---
+
+## Delete Agent
+
+Soft-delete an agent by setting `is_active` to `false`. The agent will no longer appear in list responses.
+
+```
+DELETE /api/agents/configs?agent_id=<agent_id>
+```
+
+**Required permission:** `agents:configure`
+
+### Query Parameters
+
+| Parameter  | Type     | Required | Description                   |
+| ---------- | -------- | -------- | ----------------------------- |
+| `agent_id` | `string` | Yes      | The agent's string identifier |
+
+### Example Request
+
+```bash
+curl -X DELETE "https://app.celune.ai/api/agents/configs?agent_id=nova" \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx"
+```
+
+### Example Response
+
+```json
+{
+  "success": true
+}
+```
+
+### Status Codes
+
+| Code  | Meaning                            |
+| ----- | ---------------------------------- |
+| `200` | Agent deleted successfully         |
+| `400` | Missing `agent_id` query parameter |
+| `401` | Missing or invalid credentials     |
+| `403` | Insufficient permissions           |
+| `404` | Agent not found                    |
+
+---
+
+## Agent Status
+
+Get the live operational status of agents in a workspace.
+
+```
+GET /api/agents/status?workspace_id=<uuid>
+```
+
+**Required permission:** `agents:read`
+
+Returns an array of agents with their current `status` (`idle`, `working`, `offline`) and the task they're currently assigned to, if any.
+
+### Example Request
+
+```bash
+curl https://app.celune.ai/api/agents/status \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -G \
+  --data-urlencode "workspace_id=3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c"
+```
+
+### Example Response
+
+```json
+[
+  {
+    "agent_id": "rick",
+    "display_name": "RICK",
+    "status": "working",
+    "current_task_id": "task-uuid",
+    "current_task_title": "Refactor auth middleware"
+  },
+  {
+    "agent_id": "sage",
+    "display_name": "SAGE",
+    "status": "idle",
+    "current_task_id": null,
+    "current_task_title": null
+  }
+]
+```

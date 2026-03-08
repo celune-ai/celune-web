@@ -1,0 +1,133 @@
+# Authentication
+
+How to authenticate with the Celune API using API keys or JWT tokens.
+
+---
+
+## API Keys
+
+API keys are the primary authentication method for programmatic access — including MCP connections, CI/CD pipelines, and third-party integrations.
+
+### Creating an API Key
+
+1. Open the Celune dashboard and navigate to **Settings → API Keys**.
+2. Click **New API Key**.
+3. Give the key a descriptive name (e.g., `claude-code-mcp`, `ci-pipeline`).
+4. Select an environment: `development` or `production`.
+5. Choose a scope (see [Scopes](#scopes) below).
+6. Optionally set an expiration date and a custom rate limit.
+7. Click **Create Key**.
+
+> The plaintext API key is shown **once** at creation time. Copy it immediately — it cannot be retrieved again. Only a hashed version is stored.
+
+---
+
+### Using an API Key
+
+Include your API key in the `Authorization` header on every request:
+
+```bash
+curl https://app.celune.ai/api/agents/configs \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -G \
+  --data-urlencode "workspace_id=your-workspace-uuid"
+```
+
+The key prefix indicates the environment:
+
+| Prefix       | Environment |
+| ------------ | ----------- |
+| `clne_live_` | Production  |
+| `clne_test_` | Development |
+
+---
+
+### Scopes
+
+API keys are issued with a scope that controls what they can access.
+
+| Scope   | Permissions                                                                   |
+| ------- | ----------------------------------------------------------------------------- |
+| `read`  | Read tasks, projects, agents, analytics                                       |
+| `write` | Read + create/update tasks, projects, and agents                              |
+| `admin` | Full access including webhooks, API keys, audit logs, and agent configuration |
+
+Scopes map to granular permission keys internally. An `admin`-scoped key grants:
+
+```
+tasks:create  tasks:read  tasks:update  tasks:delete
+projects:create  projects:read  projects:update  projects:delete
+agents:configure  agents:read
+users:read  settings:read  analytics:read
+webhooks:manage  webhooks:read
+api_keys:read  audit_log:read
+```
+
+A `write`-scoped key grants a subset focused on core task and project operations. A `read`-scoped key is read-only.
+
+---
+
+### Rotating and Revoking Keys
+
+To rotate a key:
+
+1. Create a new key in **Settings → API Keys**.
+2. Update your integration with the new key.
+3. Revoke the old key by clicking the trash icon.
+
+Revoked keys immediately stop working. There is no grace period.
+
+---
+
+## Supabase JWT (Web App)
+
+The Celune web application uses Supabase authentication. If you're building on top of the platform's internal API with a session context, use the JWT from `supabase.auth.getSession()`.
+
+### Getting a Session Token
+
+```typescript
+import { createBrowserClient } from '@supabase/ssr';
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
+
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+const token = session?.access_token;
+```
+
+Pass the token as a Bearer token:
+
+```bash
+curl https://app.celune.ai/api/agents/configs \
+  -H "Authorization: Bearer <jwt_token>" \
+  -G \
+  --data-urlencode "workspace_id=your-workspace-uuid"
+```
+
+### Token Refresh
+
+Supabase JWTs expire after 1 hour. The Supabase client handles refresh automatically when using `onAuthStateChange` or the `@supabase/ssr` package with proper cookie handling.
+
+```typescript
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'TOKEN_REFRESHED') {
+    // session.access_token is the new JWT
+  }
+});
+```
+
+For server-side requests, use `supabase.auth.getUser()` which validates the token with the Supabase Auth server on each call.
+
+---
+
+## Security Notes
+
+- Never expose API keys in client-side code or public repositories.
+- Use environment variables to store keys in your applications.
+- Prefer scoped keys with the minimum permissions required for your use case.
+- Set expiration dates on keys used in automated pipelines.
+- The service-role Supabase key is **never** exposed through the public API — all requests are validated against workspace membership and role permissions.

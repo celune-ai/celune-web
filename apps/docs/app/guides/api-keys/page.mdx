@@ -1,0 +1,153 @@
+# API Keys
+
+Celune API keys let you connect external tools to your workspace — including Claude Code via MCP, CI/CD pipelines, and your own integrations. This guide covers creating, managing, and securing your API keys.
+
+For information on bringing your own AI provider keys (Anthropic, OpenAI), see [BYOK](#byok-bring-your-own-key) below.
+
+---
+
+## Creating an API Key
+
+1. Open the Celune dashboard and navigate to **Settings → API Keys**.
+2. Click **New API Key**.
+3. Enter a descriptive name — e.g., `claude-code-local`, `ci-pipeline`, `integration-test`.
+4. Select an **environment**: `development` or `production`.
+5. Choose a **scope** (see [Scopes](#scopes) below).
+6. Optionally set an **expiration date** and a **rate limit**.
+7. Click **Create Key**.
+
+> The key is shown **once** at creation. Copy it immediately and store it somewhere safe — Celune only stores a hashed version and cannot retrieve the plaintext key after this point.
+
+---
+
+## Key Format
+
+API keys use a prefix that identifies their environment:
+
+| Prefix       | Environment |
+| ------------ | ----------- |
+| `clne_live_` | Production  |
+| `clne_test_` | Development |
+
+Always use `clne_test_` keys in development environments and `clne_live_` keys for production workloads.
+
+---
+
+## Using an API Key
+
+Include your key in the `Authorization` header on every request:
+
+```bash
+curl https://app.celune.ai/api/agents/configs \
+  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -G \
+  --data-urlencode "workspace_id=your-workspace-uuid"
+```
+
+For MCP connections (Claude Code), the key goes in your `.mcp.json` or global Claude Code settings. See the [MCP Setup Guide](/guides/mcp-setup) for details.
+
+---
+
+## Scopes
+
+API keys are issued with a scope that controls what they can do.
+
+| Scope   | Permissions                                                                            |
+| ------- | -------------------------------------------------------------------------------------- |
+| `read`  | Read-only access to tasks, projects, agents, and analytics                             |
+| `write` | Read + create, update tasks and projects; create memory entries                        |
+| `admin` | Full access: webhooks, API key management, audit logs, agent configuration             |
+
+Use the minimum scope required for your integration. CI pipelines that only need to read task status should use `read`, not `admin`.
+
+---
+
+## Rate Limits
+
+The default rate limit is **100 requests per minute** per key. You can configure a custom limit when creating a key.
+
+When exceeded, the API returns:
+
+```
+HTTP 429 Too Many Requests
+{ "error": "Rate limit exceeded" }
+```
+
+Rate limit status is included in response headers:
+
+| Header                  | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `X-RateLimit-Limit`     | Maximum requests per minute              |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset`     | Unix timestamp when the window resets    |
+
+---
+
+## Rotating and Revoking Keys
+
+To rotate a key:
+
+1. Create a new key in **Settings → API Keys**.
+2. Update your integration with the new key.
+3. Revoke the old key by clicking the trash icon.
+
+Revoked keys stop working immediately — there is no grace period. Plan your rotation accordingly for production integrations.
+
+---
+
+## Security Best Practices
+
+- **Never commit keys to source control.** Use environment variables or a secrets manager.
+- **Never include keys in client-side code.** API keys are for server-side and CLI use only.
+- **Set expiration dates** on keys used in automated pipelines.
+- **Scope keys to what they need.** A key that only reads task status does not need `admin` scope.
+- **Audit regularly.** Review your active keys in **Settings → API Keys** and revoke anything unused.
+
+---
+
+## BYOK: Bring Your Own Key
+
+By default, Celune uses its own API access to Anthropic's Claude models for agent inference. If you prefer to supply your own provider keys, you can use **BYOK** mode.
+
+BYOK lets you:
+
+- Route agent model calls through your own Anthropic or OpenAI account.
+- Apply your own usage caps and billing separately.
+- Meet compliance requirements that mandate using approved API credentials.
+
+### Supported Providers
+
+| Provider  | Models Available                                               |
+| --------- | -------------------------------------------------------------- |
+| Anthropic | claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5          |
+| OpenAI    | gpt-4o, gpt-4o-mini, o1, o3-mini _(coming soon)_              |
+
+### Adding a Provider Key
+
+1. Go to **Settings → Integrations → AI Providers**.
+2. Click **Add Provider Key**.
+3. Select the provider (Anthropic or OpenAI).
+4. Paste your API key.
+5. Click **Save**.
+
+Once added, your workspace will route model calls through your provider key instead of Celune's managed access. This applies to all agents in the workspace.
+
+> Your provider key is stored encrypted at rest. Celune never exposes the plaintext key via the API or UI after it has been saved.
+
+### Removing a Provider Key
+
+To stop using BYOK and return to Celune-managed inference, go to **Settings → Integrations → AI Providers** and delete the provider key. Model calls will switch back to Celune's default access on the next request.
+
+### BYOK and Billing
+
+BYOK does not affect your Celune subscription cost — you are still billed by Celune for platform access. Model inference costs are billed directly to you by the provider (Anthropic or OpenAI) under your account.
+
+> BYOK is available on Pro, Team, and Enterprise plans. It is not available on the Spark (free) tier.
+
+---
+
+## Related Pages
+
+- [MCP Setup](/guides/mcp-setup) — How to use your API key with Claude Code.
+- [API Reference: Authentication](/api-reference/authentication) — Full technical reference for authentication methods.
+- [Billing & Plans](/guides/billing) — Plan tiers and what's included at each level.

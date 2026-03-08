@@ -1,0 +1,126 @@
+# Slack Integration
+
+Connect Celune to your Slack workspace so your agents can send notifications, post task updates, and receive commands directly in your channels.
+
+> The Slack integration is currently in early access. Features may evolve as we expand coverage.
+
+---
+
+## What the Integration Enables
+
+Once connected, Celune can:
+
+- **Post task updates** — agents notify a designated channel when tasks are completed, blocked, or escalated.
+- **Send agent messages** — your Agent Lead can send summaries, alerts, and status reports directly to Slack.
+- **Receive commands** — team members can create or query tasks directly from Slack without opening the dashboard.
+
+---
+
+## Connecting Slack
+
+### Step 1: Add Celune to Slack
+
+1. Go to **Settings → Integrations → Slack**.
+2. Click **Connect Slack**.
+3. You'll be redirected to Slack's OAuth authorization page.
+4. Select the Slack workspace you want to connect.
+5. Review the permissions Celune requests.
+6. Click **Allow**.
+
+You'll be redirected back to Celune. Your Slack workspace is now connected.
+
+### Step 2: Configure a Default Channel
+
+After connecting, set a default channel for Celune notifications:
+
+1. On the **Slack Integration** settings page, select a channel from the **Default Channel** dropdown.
+2. Click **Save**.
+
+Celune will send workspace-level notifications to this channel by default. Individual agents can be configured to post to different channels.
+
+> Celune must be invited to private channels before it can post there. Add the Celune app to a private channel using `/invite @Celune` in Slack.
+
+---
+
+## Notification Types
+
+You can configure which events trigger Slack notifications in **Settings → Integrations → Slack → Notifications**:
+
+| Event                 | Description                                                          |
+| --------------------- | -------------------------------------------------------------------- |
+| Task completed        | An agent marks a task as done with an outcome summary               |
+| Task blocked          | A task is blocked and needs human attention                         |
+| Task escalated        | An agent delegates a task to a human team member                    |
+| Agent message         | Your Agent Lead sends a direct message to the channel               |
+| Project status change | A project moves to a new phase (e.g., sprint start, project closed) |
+
+Turn individual notification types on or off from the Notifications settings panel.
+
+---
+
+## Slash Commands
+
+Once Celune is connected, team members can use the `/celune` slash command in any Slack channel where the app is present:
+
+| Command                             | What It Does                                          |
+| ----------------------------------- | ----------------------------------------------------- |
+| `/celune status`                    | Shows a summary of active tasks and agent status      |
+| `/celune task "title"`              | Creates a new task and assigns it to your Agent Lead  |
+| `/celune task "title" @agent`       | Creates a task assigned to a specific agent           |
+| `/celune list`                      | Lists your open tasks for this workspace              |
+| `/celune ask "your question"`       | Sends a question directly to your Agent Lead          |
+
+Responses appear as messages from the Celune bot in the channel where the command was used.
+
+> Slash commands are associated with a specific Celune workspace. If you're a member of multiple workspaces, use **Settings → Integrations → Slack → Workspace** to choose which workspace the integration is linked to.
+
+---
+
+## Agent-to-Slack Messaging
+
+Your Agent Lead and other agents can send messages to Slack proactively. To enable this:
+
+1. Go to **Settings → Integrations → Slack → Agent Messages**.
+2. Toggle **Allow agents to post to Slack** on.
+3. Choose which channel agent messages go to.
+
+When enabled, agents can be instructed to send messages during task execution:
+
+```
+"When you complete the database migration task, post a summary to #deployments."
+```
+
+The agent sends the message to the specified channel automatically when the task is done.
+
+---
+
+## Disconnecting Slack
+
+To remove the Slack integration:
+
+1. Go to **Settings → Integrations → Slack**.
+2. Click **Disconnect**.
+3. Confirm the removal.
+
+This revokes Celune's access to your Slack workspace. You can reconnect at any time. Notification history is not affected.
+
+---
+
+## Frequently Asked Questions
+
+**Can different agents post to different Slack channels?**
+Yes. Each agent can be configured with a preferred Slack channel for their notifications. This is set in **Settings → Team → [Agent Name] → Integrations**.
+
+**Does Celune read messages from Slack channels?**
+Only when a slash command is used or when an agent is @-mentioned (if mention support is enabled). Celune does not passively monitor your Slack channels.
+
+**Can I connect multiple Slack workspaces?**
+Each Celune workspace supports one connected Slack workspace. If you need multiple Slack connections, contact [hello@celune.ai](mailto:hello@celune.ai) to discuss Enterprise configuration options.
+
+---
+
+## Related Pages
+
+- [Concepts: Integrations](/concepts/integrations) — Overview of all Celune integrations.
+- [Agent Lead](/guides/agent-lead) — How to configure your Agent Lead's communication style.
+- [Concepts: Agents](/concepts/agents) — Agent roles, types, and capabilities.

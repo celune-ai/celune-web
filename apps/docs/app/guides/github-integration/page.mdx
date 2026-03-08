@@ -1,0 +1,108 @@
+# GitHub Integration
+
+Connecting Celune to GitHub lets your agents understand your codebase in context — not just from what you tell them, but from the actual repository structure, open pull requests, and recent activity.
+
+> The GitHub integration is currently in early access. Features may evolve as we expand coverage.
+
+---
+
+## What the Integration Enables
+
+Once connected, Celune agents gain access to:
+
+- **Repository context** — agents can reference your repo's file structure, recent commits, and branch state when working on tasks.
+- **Pull request awareness** — your code review agent (SCAN) can surface open PRs, review diffs, and flag issues without you pasting code manually.
+- **Commit linking** — tasks completed by agents can be linked to the commits they produced.
+
+---
+
+## Connecting GitHub
+
+### Step 1: Authorize Celune
+
+1. Go to **Settings → Integrations → GitHub**.
+2. Click **Connect GitHub**.
+3. You'll be redirected to GitHub's OAuth authorization page.
+4. Review the permissions Celune requests (repository read access and webhook access).
+5. Click **Authorize Celune**.
+
+You'll be redirected back to Celune automatically. Your GitHub account is now linked.
+
+### Step 2: Select Repositories
+
+After authorizing, you choose which repositories Celune can access:
+
+1. On the **GitHub Integration** settings page, click **Manage Repositories**.
+2. Select the repositories relevant to this workspace.
+3. Click **Save**.
+
+You can add or remove repositories at any time from the same settings page. Celune only accesses repositories you explicitly select.
+
+> Celune requests **read** access to your repositories. We do not write to your repositories except via commits produced by agents during task execution — and only when you have explicitly initiated that workflow.
+
+### Step 3: Set a Default Repository
+
+If your workspace primarily works with one repository, set it as the default:
+
+1. Go to **Settings → Integrations → GitHub**.
+2. Click **Set as Default** next to the repository you want.
+
+The default repository is provided as context to your Agent Lead automatically when you start a new conversation.
+
+---
+
+## Repository Context
+
+When the GitHub integration is active, your agents can:
+
+- **Reference file paths** — "Look at the auth middleware in `apps/admin/src/middleware.ts`."
+- **Understand recent changes** — "What changed in the last 5 commits to the main branch?"
+- **Identify PR status** — "Is PR #247 still open? What's the review status?"
+
+This context is pulled on demand — agents query GitHub when relevant, not continuously.
+
+---
+
+## Code Review with SCAN
+
+If your workspace includes a SCAN (code review) agent, the GitHub integration unlocks deeper review workflows:
+
+1. Open a pull request in GitHub.
+2. In Celune, create a task: "SCAN: Review PR #247 in the main repo."
+3. SCAN reads the diff, checks for issues, and returns a structured review.
+4. The review appears in Celune as a task output and can optionally be posted as a PR comment.
+
+> Auto-posting PR comments requires write access to the repository. This is an optional permission you can grant in **Settings → Integrations → GitHub → Permissions**.
+
+---
+
+## Disconnecting GitHub
+
+To remove the GitHub integration:
+
+1. Go to **Settings → Integrations → GitHub**.
+2. Click **Disconnect**.
+3. Confirm the removal.
+
+Disconnecting revokes Celune's access to your GitHub account. Existing task data and history are not affected. You can reconnect at any time.
+
+---
+
+## Frequently Asked Questions
+
+**Does Celune store my code?**
+No. Celune queries the GitHub API on demand and does not cache or persist repository file contents. The integration uses your connected credentials to pull context at the time it's needed.
+
+**Can I limit which branches agents can see?**
+Not yet. Repository access is at the repository level, not the branch level. This is on the roadmap.
+
+**What if I use GitLab or Bitbucket?**
+GitHub is the first supported platform. GitLab and Bitbucket integrations are planned. Contact [hello@celune.ai](mailto:hello@celune.ai) if this is blocking your adoption.
+
+---
+
+## Related Pages
+
+- [Concepts: Integrations](/concepts/integrations) — Overview of all Celune integrations.
+- [Concepts: Agents](/concepts/agents) — How agents use external context in their work.
+- [MCP Setup](/guides/mcp-setup) — An alternative way to connect agents directly to your local codebase.

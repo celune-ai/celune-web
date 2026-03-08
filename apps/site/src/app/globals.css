@@ -1,0 +1,226 @@
+@import 'tailwindcss';
+@import '@repo/ui/theme.css';
+
+/* Scan @repo/ui components so Tailwind generates their utility classes */
+@source '../../../../packages/ui/src';
+
+@theme inline {
+  /* Core background / foreground */
+  --color-background: var(--background-default);
+  --color-foreground: var(--foreground-default);
+
+  /* Surface scale */
+  --color-surface-75: var(--background-surface-75);
+  --color-surface-100: var(--background-surface-100);
+  --color-surface-200: var(--background-surface-200);
+  --color-surface-300: var(--background-surface-300);
+  --color-surface-400: var(--background-surface-400);
+
+  /* Foreground scale */
+  --color-foreground-light: var(--foreground-light);
+  --color-foreground-lighter: var(--foreground-lighter);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-contrast: var(--foreground-contrast);
+
+  /* Brand (green) */
+  --color-brand: var(--brand-default);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+
+  /* Celune green color scale */
+  --color-celune-300: #86efac;
+  --color-celune-400: #4ade80;
+  --color-celune-500: #22c55e;
+  --color-celune-600: #16a34a;
+
+  /* Overlay (floating panels) */
+  --color-overlay: var(--background-overlay);
+  --color-overlay-hover: var(--background-overlay-hover);
+
+  /* Borders */
+  --color-border: var(--border-default);
+  --color-border-muted: var(--border-muted);
+  --color-border-strong: var(--border-strong);
+  --color-border-stronger: var(--border-stronger);
+  --color-border-control: var(--border-control);
+  --color-border-overlay: var(--border-overlay);
+
+  /* Destructive */
+  --color-destructive: var(--destructive-default);
+  --color-destructive-200: var(--destructive-200);
+  --color-destructive-300: var(--destructive-300);
+  --color-destructive-400: var(--destructive-400);
+  --color-destructive-500: var(--destructive-500);
+  --color-destructive-600: var(--destructive-600);
+
+  /* Warning */
+  --color-warning: var(--warning-default);
+  --color-warning-200: var(--warning-200);
+  --color-warning-300: var(--warning-300);
+  --color-warning-400: var(--warning-400);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+
+  /* Backward compat — shadcn/ui token names */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Typography */
+  --font-sans: var(--font-soehne);
+  --font-mono: var(--font-soehne-mono);
+  --font-heading: var(--font-soehne);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+body {
+  background: #08080a;
+  color: var(--foreground-default);
+}
+
+/* ─── Terminal window ─── */
+.terminal-window {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+}
+
+.terminal-dot-red {
+  background: #ff5f57;
+}
+.terminal-dot-yellow {
+  background: #febc2e;
+}
+.terminal-dot-green {
+  background: #28c840;
+}
+
+/* ─── Dot grid backgrounds ─── */
+.dot-grid-bg {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dot-grid-bg-dense {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* ─── Glow effects ─── */
+.glow-green {
+  box-shadow:
+    0 0 20px rgba(34, 197, 94, 0.15),
+    0 0 60px rgba(34, 197, 94, 0.05);
+}
+
+.glow-green-text {
+  text-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+}
+
+/* ─── Animations ─── */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes grid-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.animate-grid-fade {
+  animation: grid-fade 1.5s ease-out;
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes retro-grid {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(var(--cell-size)));
+  }
+}
+
+.animate-retro-grid {
+  animation: retro-grid 5s linear infinite;
+}
+
+/* ─── Hide scrollbar ─── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Container ─── */
+.container {
+  width: 100%;
+  max-width: 1536px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}

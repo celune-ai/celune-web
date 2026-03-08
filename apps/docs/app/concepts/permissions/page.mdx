@@ -1,0 +1,89 @@
+# Permissions
+
+Celune uses a simple, fixed role system. There are four roles — owner, admin, member, and viewer — and each role is a strict subset of the one above it. No custom roles, no permission toggles. Simple by design.
+
+---
+
+## The Four Roles
+
+| Role       | Who It's For                                             |
+| ---------- | -------------------------------------------------------- |
+| **Owner**  | The person who created the workspace. One per workspace. |
+| **Admin**  | Trusted team leads who manage members and settings.      |
+| **Member** | Active contributors who create and work on tasks.        |
+| **Viewer** | Stakeholders who need visibility but not edit access.    |
+
+---
+
+## What Each Role Can Do
+
+| Action                     | Owner | Admin | Member | Viewer |
+| -------------------------- | :---: | :---: | :----: | :----: |
+| View tasks and projects    |  Yes  |  Yes  |  Yes   |  Yes   |
+| Create and edit tasks      |  Yes  |  Yes  |  Yes   |   No   |
+| Assign tasks to agents     |  Yes  |  Yes  |  Yes   |   No   |
+| Create and manage projects |  Yes  |  Yes  |  Yes   |   No   |
+| Invite new members         |  Yes  |  Yes  |   No   |   No   |
+| Change member roles        |  Yes  |  Yes  |   No   |   No   |
+| Remove members             |  Yes  |  Yes  |   No   |   No   |
+| Configure agents           |  Yes  |  Yes  |   No   |   No   |
+| Manage workspace settings  |  Yes  |  Yes  |   No   |   No   |
+| Manage billing             |  Yes  |  No   |   No   |   No   |
+| Transfer ownership         |  Yes  |  No   |   No   |   No   |
+| Delete the workspace       |  Yes  |  No   |   No   |   No   |
+
+---
+
+## Org-Level vs Workspace-Level Roles
+
+Celune has two levels where roles apply:
+
+**Organization level** — applies across all workspaces the org owns. Org owners can create and delete workspaces, manage billing, and see all workspace members.
+
+**Workspace level** — applies within a single workspace. A person can be an admin in one workspace and a viewer in another. Roles don't bleed across workspaces.
+
+When someone is invited to a workspace, you set their workspace-level role. Their org-level role is separate and only set by the org owner.
+
+---
+
+## Inviting Members
+
+To invite someone to a workspace:
+
+1. Go to **Settings → Members** inside the workspace.
+2. Click **Invite Member**.
+3. Enter their email address and select a role.
+4. They receive an invitation email with a link to accept.
+
+Once they accept, they appear as an **Active** member with the role you assigned. You can change their role or remove them at any time from the same Members page.
+
+---
+
+## Changing Roles
+
+Owners and admins can change any member's role — except the workspace owner's role, which is fixed. To transfer ownership, the current owner must explicitly initiate a transfer from **Settings → Danger Zone**.
+
+When a role is changed, the new permissions take effect immediately. There is no approval step.
+
+---
+
+## Removing Members
+
+Removing a member revokes their access immediately. They cannot log in to the workspace or see any data.
+
+Their historical contributions — tasks they created, comments they left, projects they worked on — remain visible to other members. Removing someone does not erase their work.
+
+---
+
+## A Note on Simplicity
+
+Celune intentionally avoids custom roles and granular permission toggles. Experience shows that custom permission systems become hard to audit and create unexpected security gaps.
+
+The four-role system is easy to reason about: if you're not sure what someone should be able to do, pick the more restrictive role. You can always promote them later.
+
+---
+
+## Related Concepts
+
+- [Workspaces](/concepts/workspaces) — Roles are scoped to workspaces.
+- [Agents](/concepts/agents) — Agent configuration requires admin or owner access.
