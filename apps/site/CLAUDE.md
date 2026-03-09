@@ -23,4 +23,4 @@
 ## Gotchas
 - This IS a Next.js app. Server components, API routes, App Router.
 - Dashboard fetches from `/api/health` which runs a local Python script — dev only.
-- Celune domain TBD. Dev runs on port 3003.
+- Production domain: celune.ai. Dev runs on port 3003.
