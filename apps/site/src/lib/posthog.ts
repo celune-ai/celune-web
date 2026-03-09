@@ -1,14 +1,14 @@
 import posthogLib from 'posthog-js';
 
-export const POSTHOG_KEY = 'phc_mpxYHjhGcv6IOLQAmvA2sHfXvLNWtZPQvTqDklLS3J4';
-export const POSTHOG_HOST = 'https://us.i.posthog.com';
+export const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '';
+export const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 
 const IS_PROD = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
 let initialized = false;
 
 export function initPostHog() {
   if (typeof window === 'undefined') return;
-  if (!IS_PROD) return;
+  if (!IS_PROD || !POSTHOG_KEY) return;
   if (initialized) return;
 
   try {
