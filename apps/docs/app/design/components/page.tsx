@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Components — Design System',
+  title: 'Components - Design System',
   description: 'All atom components in the @repo/ui shared library with usage guidance.',
 };
 
@@ -173,7 +173,7 @@ export default function ComponentsPage() {
       </p>
       <p>
         Status indicators, count chips, and classification tags. Renders as an{' '}
-        <code>inline-flex</code> pill. All variants inherit the base size and border-radius — only
+        <code>inline-flex</code> pill. All variants inherit the base size and border-radius - only
         color changes.
       </p>
 
@@ -350,7 +350,7 @@ export default function ComponentsPage() {
         <li>
           Width auto-sizes to content via a hidden sizer <code>span</code>
         </li>
-        <li>Transparent background, no border — blends with surrounding text</li>
+        <li>Transparent background, no border - blends with surrounding text</li>
         <li>
           Pair with a <code>Button size=&quot;icon-xs&quot;</code> for a save/cancel icon
         </li>
@@ -363,7 +363,7 @@ export default function ComponentsPage() {
 const [editing, setEditing] = useState(false)
 const [draft, setDraft] = useState(project.name)
 
-// In JSX — toggle between static text and naked input
+// In JSX - toggle between static text and naked input
 {editing ? (
   <NakedInput
     value={draft}
@@ -463,7 +463,7 @@ const [draft, setDraft] = useState(project.name)
         Import: <code>@repo/ui/components/progress</code>
       </p>
       <p>
-        Radix Progress with brand fill. Accepts a <code>value</code> prop (0–100).
+        Radix Progress with brand fill. Accepts a <code>value</code> prop (0-100).
       </p>
 
       <h3 id="avatar">Avatar</h3>
@@ -569,22 +569,22 @@ const [draft, setDraft] = useState(project.name)
 
       <ul>
         <li>
-          <strong>Page header</strong> — Breadcrumb + h1 + description + action button(s)
+          <strong>Page header</strong> - Breadcrumb + h1 + description + action button(s)
         </li>
         <li>
-          <strong>Form item layout</strong> — Label + Input/Select + description + error message
+          <strong>Form item layout</strong> - Label + Input/Select + description + error message
         </li>
         <li>
-          <strong>Confirmation modal</strong> — Dialog + destructive Button + cancel
+          <strong>Confirmation modal</strong> - Dialog + destructive Button + cancel
         </li>
         <li>
-          <strong>Data table</strong> — Table + sort headers + pagination
+          <strong>Data table</strong> - Table + sort headers + pagination
         </li>
         <li>
-          <strong>Metric card</strong> — Card + large value + label + trend indicator
+          <strong>Metric card</strong> - Card + large value + label + trend indicator
         </li>
         <li>
-          <strong>Empty state</strong> — Icon + heading + description + CTA Button
+          <strong>Empty state</strong> - Icon + heading + description + CTA Button
         </li>
       </ul>
 
@@ -601,14 +601,14 @@ const [draft, setDraft] = useState(project.name)
           <a href="/design/charts">
             <strong>Charts</strong>
           </a>{' '}
-          — <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>,{' '}
+          - <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>,{' '}
           <code>LogsBarChart</code>, <code>ChartTooltip</code>
         </li>
         <li>
           <a href="/design/metrics">
             <strong>Metric Cards</strong>
           </a>{' '}
-          — <code>MetricCard</code>, <code>MetricCardValue</code>,{' '}
+          - <code>MetricCard</code>, <code>MetricCardValue</code>,{' '}
           <code>MetricCardDifferential</code>, <code>MetricCardSparkline</code>
         </li>
       </ul>

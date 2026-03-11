@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(slug);
   if (!post) return {};
   return {
-    title: `${post.title} — Smejkal Design`,
+    title: `${post.title} - Smejkal Design`,
     description: post.description,
   };
 }
@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="border-border mt-6 border-t" />
         </header>
 
-        {/* Post body — rendered MDX */}
+        {/* Post body - rendered MDX */}
         <div className="prose prose-sm">
           <PostContent />
         </div>

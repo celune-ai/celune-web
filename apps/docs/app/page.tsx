@@ -51,7 +51,7 @@ export default function DocsHome() {
     <div className="mx-auto w-full max-w-[64rem] px-6 py-16 sm:px-10 sm:py-24">
       {/* Hero */}
       <div className="mb-16 max-w-2xl">
-        <h1 className="text-foreground mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="text-foreground mb-4 text-4xl font-light tracking-tight sm:text-5xl">
           Celune Documentation
         </h1>
         <p className="text-foreground-light text-lg leading-relaxed sm:text-xl">
@@ -70,11 +70,11 @@ export default function DocsHome() {
             <div className="bg-surface-200 text-foreground-lighter mb-4 flex h-10 w-10 items-center justify-center rounded-lg">
               <Icon size={20} />
             </div>
-            <h2 className="text-foreground mb-1 text-base font-semibold">{title}</h2>
-            <p className="text-foreground-lighter mb-4 flex-1 text-sm leading-relaxed">
+            <h2 className="text-foreground mb-1 text-base font-light">{title}</h2>
+            <p className="text-foreground-light mt-2 mb-4 flex-1 text-sm leading-relaxed">
               {description}
             </p>
-            <span className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm font-medium transition-colors">
+            <span className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm font-light transition-colors">
               Read more <ArrowRight size={14} />
             </span>
           </Link>

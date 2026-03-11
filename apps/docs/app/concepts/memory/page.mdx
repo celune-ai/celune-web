@@ -1,6 +1,6 @@
 # Memory
 
-Celune's memory system — the **Second Brain** — gives your agents durable context that persists across sessions. Agents store structured notes in a searchable database, so they can recall relevant information from past work without you repeating yourself.
+Celune's memory system - the **Second Brain** - gives your agents durable context that persists across sessions. Agents store structured notes in a searchable database, so they can recall relevant information from past work without you repeating yourself.
 
 ---
 
@@ -10,7 +10,7 @@ Celune stores memory in three layers, each with a different lifespan:
 
 ### 1. Conversation Context
 
-The messages in a live session are available to your agent during that session. This is standard chat context — it resets when the session ends.
+The messages in a live session are available to your agent during that session. This is standard chat context - it resets when the session ends.
 
 ### 2. Task Memory
 
@@ -26,9 +26,9 @@ Explicit, structured notes that agents write (or that you write) to a persistent
 
 Memory entries are created in several ways:
 
-- **By the agent** — during a task or conversation, your Agent Lead writes a note when they encounter something worth retaining.
-- **Manually via MCP** — using the `celune_remember` tool in Claude Code.
-- **Via the task CLI** — developers can write entries directly: `node task-cli.mjs remember "..."`.
+- **By the agent** - during a task or conversation, your Agent Lead writes a note when they encounter something worth retaining.
+- **Manually via Claude Code** - using the /remember skill.
+- **Via the task CLI** - developers can write entries directly: `node task-cli.mjs remember "..."`.
 
 Examples of what gets stored:
 
@@ -43,14 +43,14 @@ Examples of what gets stored:
 
 Memory is retrieved by meaning, not just keywords. Celune uses vector embeddings (384-dimensional, via the `gte-small` model running on a Supabase Edge Function) to encode every memory entry.
 
-When your agent searches memory — whether triggered automatically or by explicit recall — it computes an embedding of the query and finds the closest matching entries by cosine similarity.
+When your agent searches memory - whether triggered automatically or by explicit recall - it computes an embedding of the query and finds the closest matching entries by cosine similarity.
 
 This means:
 
 - Searching "auth problems" returns memories about "authentication middleware failures."
 - Searching "team preferences" returns memories about code style, communication patterns, and workflow choices.
 
-The threshold for what counts as "relevant" is configurable. The default is 0.5 — entries below that similarity score are not returned.
+The threshold for what counts as "relevant" is configurable. The default is 0.5 - entries below that similarity score are not returned.
 
 ---
 
@@ -58,14 +58,14 @@ The threshold for what counts as "relevant" is configurable. The default is 0.5 
 
 Each memory entry contains:
 
-| Field        | Description                                                       |
-| ------------ | ----------------------------------------------------------------- |
-| `content`    | The text of the memory                                            |
-| `source`     | Who created it: `agent`, `task-cli`, or `mcp`                    |
-| `category`   | Classification: `technical`, `preference`, `decision`, `context` |
-| `agent_id`   | Which agent created or owns the memory                            |
-| `embedding`  | The vector representation used for semantic search               |
-| `created_at` | When the entry was created                                        |
+| Field      | Description                                                    |
+| ---------- | -------------------------------------------------------------- |
+| content    | The text of the memory                                         |
+| source     | Who created it: agent, task-cli, or mcp                        |
+| category   | Classification: technical, preference, decision, context       |
+| agent_id   | Which agent created or owns the memory                         |
+| embedding  | The vector representation used for semantic search             |
+| created_at | When the entry was created                                     |
 
 ---
 
@@ -91,15 +91,15 @@ When you reach the limit, new entries are blocked. Existing entries are preserve
 Navigate to **Memory** in the sidebar to:
 
 - **Browse** all entries, sorted by creation date.
-- **Search** by typing a query — uses semantic search.
+- **Search** by typing a query - uses semantic search.
 - **Edit** an entry to update its content.
 - **Delete** individual entries.
 
-### Via MCP (Claude Code)
+### Via Skills (Claude Code)
 
 ```
-celune_remember: "Deploy to staging requires running db:migrate before the build."
-celune_recall: "What do I need to do before deploying?"
+/remember "Deploy to staging requires running db:migrate before the build."
+/recall "What do I need to do before deploying?"
 ```
 
 ### Via the Task CLI
@@ -115,12 +115,12 @@ node packages/db/scripts/task-cli.mjs recall --query "Stripe configuration"
 
 Categorizing entries makes search more precise:
 
-| Category      | What It's For                                                |
-| ------------- | ------------------------------------------------------------ |
-| `technical`   | Architecture decisions, stack choices, environment config    |
-| `preference`  | Team style preferences, communication patterns               |
-| `decision`    | Resolved debates, tradeoff choices, direction calls          |
-| `context`     | Background info, project history, stakeholder relationships  |
+| Category   | What It's For                                                |
+| ---------- | ------------------------------------------------------------ |
+| technical  | Architecture decisions, stack choices, environment config    |
+| preference | Team style preferences, communication patterns               |
+| decision   | Resolved debates, tradeoff choices, direction calls          |
+| context    | Background info, project history, stakeholder relationships  |
 
 You can filter by category in the dashboard's Memory view.
 
@@ -134,6 +134,6 @@ Agent memory is scoped to your workspace and protected by Row Level Security at 
 
 ## Related Concepts
 
-- [Agents](/concepts/agents) — How agents use memory during task execution and delegation.
-- [Memory Guide](/guides/memory) — Practical walkthrough of creating, searching, and managing memory entries.
-- [MCP Setup](/guides/mcp-setup) — How to use `celune_remember` and `celune_recall` from Claude Code.
+- [Agents](/concepts/agents) - How agents use memory during task execution and delegation.
+- [Memory Guide](/guides/memory) - Practical walkthrough of creating, searching, and managing memory entries.
+- [MCP Setup](/guides/mcp-setup) - How to use /remember and /recall from Claude Code.

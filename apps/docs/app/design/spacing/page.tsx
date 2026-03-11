@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Spacing & Radius — Design System',
+  title: 'Spacing & Radius - Design System',
   description: '8px base grid, border radius scale, and shadow tokens.',
 };
 
@@ -172,7 +172,7 @@ export default function SpacingPage() {
 
       <p>
         All interactive components use <code>transition-colors</code> for color changes and follow a
-        150–200ms duration at <code>cubic-bezier(0.4, 0, 0.2, 1)</code>. This is Tailwind&apos;s
+        150-200ms duration at <code>cubic-bezier(0.4, 0, 0.2, 1)</code>. This is Tailwind&apos;s
         default transition easing. Avoid custom durations unless an animation has a specific
         semantic purpose.
       </p>

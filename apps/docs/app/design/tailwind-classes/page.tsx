@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Tailwind Classes — Design System',
+  title: 'Tailwind Classes - Design System',
   description: 'How our design tokens map to Tailwind CSS utilities in the Smejkal Design System.',
 };
 
@@ -28,7 +28,7 @@ export default async function TailwindClassesPage() {
       </p>
 
       <CodeBlock
-        code={`/* globals.css — simplified excerpt */
+        code={`/* globals.css - simplified excerpt */
 @import "tailwindcss";
 
 /* Semantic tokens defined in .dark selector */
@@ -367,7 +367,7 @@ export default async function TailwindClassesPage() {
               <code>var(--foreground-default)</code>
             </td>
             <td>
-              Primary text — drops the <code>-default</code> suffix
+              Primary text - drops the <code>-default</code> suffix
             </td>
           </tr>
           <tr>
@@ -377,7 +377,7 @@ export default async function TailwindClassesPage() {
             <td>
               <code>var(--border-default)</code>
             </td>
-            <td>Default border — the double "border" is intentional</td>
+            <td>Default border - the double "border" is intentional</td>
           </tr>
           <tr>
             <td>

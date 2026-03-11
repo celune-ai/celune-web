@@ -1,18 +1,18 @@
 # Memory (Second Brain)
 
-Celune's memory system gives your agents durable context that persists across sessions. Instead of starting cold every time, your Agent Lead can recall relevant information from past work — decisions made, patterns noted, context shared — and use it to give better, faster responses.
+Celune's memory system gives your agents durable context that persists across sessions. Instead of starting cold every time, your Agent Lead can recall relevant information from past work - decisions made, patterns noted, context shared - and use it to give better, faster responses.
 
 ---
 
 ## How Memory Works
 
-When your Agent Lead (or any agent) encounters something worth retaining, they write a **memory entry** to a persistent store. This is separate from the conversation history — memory entries are structured notes that survive session resets and can be retrieved at any time.
+When your Agent Lead (or any agent) encounters something worth retaining, they write a **memory entry** to a persistent store. This is separate from the conversation history - memory entries are structured notes that survive session resets and can be retrieved at any time.
 
 Memory is:
 
-- **Scoped to your workspace** — entries are never shared across workspaces.
-- **Searchable by meaning** — Celune uses semantic search (vector embeddings) to find relevant memories even when the exact words don't match.
-- **Persistent** — entries remain until explicitly deleted or until the plan limit is reached.
+- **Scoped to your workspace** - entries are never shared across workspaces.
+- **Searchable by meaning** - Celune uses semantic search (vector embeddings) to find relevant memories even when the exact words don't match.
+- **Persistent** - entries remain until explicitly deleted or until the plan limit is reached.
 
 ---
 
@@ -30,12 +30,12 @@ During a task or conversation, your Agent Lead can create a memory when they enc
 
 The agent decides when something is memory-worthy. You can also prompt them explicitly.
 
-### Manual Memories (via MCP)
+### Manual Memories (via Skills)
 
-If you're using Celune via Claude Code, you can create memories directly with the `celune_remember` MCP tool:
+If you're using Celune via Claude Code, you can create memories directly with the /remember skill:
 
 ```
-celune_remember: "The staging environment uses a separate Supabase project. Always check NEXT_PUBLIC_SUPABASE_URL before running migrations."
+/remember "The staging environment uses a separate Supabase project. Always check NEXT_PUBLIC_SUPABASE_URL before running migrations."
 ```
 
 This stores the entry immediately with your Agent Lead as the source.
@@ -45,7 +45,7 @@ This stores the entry immediately with your Agent Lead as the source.
 In development workflows, you can create memories via the task CLI:
 
 ```bash
-node packages/db/scripts/task-cli.mjs remember "Supabase MCP execute_sql bypasses RLS — only use for migrations and analytics."
+node packages/db/scripts/task-cli.mjs remember "Supabase MCP execute_sql bypasses RLS - only use for migrations and analytics."
 ```
 
 ---
@@ -54,13 +54,13 @@ node packages/db/scripts/task-cli.mjs remember "Supabase MCP execute_sql bypasse
 
 Each memory entry contains:
 
-| Field        | Description                                                      |
-| ------------ | ---------------------------------------------------------------- |
-| `content`    | The text of the memory                                           |
-| `source`     | Who created it: `agent`, `task-cli`, or `mcp`                   |
-| `category`   | Classification: `technical`, `preference`, `decision`, `context` |
-| `agent_id`   | Which agent created or owns the memory                           |
-| `created_at` | When the entry was created                                       |
+| Field      | Description                                                    |
+| ---------- | -------------------------------------------------------------- |
+| content    | The text of the memory                                         |
+| source     | Who created it: agent, task-cli, or mcp                        |
+| category   | Classification: technical, preference, decision, context       |
+| agent_id   | Which agent created or owns the memory                         |
+| created_at | When the entry was created                                     |
 
 ---
 
@@ -77,12 +77,12 @@ Celune uses vector embeddings (384-dimensional, via the `gte-small` model) to po
 
 Semantic search finds meaning, not just keywords.
 
-### Via MCP
+### Via Skills (Claude Code)
 
-You can query memory explicitly from Claude Code using the `celune_recall` MCP tool:
+You can query memory explicitly from Claude Code using the /recall skill:
 
 ```
-celune_recall: "How does staging environment differ from production?"
+/recall "How does staging environment differ from production?"
 ```
 
 Returns the most relevant memory entries above the relevance threshold.
@@ -104,7 +104,7 @@ In the Celune dashboard, navigate to **Memory** in the sidebar to browse, search
 
 When you reach the limit, new entries are blocked. Existing entries remain intact and searchable. To free up capacity, delete old entries from the **Memory** page in the dashboard, or upgrade your plan.
 
-> Celune does not automatically delete old memories when the limit is reached. Your data is preserved — you just cannot add more until you create space.
+> Celune does not automatically delete old memories when the limit is reached. Your data is preserved - you just cannot add more until you create space.
 
 ---
 
@@ -112,10 +112,10 @@ When you reach the limit, new entries are blocked. Existing entries remain intac
 
 All memory entries are visible in the **Memory** section of your Celune dashboard. From here you can:
 
-- **Browse** — view all entries sorted by creation date.
-- **Search** — find relevant entries by typing a query.
-- **Edit** — update the content of an entry (useful if something changes).
-- **Delete** — remove entries that are no longer accurate or relevant.
+- **Browse** - view all entries sorted by creation date.
+- **Search** - find relevant entries by typing a query.
+- **Edit** - update the content of an entry (useful if something changes).
+- **Delete** - remove entries that are no longer accurate or relevant.
 
 You can also delete all memories for a specific agent from **Settings → Agent → Danger Zone**.
 
@@ -125,12 +125,12 @@ You can also delete all memories for a specific agent from **Settings → Agent 
 
 When creating a memory (manually or via CLI), you can specify a category to make search more precise:
 
-| Category      | What It's For                                               |
-| ------------- | ----------------------------------------------------------- |
-| `technical`   | Architecture decisions, stack choices, environment config   |
-| `preference`  | Team style preferences, communication patterns              |
-| `decision`    | Resolved debates, tradeoff choices, direction calls         |
-| `context`     | Background info, project history, stakeholder relationships |
+| Category   | What It's For                                               |
+| ---------- | ----------------------------------------------------------- |
+| technical  | Architecture decisions, stack choices, environment config   |
+| preference | Team style preferences, communication patterns              |
+| decision   | Resolved debates, tradeoff choices, direction calls         |
+| context    | Background info, project history, stakeholder relationships |
 
 If no category is specified, the entry is stored without one and is still fully searchable.
 
@@ -158,6 +158,6 @@ API key access to memory requires the `write` scope or higher. Read-only API key
 
 ## Related Pages
 
-- [Agent Lead](/guides/agent-lead) — How your Agent Lead uses memory to give better responses.
-- [MCP Setup](/guides/mcp-setup) — Use `celune_remember` and `celune_recall` from Claude Code.
-- [Concepts: Agents](/concepts/agents) — Agent roles, types, and capabilities.
+- [Agent Lead](/guides/agent-lead) - How your Agent Lead uses memory to give better responses.
+- [MCP Setup](/guides/mcp-setup) - Use /remember and /recall from Claude Code.
+- [Concepts: Agents](/concepts/agents) - Agent roles, types, and capabilities.

@@ -295,6 +295,10 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Celune brand green (for buttons) */
+  --color-celune-400: #4ade80;
+  --color-celune-500: #22c55e;
+
   /* Typography — Inter 300 for UI, Source Code Pro for code */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-source-code-pro);
@@ -310,6 +314,7 @@ body {
   background: var(--background-default);
   color: var(--foreground-default);
   font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 300;
   font-size: 1rem;
   line-height: 1.5;
   font-synthesis-weight: none;
@@ -366,6 +371,7 @@ button,
 
 /* Prose overrides for dark theme */
 .prose {
+  line-height: 1.8;
   --tw-prose-body: var(--foreground-light);
   --tw-prose-headings: var(--foreground-default);
   --tw-prose-lead: var(--foreground-lighter);
@@ -379,9 +385,9 @@ button,
   --tw-prose-captions: var(--foreground-muted);
   --tw-prose-code: var(--brand-default);
   --tw-prose-pre-code: var(--foreground-default);
-  --tw-prose-pre-bg: var(--background-surface-75);
-  --tw-prose-th-borders: var(--border-default);
-  --tw-prose-td-borders: var(--border-muted);
+  --tw-prose-pre-bg: var(--background-surface-200);
+  --tw-prose-th-borders: var(--border-alternative);
+  --tw-prose-td-borders: var(--border-default);
 }
 
 .prose a {
@@ -395,13 +401,19 @@ button,
 }
 
 .prose code:not(pre code) {
-  background: var(--background-surface-75);
-  border: 1px solid var(--border-muted);
+  background: hsl(152.92deg 53.41% 13.09%);
+  border: 1px solid hsl(152.92deg 53.41% 18%);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
-  font-size: 0.75rem; /* 12px — matches Supabase text-code-inline */
-  font-weight: 500;
+  font-size: 0.9em;
+  font-weight: 400;
   font-family: var(--font-mono), monospace;
+}
+
+/* Hide backtick characters added by Tailwind Typography on inline code */
+.prose code::before,
+.prose code::after {
+  content: none !important;
 }
 
 .prose pre {
@@ -411,7 +423,7 @@ button,
 }
 
 .prose table {
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .prose th {
@@ -420,7 +432,7 @@ button,
 }
 
 .prose td {
-  color: var(--foreground-lighter);
+  color: var(--foreground-light);
 }
 
 .prose blockquote {
@@ -475,12 +487,13 @@ button,
    ============================================================ */
 .shiki-block pre,
 pre.shiki {
-  background: var(--background-surface-75) !important;
+  background: var(--background-surface-200) !important;
   margin: 0;
   padding: 1.25rem 1.5rem;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
   font-family: var(--font-mono), 'Source Code Pro', ui-monospace, monospace;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.75;
   border-radius: 0;
 }
@@ -498,14 +511,15 @@ pre.shiki code {
 
 /* MDX prose pre: when shiki is not present, use the same surface styling */
 .prose pre:not(.shiki) {
-  background: var(--background-surface-75) !important;
+  background: var(--background-surface-200) !important;
   border: 1px solid var(--border-muted);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   font-family: var(--font-mono), 'Source Code Pro', ui-monospace, monospace;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.75;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* For MDX prose, shiki pre gets a border from prose — reset it */

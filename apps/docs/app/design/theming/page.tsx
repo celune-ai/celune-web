@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Theming — Design System',
+  title: 'Theming - Design System',
   description:
     'How the Smejkal Design System token architecture enables dark-first theming with a two-layer CSS custom property system.',
 };
@@ -25,7 +25,7 @@ export default async function ThemingPage() {
       <p>
         The admin app and this docs site both apply <code>class="dark"</code> to the{' '}
         <code>{'<html>'}</code> element in their root layouts. This is not a user preference toggle
-        — it is the intended aesthetic. The dark selector activates all semantic token overrides
+ - it is the intended aesthetic. The dark selector activates all semantic token overrides
         immediately on page load with no flash of light content.
       </p>
 
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </p>
 
       <CodeBlock
-        code={`/* Layer 1 — primitive scales in :root */
+        code={`/* Layer 1 - primitive scales in :root */
 :root {
   --colors-gray-dark-100: hsl(0deg 0% 8.6%);
   --colors-gray-dark-200: hsl(0deg 0% 11%);
@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </p>
 
       <CodeBlock
-        code={`/* Layer 2 — semantic tokens, light mode (in :root) */
+        code={`/* Layer 2 - semantic tokens, light mode (in :root) */
 :root, .light {
   --background-default:        hsl(0deg 0% 98.8%);
   --background-surface-75:     hsl(0deg 0% 100%);
@@ -92,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   --border-default:            hsl(0deg 0% 87.5%);
 }
 
-/* Layer 2 — dark mode overrides */
+/* Layer 2 - dark mode overrides */
 .dark {
   --background-default:        hsl(0deg 0% 7.1%);
   --background-surface-75:     hsl(0deg 0% 9%);
@@ -115,7 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </p>
 
       <CodeBlock
-        code={`/* The bridge — in globals.css */
+        code={`/* The bridge - in globals.css */
 @theme inline {
   /* bg-background, text-background, border-background */
   --color-background: var(--background-default);
@@ -145,7 +145,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <p>
         Each app can override or extend the shared token set by adding its own declarations to{' '}
         <code>globals.css</code>. This is how the docs app uses a different font from the admin app
-        — both reference <code>--font-sans</code>, but each app points that variable at a different
+ - both reference <code>--font-sans</code>, but each app points that variable at a different
         font family.
       </p>
 

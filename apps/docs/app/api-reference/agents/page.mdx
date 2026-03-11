@@ -10,21 +10,21 @@ Every agent in Celune is backed by a config record stored in the `agent_configs`
 
 | Field            | Type                     | Description                                                         |
 | ---------------- | ------------------------ | ------------------------------------------------------------------- |
-| `id`             | `string (uuid)`          | Unique record ID                                                    |
-| `workspace_id`   | `string (uuid)`          | Workspace this agent belongs to                                     |
-| `agent_id`       | `string`                 | Unique agent identifier within the workspace (e.g., `rick`, `sage`) |
-| `display_name`   | `string`                 | Human-readable name shown in the UI                                 |
-| `role`           | `string \| null`         | Agent's role title (e.g., `Lead Engineer`)                          |
-| `description`    | `string \| null`         | What this agent does                                                |
-| `agent_type`     | `"ai" \| "human"`        | Whether this is an AI or human team member                          |
-| `model`          | `string \| null`         | Model ID (e.g., `claude-opus-4-6`)                                  |
-| `color`          | `string \| null`         | Hex color for the agent's avatar                                    |
-| `persona_prompt` | `string \| null`         | System prompt that defines the agent's personality                  |
-| `capabilities`   | `string[]`               | List of capability tags                                             |
-| `parameters`     | `Record<string, number>` | Personality sliders (e.g., `{ humor: 0.3, directness: 0.9 }`)       |
-| `is_active`      | `boolean`                | Whether the agent is currently active                               |
-| `created_at`     | `string (ISO 8601)`      | Creation timestamp                                                  |
-| `updated_at`     | `string (ISO 8601)`      | Last update timestamp                                               |
+| id             | string (uuid)          | Unique record ID                                                    |
+| workspace_id   | string (uuid)          | Workspace this agent belongs to                                     |
+| agent_id       | string                 | Unique agent identifier within the workspace (e.g., rick, sage)     |
+| display_name   | string                 | Human-readable name shown in the UI                                 |
+| role           | string \| null         | Agent's role title (e.g., Lead Engineer)                            |
+| description    | string \| null         | What this agent does                                                |
+| agent_type     | "ai" \| "human"        | Whether this is an AI or human team member                          |
+| model          | string \| null         | Model ID (e.g., claude-opus-4-6)                                    |
+| color          | string \| null         | Hex color for the agent's avatar                                    |
+| persona_prompt | string \| null         | System prompt that defines the agent's personality                  |
+| capabilities   | string[]               | List of capability tags                                             |
+| parameters     | Record\<string, number\> | Personality sliders (e.g., humor: 0.3, directness: 0.9)           |
+| is_active      | boolean                | Whether the agent is currently active                               |
+| created_at     | string (ISO 8601)      | Creation timestamp                                                  |
+| updated_at     | string (ISO 8601)      | Last update timestamp                                               |
 
 ---
 
@@ -42,7 +42,7 @@ GET /api/agents/configs?workspace_id=<uuid>
 
 | Parameter      | Type            | Required | Description                      |
 | -------------- | --------------- | -------- | -------------------------------- |
-| `workspace_id` | `string (uuid)` | Yes      | The workspace to list agents for |
+| workspace_id | string (uuid) | Yes      | The workspace to list agents for |
 
 ### Example Request
 
@@ -86,10 +86,10 @@ curl https://app.celune.ai/api/agents/configs \
 
 | Code  | Meaning                                  |
 | ----- | ---------------------------------------- |
-| `200` | Success — returns array of agent configs |
-| `400` | `workspace_id` is missing                |
-| `401` | Missing or invalid credentials           |
-| `403` | Insufficient permissions                 |
+| 200 | Success - returns array of agent configs |
+| 400 | workspace_id is missing                  |
+| 401 | Missing or invalid credentials           |
+| 403 | Insufficient permissions                 |
 
 ---
 
@@ -107,17 +107,17 @@ POST /api/agents/configs
 
 | Field            | Type                     | Required | Description                                                                        |
 | ---------------- | ------------------------ | -------- | ---------------------------------------------------------------------------------- |
-| `workspace_id`   | `string (uuid)`          | Yes      | Workspace to create the agent in                                                   |
-| `agent_id`       | `string`                 | Yes      | Unique identifier: lowercase letters, numbers, hyphens, underscores. Max 50 chars. |
-| `display_name`   | `string`                 | Yes      | Human-readable name. Max 100 chars.                                                |
-| `role`           | `string`                 | No       | Role title. Max 100 chars.                                                         |
-| `description`    | `string`                 | No       | Agent description. Max 2000 chars.                                                 |
-| `agent_type`     | `"ai" \| "human"`        | No       | Defaults to `"ai"`                                                                 |
-| `model`          | `string`                 | No       | Model identifier. Max 100 chars.                                                   |
-| `color`          | `string`                 | No       | Hex color code. Max 20 chars.                                                      |
-| `persona_prompt` | `string`                 | No       | System prompt. Max 5000 chars.                                                     |
-| `capabilities`   | `string[]`               | No       | Array of capability tags                                                           |
-| `parameters`     | `Record<string, number>` | No       | Personality parameters as key-value pairs                                          |
+| workspace_id   | string (uuid)          | Yes      | Workspace to create the agent in                                                   |
+| agent_id       | string                 | Yes      | Unique identifier: lowercase letters, numbers, hyphens, underscores. Max 50 chars. |
+| display_name   | string                 | Yes      | Human-readable name. Max 100 chars.                                                |
+| role           | string                 | No       | Role title. Max 100 chars.                                                         |
+| description    | string                 | No       | Agent description. Max 2000 chars.                                                 |
+| agent_type     | "ai" \| "human"        | No       | Defaults to "ai"                                                                   |
+| model          | string                 | No       | Model identifier. Max 100 chars.                                                   |
+| color          | string                 | No       | Hex color code. Max 20 chars.                                                      |
+| persona_prompt | string                 | No       | System prompt. Max 5000 chars.                                                     |
+| capabilities   | string[]               | No       | Array of capability tags                                                           |
+| parameters     | Record\<string, number\> | No       | Personality parameters as key-value pairs                                          |
 
 ### Example Request
 
@@ -171,18 +171,18 @@ curl -X POST https://app.celune.ai/api/agents/configs \
 
 | Code  | Meaning                                                       |
 | ----- | ------------------------------------------------------------- |
-| `201` | Agent created successfully                                    |
-| `400` | Validation error — see `error` field for details              |
-| `401` | Missing or invalid credentials                                |
-| `403` | Insufficient permissions                                      |
-| `409` | An agent with this `agent_id` already exists in the workspace |
-| `422` | Plan limit reached — upgrade to add more agents               |
+| 201 | Agent created successfully                                    |
+| 400 | Validation error - see error field for details                |
+| 401 | Missing or invalid credentials                                |
+| 403 | Insufficient permissions                                      |
+| 409 | An agent with this agent_id already exists in the workspace   |
+| 422 | Plan limit reached - upgrade to add more agents               |
 
 ---
 
 ## Update Agent
 
-Update an existing agent configuration. All fields are optional — only send what you want to change.
+Update an existing agent configuration. All fields are optional - only send what you want to change.
 
 ```
 PATCH /api/agents/configs?agent_id=<agent_id>
@@ -196,7 +196,7 @@ PATCH /api/agents/configs?agent_id=<agent_id>
 
 | Parameter  | Type     | Required | Description                   |
 | ---------- | -------- | -------- | ----------------------------- |
-| `agent_id` | `string` | Yes      | The agent's string identifier |
+| agent_id | string | Yes      | The agent's string identifier |
 
 ### Request Body
 
@@ -249,11 +249,11 @@ curl -X PATCH "https://app.celune.ai/api/agents/configs?agent_id=nova" \
 
 | Code  | Meaning                                            |
 | ----- | -------------------------------------------------- |
-| `200` | Agent updated successfully                         |
-| `400` | Missing `agent_id` query parameter or invalid body |
-| `401` | Missing or invalid credentials                     |
-| `403` | Insufficient permissions                           |
-| `404` | Agent not found                                    |
+| 200 | Agent updated successfully                       |
+| 400 | Missing agent_id query parameter or invalid body |
+| 401 | Missing or invalid credentials                   |
+| 403 | Insufficient permissions                         |
+| 404 | Agent not found                                  |
 
 ---
 
@@ -271,7 +271,7 @@ DELETE /api/agents/configs?agent_id=<agent_id>
 
 | Parameter  | Type     | Required | Description                   |
 | ---------- | -------- | -------- | ----------------------------- |
-| `agent_id` | `string` | Yes      | The agent's string identifier |
+| agent_id | string | Yes      | The agent's string identifier |
 
 ### Example Request
 
@@ -292,11 +292,11 @@ curl -X DELETE "https://app.celune.ai/api/agents/configs?agent_id=nova" \
 
 | Code  | Meaning                            |
 | ----- | ---------------------------------- |
-| `200` | Agent deleted successfully         |
-| `400` | Missing `agent_id` query parameter |
-| `401` | Missing or invalid credentials     |
-| `403` | Insufficient permissions           |
-| `404` | Agent not found                    |
+| 200 | Agent deleted successfully       |
+| 400 | Missing agent_id query parameter |
+| 401 | Missing or invalid credentials   |
+| 403 | Insufficient permissions         |
+| 404 | Agent not found                  |
 
 ---
 

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Writing — Design System',
+  title: 'Writing - Design System',
   description: 'Writing conventions for UI text across the Smejkal Design System.',
 };
 
@@ -99,7 +99,7 @@ export default async function WritingPage() {
 
       <p>
         Button labels are verbs that describe what the action does, not vague calls to action. Lead
-        with the verb. Keep labels short — one or two words is ideal.
+        with the verb. Keep labels short - one or two words is ideal.
       </p>
 
       <table>
@@ -134,7 +134,7 @@ export default async function WritingPage() {
       </table>
 
       <CodeBlock
-        code={`// Confirmation dialog — clear, specific actions
+        code={`// Confirmation dialog - clear, specific actions
 <Dialog>
   <DialogHeader>
     <DialogTitle>Delete task</DialogTitle>
@@ -186,12 +186,12 @@ export default async function WritingPage() {
       </table>
 
       <p>
-        Inline field errors appear below the input. They should be short — one sentence — and avoid
+        Inline field errors appear below the input. They should be short - one sentence - and avoid
         restating the field name if it is already visible.
       </p>
 
       <CodeBlock
-        code={`// Field error — direct and specific
+        code={`// Field error - direct and specific
 <div className="space-y-1.5">
   <label htmlFor="title" className="text-sm text-foreground">
     Title
@@ -258,7 +258,7 @@ export default async function WritingPage() {
               <code>blocked</code>
             </td>
             <td>Blocked</td>
-            <td>Cannot proceed — dependency or impediment</td>
+            <td>Cannot proceed - dependency or impediment</td>
           </tr>
           <tr>
             <td>

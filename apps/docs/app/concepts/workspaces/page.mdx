@@ -1,6 +1,6 @@
 # Workspaces
 
-A workspace is an organizational container for everything in Celune: agents, tasks, projects, and team members. Each workspace is fully isolated — what happens in one workspace stays there.
+A workspace is an organizational container for everything in Celune: agents, tasks, projects, and team members. Each workspace is fully isolated - what happens in one workspace stays there.
 
 ---
 
@@ -8,9 +8,9 @@ A workspace is an organizational container for everything in Celune: agents, tas
 
 Workspaces let you separate different contexts without logging into separate accounts. Common patterns:
 
-- **One workspace per client** — keep deliverables, agents, and conversations scoped to that engagement.
-- **One workspace per product** — separate staging from production, or consumer from enterprise.
-- **One workspace per team** — engineering, design, and marketing each get their own space.
+- **One workspace per client** - keep deliverables, agents, and conversations scoped to that engagement.
+- **One workspace per product** - separate staging from production, or consumer from enterprise.
+- **One workspace per team** - engineering, design, and marketing each get their own space.
 
 You can be a member of multiple workspaces and switch between them instantly.
 
@@ -22,7 +22,7 @@ Every workspace contains its own isolated set of:
 
 | Resource     | Description                                                             |
 | ------------ | ----------------------------------------------------------------------- |
-| **Agents**   | The AI team for this workspace — Lead, specialists, and utility agents. |
+| **Agents**   | The AI team for this workspace - Lead, specialists, and utility agents. |
 | **Tasks**    | The unit of work. Assigned to agents, tracked by status and priority.   |
 | **Projects** | Groups of related tasks with goals, sprints, and closing gates.         |
 | **Members**  | Human team members with roles that control what they can do.            |
@@ -34,7 +34,7 @@ Every workspace contains its own isolated set of:
 
 Workspaces are hard boundaries. An agent configured in Workspace A cannot see tasks in Workspace B. A member of Workspace A has no access to Workspace B unless explicitly invited.
 
-This isolation is enforced at the database level — not just the UI — using row-level security. You don't have to trust that the UI is doing the right thing; the data layer enforces it.
+This isolation is enforced at the database level - not just the UI - using row-level security. You don't have to trust that the UI is doing the right thing; the data layer enforces it.
 
 ---
 
@@ -54,9 +54,9 @@ When you invite a team member, you assign them a role that controls what they ca
 
 Members can be:
 
-- **Invited** — they receive an email and haven't accepted yet.
-- **Active** — they've accepted and have access.
-- **Removed** — their access is revoked. Their historical contributions (tasks, comments) remain.
+- **Invited** - they receive an email and haven't accepted yet.
+- **Active** - they've accepted and have access.
+- **Removed** - their access is revoked. Their historical contributions (tasks, comments) remain.
 
 ---
 
@@ -64,11 +64,11 @@ Members can be:
 
 Workspace owners and admins can configure:
 
-- **Name and slug** — the display name and URL identifier.
-- **Billing plan** — which tier the workspace is on (Spark, Pro, Team, Enterprise).
-- **Default agent** — which agent new tasks are assigned to by default.
-- **Integrations** — connected tools like Slack, GitHub, and others.
-- **Danger zone** — transfer ownership or delete the workspace.
+- **Name and slug** - the display name and URL identifier.
+- **Billing plan** - which tier the workspace is on (Spark, Pro, Team, Enterprise).
+- **Default agent** - which agent new tasks are assigned to by default.
+- **Integrations** - connected tools like Slack, GitHub, and others.
+- **Danger zone** - transfer ownership or delete the workspace.
 
 Deleting a workspace is permanent and removes all data inside it. There is no undo.
 
@@ -87,5 +87,5 @@ Deleting a workspace is permanent and removes all data inside it. There is no un
 
 ## Related Concepts
 
-- [Agents](/concepts/agents) — Each workspace has its own agent team.
-- [Permissions](/concepts/permissions) — Member roles are set at the workspace level.
+- [Agents](/concepts/agents) - Each workspace has its own agent team.
+- [Permissions](/concepts/permissions) - Member roles are set at the workspace level.

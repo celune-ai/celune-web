@@ -8,7 +8,7 @@ import { DocsLayout } from './docs-layout';
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
-  weight: ['400', '600'],
+  weight: ['300', '400', '600'],
   display: 'swap',
 });
 
@@ -20,12 +20,12 @@ const sourceCodePro = Source_Code_Pro({
 
 export const metadata: Metadata = {
   title: 'Celune Documentation',
-  description: 'Documentation for Celune — Agentic Engineering on Autopilot',
+  description: 'Documentation for Celune - Agentic Engineering on Autopilot',
   icons: { icon: '/favicon.png' },
   metadataBase: new URL('https://docs.celune.ai'),
   openGraph: {
     title: 'Celune Documentation',
-    description: 'Documentation for Celune — Agentic Engineering on Autopilot',
+    description: 'Documentation for Celune - Agentic Engineering on Autopilot',
     url: 'https://docs.celune.ai',
     siteName: 'Celune Docs',
     type: 'website',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Celune Documentation',
-    description: 'Documentation for Celune — Agentic Engineering on Autopilot',
+    description: 'Documentation for Celune - Agentic Engineering on Autopilot',
   },
 };
 

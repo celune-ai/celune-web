@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Charts — Design System',
+  title: 'Charts - Design System',
   description:
     'Chart component library for @repo/ui: composable wrappers around recharts with consistent dark-theme styling.',
 };
@@ -18,13 +18,13 @@ export default function ChartsPage() {
           recharts
         </a>{' '}
         that applies the design token vocabulary consistently. All chart components are dark-theme
-        compatible and use semantic CSS custom properties — never hardcoded colors.
+        compatible and use semantic CSS custom properties - never hardcoded colors.
       </p>
 
       <blockquote>
         <p>
           <strong>Peer dependency:</strong> Add <code>recharts &gt;=2.0.0</code> to the consuming
-          app&apos;s dependencies. <code>@repo/ui</code> lists it as a peer dependency only — it
+          app&apos;s dependencies. <code>@repo/ui</code> lists it as a peer dependency only - it
           does not bundle recharts.
         </p>
       </blockquote>
@@ -67,7 +67,7 @@ export default function ChartsPage() {
               <code>@repo/ui/components/bar-chart</code>
             </td>
             <td>
-              <code>BarChartCard</code> — recharts <code>BarChart</code> wrapper
+              <code>BarChartCard</code> - recharts <code>BarChart</code> wrapper
             </td>
           </tr>
           <tr>
@@ -78,7 +78,7 @@ export default function ChartsPage() {
               <code>@repo/ui/components/line-chart</code>
             </td>
             <td>
-              <code>LineChartCard</code> — recharts <code>LineChart</code> / <code>AreaChart</code>{' '}
+              <code>LineChartCard</code> - recharts <code>LineChart</code> / <code>AreaChart</code>{' '}
               wrapper
             </td>
           </tr>
@@ -90,7 +90,7 @@ export default function ChartsPage() {
               <code>@repo/ui/components/logs-bar-chart</code>
             </td>
             <td>
-              <code>LogsBarChart</code> — compact stacked status bars
+              <code>LogsBarChart</code> - compact stacked status bars
             </td>
           </tr>
         </tbody>
@@ -127,7 +127,7 @@ const config: ChartConfig = {
       <p>
         When using <code>theme</code> colors, the current theme class on the root element determines
         which value is used. Use CSS custom properties via <code>var(--brand-default)</code> for
-        colors that already adapt automatically through the token system — this is the preferred
+        colors that already adapt automatically through the token system - this is the preferred
         approach and avoids needing the <code>theme</code> key at all.
       </p>
 
@@ -227,7 +227,7 @@ const config: ChartConfig = {
             <td>
               <code>ReactNode</code>
             </td>
-            <td>Secondary line below the title — typically a summary stat or date range</td>
+            <td>Secondary line below the title - typically a summary stat or date range</td>
           </tr>
           <tr>
             <td>
@@ -422,7 +422,7 @@ const data = [
             <td>
               <code>DataPoint[]</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>recharts data array</td>
           </tr>
           <tr>
@@ -432,7 +432,7 @@ const data = [
             <td>
               <code>string | string[]</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>Key(s) to render as bars. Pass an array for grouped bars.</td>
           </tr>
           <tr>
@@ -442,7 +442,7 @@ const data = [
             <td>
               <code>ChartConfig</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>Label and color mapping for each data key</td>
           </tr>
           <tr>
@@ -479,7 +479,7 @@ const data = [
             <td>
               <code>string</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>
               Property on each data point to use as per-bar fill (overrides <code>config</code>{' '}
               color)
@@ -542,7 +542,7 @@ const data = [
             <td>
               <code>string</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>recharts syncId for linked tooltips across charts</td>
           </tr>
           <tr>
@@ -564,7 +564,7 @@ const data = [
             <td>
               <code>ReactNode</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>
               Forwarded to <code>ChartHeader</code> / <code>ChartFooter</code>; omitting them
               suppresses those sections entirely
@@ -646,7 +646,7 @@ const config: ChartConfig = {
             <td>
               <code>string | string[]</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>Key(s) to render as lines</td>
           </tr>
           <tr>
@@ -718,7 +718,7 @@ const config: ChartConfig = {
             <td>
               <code>string</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>recharts syncId for linked charts</td>
           </tr>
           <tr>
@@ -726,8 +726,8 @@ const config: ChartConfig = {
               <code>height</code>, <code>isLoading</code>, <code>title</code>, <code>metric</code>,{' '}
               <code>action</code>, <code>footer</code>
             </td>
-            <td>—</td>
-            <td>—</td>
+            <td>-</td>
+            <td>-</td>
             <td>
               Same as <code>BarChartCard</code>
             </td>
@@ -776,7 +776,7 @@ const config: ChartConfig = {
       </p>
 
       <p>
-        Unlike the other chart components, <code>LogsBarChart</code> is a standalone component — it
+        Unlike the other chart components, <code>LogsBarChart</code> is a standalone component - it
         does not use <code>ChartCard</code> internally. Embed it inside any container with the
         height you need.
       </p>
@@ -800,7 +800,7 @@ const data: LogsDataPoint[] = [
 // Inside a card header
 <Card>
   <CardHeader>
-    <CardTitle>API Health — Last 24h</CardTitle>
+    <CardTitle>API Health - Last 24h</CardTitle>
   </CardHeader>
   <CardContent className="px-4 pb-4 pt-0">
     <LogsBarChart data={data} />
@@ -825,7 +825,7 @@ const data: LogsDataPoint[] = [
             <td>
               <code>LogsDataPoint[]</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>
               Array of <code>{'{ timestamp, ok_count, error_count, warning_count }'}</code>
             </td>
@@ -873,7 +873,7 @@ const data: LogsDataPoint[] = [
 
       <p>
         Use the bare <code>Chart</code> provider (not <code>ChartCard</code>) when you need the
-        context and <code>ChartTooltip</code> without the Card wrapper — for example, embedding a
+        context and <code>ChartTooltip</code> without the Card wrapper - for example, embedding a
         chart inside an existing panel.
       </p>
 

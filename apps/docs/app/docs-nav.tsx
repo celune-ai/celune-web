@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { categories, getDocsByCategory, getDocHref } from '@/lib/docs';
 
 /* ----------------------------------------------------------------
    Nav item
@@ -28,7 +27,7 @@ function NavItem({
       className={`block truncate rounded-md px-2 py-1.5 text-sm transition-colors ${
         active
           ? 'bg-surface-200 text-foreground'
-          : 'text-foreground-lighter hover:bg-surface-100 hover:text-foreground'
+          : 'text-foreground-light hover:bg-surface-100 hover:text-foreground'
       }`}
     >
       {label}
@@ -38,7 +37,7 @@ function NavItem({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-foreground-muted px-2 pt-2 pb-1 text-[10px] font-medium tracking-[0.08em] uppercase">
+    <p className="text-foreground-light px-2 pt-2 pb-3 text-[12px] font-medium tracking-[0.08em] capitalize">
       {children}
     </p>
   );
@@ -119,7 +118,7 @@ function DesignSidebarContent({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-3">
-      {/* Introduction — always at top, no section header */}
+      {/* Introduction - always at top, no section header */}
       <ul className="space-y-px pb-1">
         <li>
           <NavItem
@@ -166,12 +165,16 @@ function DesignSidebarContent({ onClose }: { onClose?: () => void }) {
 }
 
 /* ----------------------------------------------------------------
-   Public docs nav sections (Sprint 2 pages — links may 404 for now)
+   Public docs nav sections
    ---------------------------------------------------------------- */
 const PUBLIC_NAV_SECTIONS = [
   {
     label: 'Getting Started',
-    items: [{ href: '/getting-started', label: 'Introduction' }],
+    items: [
+      { href: '/getting-started', label: 'Introduction' },
+      { href: '/faq', label: 'FAQ' },
+      { href: '/support', label: 'Contact Support' },
+    ],
   },
   {
     label: 'Concepts',
@@ -200,14 +203,10 @@ const PUBLIC_NAV_SECTIONS = [
   {
     label: 'API Reference',
     items: [
-      { href: '/api-reference/overview', label: 'Overview' },
+      { href: '/api-reference/overview', label: 'Quick Start' },
       { href: '/api-reference/authentication', label: 'Authentication' },
       { href: '/api-reference/agents', label: 'Agents' },
     ],
-  },
-  {
-    label: 'Support',
-    items: [{ href: '/faq', label: 'FAQ' }],
   },
 ];
 
@@ -219,7 +218,6 @@ function DocsSidebarContent({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-3">
-      {/* Public documentation sections */}
       {PUBLIC_NAV_SECTIONS.map((section, i) => (
         <div key={section.label}>
           {i > 0 && <div className="bg-border my-3 h-px" />}
@@ -233,39 +231,12 @@ function DocsSidebarContent({ onClose }: { onClose?: () => void }) {
           </ul>
         </div>
       ))}
-
-      {/* Public pages (existing — will be reorganized in branding task) */}
-      {(() => {
-        const publicDocs = getDocsByCategory('Public');
-        if (publicDocs.length === 0) return null;
-        return (
-          <>
-            <div className="bg-border my-3 h-px" />
-            <SectionLabel>Public</SectionLabel>
-            <ul className="space-y-px">
-              {publicDocs.map((doc) => {
-                const href = getDocHref(doc);
-                return (
-                  <li key={doc.slug}>
-                    <NavItem
-                      href={href}
-                      label={doc.title}
-                      active={pathname === href}
-                      onClick={onClose}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          </>
-        );
-      })()}
     </div>
   );
 }
 
 /* ----------------------------------------------------------------
-   DocsNav — desktop sticky sidebar + mobile drawer
+   DocsNav - renders inside sidebar (desktop) or as mobile drawer
    ---------------------------------------------------------------- */
 export default function DocsNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -298,10 +269,10 @@ export default function DocsNav() {
         <Menu size={18} />
       </button>
 
-      {/* Desktop sidebar */}
-      <aside className="border-border bg-surface-75 sticky top-[49px] hidden h-[calc(100vh-49px)] w-[269px] shrink-0 flex-col border-r lg:flex">
+      {/* Desktop: just render the nav content (sidebar shell is in DocsLayout) */}
+      <div className="hidden flex-1 overflow-y-auto lg:block">
         <SidebarContent />
-      </aside>
+      </div>
 
       {/* Mobile backdrop */}
       {mobileOpen && (

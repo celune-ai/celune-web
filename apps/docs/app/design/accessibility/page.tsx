@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Accessibility — Design System',
+  title: 'Accessibility - Design System',
   description:
     'Guidelines for building keyboard-navigable, screen-reader-friendly interfaces with the Smejkal Design System.',
 };
@@ -14,7 +14,7 @@ export default async function AccessibilityPage() {
       <h1>Accessibility</h1>
 
       <p className="lead">
-        Make the interface work for everyone. Accessibility is not an afterthought — it is built
+        Make the interface work for everyone. Accessibility is not an afterthought - it is built
         into the component primitives. Radix UI handles the structural requirements; your job is to
         wire up the right attributes and follow the patterns below consistently.
       </p>
@@ -24,7 +24,7 @@ export default async function AccessibilityPage() {
       <p>
         All interactive elements must be reachable and operable via keyboard. The browser&apos;s
         default tab order is generally correct when the DOM order matches the visual order. Avoid
-        setting <code>tabIndex</code> values greater than zero — they create unpredictable tab
+        setting <code>tabIndex</code> values greater than zero - they create unpredictable tab
         sequences.
       </p>
 
@@ -73,10 +73,10 @@ export default async function AccessibilityPage() {
       </p>
 
       <CodeBlock
-        code={`// Standard focus ring — applied to buttons, links, inputs
+        code={`// Standard focus ring - applied to buttons, links, inputs
 className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-1 focus-visible:ring-offset-background"
 
-// Inset focus — for elements where an outset ring would clip (table rows, list items)
+// Inset focus - for elements where an outset ring would clip (table rows, list items)
 className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/40"`}
         lang="tsx"
       />
@@ -237,7 +237,7 @@ className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-in
               <code>text-foreground-muted</code>
             </td>
             <td>Below AA</td>
-            <td>Decorative labels only — never the primary information carrier</td>
+            <td>Decorative labels only - never the primary information carrier</td>
           </tr>
         </tbody>
       </table>
@@ -266,7 +266,7 @@ className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-in
           Use <code>{'<main>'}</code> once per page for the primary content region.
         </li>
         <li>
-          Use <code>{'<h1>'}</code> through <code>{'<h6>'}</code> in logical order — do not skip
+          Use <code>{'<h1>'}</code> through <code>{'<h6>'}</code> in logical order - do not skip
           heading levels for styling purposes.
         </li>
         <li>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Icons — Design System',
+  title: 'Icons - Design System',
   description:
     'How to import, size, color, and make accessible the lucide-react icons used in the Smejkal Design System.',
 };
@@ -27,10 +27,10 @@ export default async function IconsPage() {
       </p>
 
       <CodeBlock
-        code={`// Correct — named imports
+        code={`// Correct - named imports
 import { Plus, ArrowLeft, RefreshCw, Brain } from "lucide-react";
 
-// Incorrect — do not do this
+// Incorrect - do not do this
 import * as Icons from "lucide-react";`}
         lang="tsx"
       />
@@ -101,19 +101,19 @@ import * as Icons from "lucide-react";`}
       </table>
 
       <CodeBlock
-        code={`// Button with icon — 14px inline icon
+        code={`// Button with icon - 14px inline icon
 <button className="flex items-center gap-1.5 text-sm">
   <Plus size={14} aria-hidden="true" />
   New task
 </button>
 
-// Nav item with icon — 16px
+// Nav item with icon - 16px
 <a href="/tasks" className="flex items-center gap-2 text-sm">
   <ClipboardList size={16} aria-hidden="true" />
   Tasks
 </a>
 
-// Empty state — larger icon
+// Empty state - larger icon
 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-200">
   <Brain size={18} className="text-foreground-muted" aria-hidden="true" />
 </div>`}
@@ -129,12 +129,12 @@ import * as Icons from "lucide-react";`}
       </p>
 
       <CodeBlock
-        code={`// Inheriting color from parent — preferred
+        code={`// Inheriting color from parent - preferred
 <span className="text-foreground-muted">
   <Search size={16} aria-hidden="true" />
 </span>
 
-// Passing class directly — also acceptable
+// Passing class directly - also acceptable
 <AlertCircle size={16} className="text-destructive" aria-hidden="true" />
 
 // Using brand color for emphasis
@@ -190,7 +190,7 @@ import * as Icons from "lucide-react";`}
       </table>
 
       <CodeBlock
-        code={`// Icon-only action button — label on button, hidden icon
+        code={`// Icon-only action button - label on button, hidden icon
 <button
   aria-label="Refresh data"
   onClick={refresh}
@@ -199,7 +199,7 @@ import * as Icons from "lucide-react";`}
   <RefreshCw size={14} aria-hidden="true" />
 </button>
 
-// Icon alongside text — icon is decorative
+// Icon alongside text - icon is decorative
 <button className="flex items-center gap-1.5">
   <ArrowLeft size={14} aria-hidden="true" />
   Back
