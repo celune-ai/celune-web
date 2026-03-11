@@ -79,16 +79,16 @@ Errors follow a consistent shape:
 
 | Status | Meaning                                                    |
 | ------ | ---------------------------------------------------------- |
-| `200`  | Success                                                    |
-| `201`  | Created                                                    |
-| `400`  | Bad request — missing or invalid parameters                |
-| `401`  | Unauthorized — missing or invalid credentials              |
-| `403`  | Forbidden — valid credentials but insufficient permissions |
-| `404`  | Not found                                                  |
-| `409`  | Conflict — resource already exists                         |
-| `422`  | Unprocessable — validation failed                          |
-| `429`  | Rate limit exceeded                                        |
-| `500`  | Internal server error                                      |
+| 200  | Success                                                    |
+| 201  | Created                                                    |
+| 400  | Bad request - missing or invalid parameters                |
+| 401  | Unauthorized - missing or invalid credentials              |
+| 403  | Forbidden - valid credentials but insufficient permissions |
+| 404  | Not found                                                  |
+| 409  | Conflict - resource already exists                         |
+| 422  | Unprocessable - validation failed                          |
+| 429  | Rate limit exceeded                                        |
+| 500  | Internal server error                                      |
 
 ---
 
@@ -120,7 +120,7 @@ You can configure a custom rate limit per key when creating it via the dashboard
 
 List endpoints do not currently use cursor-based pagination. All results for a given workspace are returned in a single response, ordered by `created_at` ascending unless otherwise noted.
 
-Future endpoints may add `limit` and `offset` query parameters. The response shape will remain consistent — arrays of objects.
+Future endpoints may add `limit` and `offset` query parameters. The response shape will remain consistent - arrays of objects.
 
 ---
 

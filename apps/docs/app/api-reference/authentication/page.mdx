@@ -6,7 +6,7 @@ How to authenticate with the Celune API using API keys or JWT tokens.
 
 ## API Keys
 
-API keys are the primary authentication method for programmatic access — including MCP connections, CI/CD pipelines, and third-party integrations.
+API keys are the primary authentication method for programmatic access - including MCP connections, CI/CD pipelines, and third-party integrations.
 
 ### Creating an API Key
 
@@ -18,7 +18,7 @@ API keys are the primary authentication method for programmatic access — inclu
 6. Optionally set an expiration date and a custom rate limit.
 7. Click **Create Key**.
 
-> The plaintext API key is shown **once** at creation time. Copy it immediately — it cannot be retrieved again. Only a hashed version is stored.
+> The plaintext API key is shown **once** at creation time. Copy it immediately - it cannot be retrieved again. Only a hashed version is stored.
 
 ---
 
@@ -37,8 +37,8 @@ The key prefix indicates the environment:
 
 | Prefix       | Environment |
 | ------------ | ----------- |
-| `clne_live_` | Production  |
-| `clne_test_` | Development |
+| clne_live_ | Production  |
+| clne_test_ | Development |
 
 ---
 
@@ -48,9 +48,9 @@ API keys are issued with a scope that controls what they can access.
 
 | Scope   | Permissions                                                                   |
 | ------- | ----------------------------------------------------------------------------- |
-| `read`  | Read tasks, projects, agents, analytics                                       |
-| `write` | Read + create/update tasks, projects, and agents                              |
-| `admin` | Full access including webhooks, API keys, audit logs, and agent configuration |
+| read  | Read tasks, projects, agents, analytics                                       |
+| write | Read + create/update tasks, projects, and agents                              |
+| admin | Full access including webhooks, API keys, audit logs, and agent configuration |
 
 Scopes map to granular permission keys internally. An `admin`-scoped key grants:
 
@@ -130,4 +130,4 @@ For server-side requests, use `supabase.auth.getUser()` which validates the toke
 - Use environment variables to store keys in your applications.
 - Prefer scoped keys with the minimum permissions required for your use case.
 - Set expiration dates on keys used in automated pipelines.
-- The service-role Supabase key is **never** exposed through the public API — all requests are validated against workspace membership and role permissions.
+- The service-role Supabase key is **never** exposed through the public API - all requests are validated against workspace membership and role permissions.

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Introduction — Design System',
+  title: 'Introduction - Design System',
   description:
     'An overview of the Smejkal Design System: the stack, principles, and package structure.',
 };
@@ -112,8 +112,8 @@ export default function IntroductionPage() {
       <h3>Composable</h3>
       <p>
         Atom components live in <code>@repo/ui/src/components/</code> and are imported through the
-        workspace path alias <code>@repo/ui/components/[name]</code>. Page-level patterns — data
-        tables, confirmation dialogs, action bars — are composed from atoms inside each app rather
+        workspace path alias <code>@repo/ui/components/[name]</code>. Page-level patterns - data
+        tables, confirmation dialogs, action bars - are composed from atoms inside each app rather
         than being baked into the shared package.
       </p>
 
@@ -157,7 +157,7 @@ export default function IntroductionPage() {
       </table>
 
       <p>
-        Each app — <code>apps/web</code>, <code>apps/admin</code>, and <code>apps/docs</code> —
+        Each app - <code>apps/web</code>, <code>apps/admin</code>, and <code>apps/docs</code>  - 
         installs the workspace packages and adds its own
         <code>globals.css</code> with app-specific <code>@theme inline</code>
         overrides where needed.

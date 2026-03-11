@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllPosts, formatDate } from '@/lib/blog';
 
 export const metadata: Metadata = {
-  title: 'Blog — Smejkal Design',
+  title: 'Blog - Smejkal Design',
   description: 'Articles, tutorials, and thought leadership from the Smejkal Design studio.',
 };
 

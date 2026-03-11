@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
-  title: 'Typography — Design System',
+  title: 'Typography - Design System',
   description: 'Font families, type scale, and prose rendering for the Smejkal Design System.',
 };
 
@@ -184,10 +184,10 @@ const sourceCodePro = Source_Code_Pro({
         weight via Tailwind utilities directly rather than relying on the prose plugin.
       </p>
 
-      <h1>Heading 1 — page title</h1>
-      <h2>Heading 2 — section</h2>
-      <h3>Heading 3 — sub-section</h3>
-      <h4>Heading 4 — detail</h4>
+      <h1>Heading 1 - page title</h1>
+      <h2>Heading 2 - section</h2>
+      <h3>Heading 3 - sub-section</h3>
+      <h4>Heading 4 - detail</h4>
 
       <h2>Prose rendering</h2>
 

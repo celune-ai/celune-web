@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "sync-vault": "node scripts/sync-vault.mjs",
-    "dev": "node scripts/sync-vault.mjs && next dev --port 3004",
-    "build": "node scripts/sync-vault.mjs && next build",
+    "lint-docs": "node scripts/lint-docs.mjs",
+    "lint-docs:fix": "node scripts/lint-docs.mjs --fix",
+    "dev": "node scripts/sync-vault.mjs && node scripts/lint-docs.mjs && next dev --port 3004 --webpack",
+    "build": "node scripts/sync-vault.mjs && node scripts/lint-docs.mjs && next build --webpack",
     "start": "next start --port 3004",
     "lint": "eslint",
     "type-check": "tsc --noEmit"
@@ -25,6 +27,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.9.3",
     "shiki": "^3.23.0"
   },
   "devDependencies": {

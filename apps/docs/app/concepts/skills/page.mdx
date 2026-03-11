@@ -1,0 +1,183 @@
+# Skills
+
+Skills are slash commands that extend what your Agent Lead can do inside Claude Code. They give your agents the ability to create tasks, store memories, run builds, manage projects, and automate workflows  - all from the terminal.
+
+Skills are the primary way you interact with Celune. Type a slash command, and your Agent Lead handles the rest.
+
+---
+
+## How Skills Work
+
+When you connect Celune to Claude Code via MCP, your Agent Lead gains access to a set of skills. Each skill is a slash command that triggers a structured workflow  - your agent reads the command, gathers context, and executes the appropriate action.
+
+Skills are contextual. Your Agent Lead decides when to invoke certain skills automatically based on what you say, but you can always call them directly.
+
+```
+/create-task Build the onboarding flow for new workspaces
+```
+
+Some skills are **platform skills**  - they talk to the Celune API to manage tasks, projects, and memory. Others are **agent skills**  - local workflows that run entirely in Claude Code, like building features, running security audits, or managing git branches.
+
+---
+
+## Categories
+
+### Process
+
+Skills for managing work: creating tasks, tracking projects, planning sprints, and running builds.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /create-task | Create a new task in your workspace | All plans |
+| /list-tasks | List tasks by status, assignee, or project | All plans |
+| /update-task | Update task status, priority, or description | All plans |
+| /complete-task | Mark a task as complete with an outcome | All plans |
+| /list-projects | View all projects and their current status | All plans |
+| /get-project | Get details for a specific project | All plans |
+| /project | Deep-research a topic, create a project, and populate it with sequenced tasks | Pro+ |
+| /project-research | Create a research project with Q&A intake and final deliverable | Pro+ |
+| /project-plan | Create a plan project with full lifecycle (PRD, tasks, review, retro) | Pro+ |
+| /task | Create a single structured inbox task from research or analysis | Pro+ |
+| /build | Execute a project or task end-to-end with full build lifecycle | All plans |
+| /todays-project | Generate a prioritized daily task list from your active projects | All plans |
+
+
+### Memory
+
+Skills for storing and retrieving knowledge. Your Agent Lead uses memory to stay consistent across sessions  - remembering decisions, preferences, and context.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /remember | Store a memory entry for your Agent Lead | All plans |
+| /recall | Retrieve relevant memories by semantic search | All plans |
+| /quick-flush | Mid-session memory save  - fast context snapshot without cleanup | All plans |
+| /closing-time | End-of-session ritual with context save, memory flush, and handoff notes | All plans |
+
+
+### Automation
+
+Skills that run autonomously  - overnight builds, housekeeping, monitoring, and backlog grooming. Set them up and walk away.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /afk-building | Autonomous overnight feature builder. Picks up planned tasks and executes them | Pro+ |
+| /afk-housekeeping | Autonomous housekeeping runner. Works through low-effort planned tasks | Pro+ |
+| /afk-nightwatch | Overnight research and monitoring mode. Watches for issues and reports back | Pro+ |
+| /afk-planning | Autonomous backlog grooming and task prioritization | Pro+ |
+
+
+### System
+
+Skills for managing your development environment: git operations, deployments, workspace configuration, and agent settings.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /refresh | Re-sync active workspace context from the admin app | All plans |
+| /get-agent-config | Read configuration for a specific agent | All plans |
+| /lean | Activate lean context mode for minimal vault load and rapid responses | All plans |
+| /git-branch | Create or switch git branches with workspace naming conventions | Pro+ |
+| /git-push | Push commits to remote branch with optional PR creation | Pro+ |
+| /git-deploy | Deploy to Vercel via git push with verification | Pro+ |
+| /personality | Switch your Agent Lead's active personality profile | Pro+ |
+
+
+### Security
+
+Skills for auditing code quality, identifying vulnerabilities, and maintaining security posture.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /security-audit | Deep security audit of the codebase with automatic task creation for findings | Pro+ |
+| /auto-approve | Toggle auto-approve mode for PR self-review on non-main branches | Pro+ |
+
+
+### Research
+
+Skills for gathering external context  - web research, competitive analysis, video transcripts, and Slack history.
+
+| Skill | What it does | Tier |
+| --- | --- | --- |
+| /research | Deep market research producing a structured document. Scales from quick scan to overnight deep dive | Pro+ |
+| /youtube-transcript | Fetch YouTube video transcripts for processing and insight extraction | Pro+ |
+| /slack | Pull context from Slack threads before responding | Pro+ |
+
+---
+
+## Day 1 Skills
+
+When you create a new Celune workspace, your Agent Lead comes pre-configured with the skills that matter most on day one. No setup required  - connect via MCP and start using them immediately.
+
+**Included on all plans:**
+
+- /create-task, /list-tasks, /update-task, /complete-task  - full task lifecycle
+- /list-projects, /get-project  - project visibility
+- /remember, /recall, /quick-flush, /closing-time  - memory and session management
+- /get-agent-config  - agent inspection
+- /refresh  - workspace sync
+- /lean  - lightweight mode
+- /build  - full build lifecycle execution
+- /todays-project  - daily task prioritization
+
+**Unlocked on Pro:**
+
+- /project, /project-research, /project-plan  - structured project creation with PRDs
+- /task  - intelligent single-task creation
+- /git-branch, /git-push, /git-deploy  - git workflow and deployment
+- /personality  - agent personality switching
+- /research, /youtube-transcript, /slack  - external context gathering
+- /auto-approve, /security-audit  - PR automation and security review
+- /afk-building, /afk-housekeeping, /afk-nightwatch, /afk-planning  - autonomous overnight and background execution
+
+---
+
+## Tier Availability
+
+| Category | Spark (Free) | Pro | Team | Enterprise |
+| --- | --- | --- | --- | --- |
+| Process (basic) | 8 skills | 8 skills | 8 skills | 8 skills |
+| Process (advanced) | - | 4 skills | 4 skills | 4 skills |
+| Memory | 4 skills | 4 skills | 4 skills | 4 skills |
+| System (basic) | 3 skills | 3 skills | 3 skills | 3 skills |
+| System (advanced) | - | 4 skills | 4 skills | 4 skills |
+| Automation | - | 4 skills | 4 skills | 4 skills |
+| Security | - | 2 skills | 2 skills | 2 skills |
+| Research | - | 3 skills | 3 skills | 3 skills |
+| **Total** | **15** | **32** | **32** | **32** |
+
+> Enterprise customers can request custom skills built for their workflows. Contact [hello@celune.ai](mailto:hello@celune.ai) for details.
+
+---
+
+## Permissions
+
+Skills respect your workspace role. Not every team member can use every skill.
+
+| Role | Access |
+| --- | --- |
+| Viewer | /recall, /list-tasks, /list-projects, /get-project, /get-agent-config |
+| Member | All Viewer skills + /create-task, /update-task, /complete-task, /remember |
+| Admin | All Member skills + /personality, /auto-approve, /security-audit |
+| Owner | All skills |
+
+---
+
+## Building Custom Skills
+
+Custom skills are available on Enterprise plans. A custom skill is a slash command backed by your own logic  - it can call internal APIs, run proprietary workflows, or integrate with tools Celune does not natively support.
+
+To request a custom skill, contact [hello@celune.ai](mailto:hello@celune.ai) with:
+
+1. The slash command name you want (e.g., /deploy-staging)
+2. What the skill should do
+3. Any APIs or services it needs to connect to
+
+We work with your team to build, test, and deploy the skill to your workspace.
+
+---
+
+## Related Pages
+
+- [MCP Setup](/guides/mcp-setup)  - Connect Celune to Claude Code and activate skills.
+- [Memory](/concepts/memory)  - How the /remember and /recall skills work under the hood.
+- [Agents](/concepts/agents)  - Agent roles, types, and how skills are assigned.
+- [Billing & Plans](/guides/billing)  - Plan tiers and what is included at each level.

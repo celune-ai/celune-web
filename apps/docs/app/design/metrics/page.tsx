@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Metric Cards — Design System',
+  title: 'Metric Cards - Design System',
   description:
     'MetricCard compound component: value display, differential indicators, sparklines, and loading states.',
 };
@@ -92,7 +92,7 @@ export default function MetricsPage() {
 
       <h3 id="metric-card-header">MetricCardHeader</h3>
       <p>
-        A flex row above the value content. Accepts an optional <code>href</code> — when provided,
+        A flex row above the value content. Accepts an optional <code>href</code> - when provided,
         the header renders as an anchor tag, making the entire header area a clickable link (useful
         for metrics that navigate to a detail view).
       </p>
@@ -124,7 +124,7 @@ export default function MetricsPage() {
       <h3 id="metric-card-label">MetricCardLabel</h3>
       <p>
         The metric name. Renders in <code>text-foreground-lighter text-xs font-medium</code>.
-        Accepts an optional <code>tooltip</code> prop — when provided the label renders with a
+        Accepts an optional <code>tooltip</code> prop - when provided the label renders with a
         dashed underline and a Radix <code>Tooltip</code> on hover.
       </p>
 
@@ -166,7 +166,7 @@ export default function MetricsPage() {
       <h3 id="metric-card-content">MetricCardContent</h3>
       <p>
         A flex row that holds the value and differential side by side, aligned to the baseline. No
-        additional props — pass children directly.
+        additional props - pass children directly.
       </p>
 
       <h3 id="metric-card-value">MetricCardValue</h3>
@@ -270,7 +270,7 @@ export default function MetricsPage() {
             <td>
               <code>Array&lt;Record&lt;string, string | number&gt;&gt;</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>The data array passed to the recharts chart</td>
           </tr>
           <tr>
@@ -280,7 +280,7 @@ export default function MetricsPage() {
             <td>
               <code>string</code>
             </td>
-            <td>—</td>
+            <td>-</td>
             <td>Key of the numeric field to plot</td>
           </tr>
           <tr>
@@ -332,19 +332,19 @@ export default function MetricsPage() {
 
       <p>
         Set <code>isLoading</code> on the root <code>MetricCard</code>. All child display components
-        automatically render appropriately sized skeletons — no conditional rendering needed in the
+        automatically render appropriately sized skeletons - no conditional rendering needed in the
         consumer.
       </p>
 
       <pre>
-        <code>{`// Loading state — all inner components show skeletons automatically
+        <code>{`// Loading state - all inner components show skeletons automatically
 <MetricCard isLoading>
   <MetricCardHeader>
     <MetricCardLabel>Tasks completed</MetricCardLabel>
   </MetricCardHeader>
   <MetricCardContent>
-    <MetricCardValue>—</MetricCardValue>
-    <MetricCardDifferential variant="default">—</MetricCardDifferential>
+    <MetricCardValue>-</MetricCardValue>
+    <MetricCardDifferential variant="default">-</MetricCardDifferential>
   </MetricCardContent>
   <MetricCardSparkline data={[]} dataKey="count" />
 </MetricCard>`}</code>

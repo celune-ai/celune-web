@@ -1,6 +1,6 @@
 # MCP Setup
 
-Connect Claude Code to your Celune workspace via the Model Context Protocol — in about 5 minutes.
+Connect Claude Code to your Celune workspace via the Model Context Protocol - in about 5 minutes.
 
 ---
 
@@ -8,9 +8,9 @@ Connect Claude Code to your Celune workspace via the Model Context Protocol — 
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants like Claude connect to external tools and services. Instead of Claude operating in isolation, MCP gives it live access to the data and actions your platform exposes.
 
-Celune's MCP server gives Claude Code direct access to your workspace: tasks, projects, memory, and agent configuration. When you open Claude Code in your project, your Agent Lead is right there with you — aware of what's in flight, able to create tasks, and able to recall past context.
+Celune's MCP server gives Claude Code direct access to your workspace: tasks, projects, memory, and agent configuration. When you open Claude Code in your project, your Agent Lead is right there with you - aware of what's in flight, able to create tasks, and able to recall past context.
 
-> MCP connections run locally on your machine. Your Celune API key authenticates each request — no data is stored by the MCP server itself.
+> MCP connections run locally on your machine. Your Celune API key authenticates each request - no data is stored by the MCP server itself.
 
 ---
 
@@ -18,7 +18,7 @@ Celune's MCP server gives Claude Code direct access to your workspace: tasks, pr
 
 Before you begin, make sure you have:
 
-1. **Claude Code** installed — [claude.ai/download](https://claude.ai/download)
+1. **Claude Code** installed - [claude.ai/download](https://claude.ai/download)
 2. A **Celune account** with at least one workspace created
 3. **Node.js 18+** installed (required to run the MCP server via `npx`)
 
@@ -30,8 +30,8 @@ Your API key authenticates the MCP server with your Celune workspace.
 
 1. Go to the Celune dashboard and open **Settings → API Keys**.
 2. Click **Create API Key**.
-3. Give it a name like `Claude Code — Local` so you can identify it later.
-4. Copy the key immediately — it will not be shown again.
+3. Give it a name like `Claude Code - Local` so you can identify it later.
+4. Copy the key immediately - it will not be shown again.
 
 > Store your API key somewhere safe. If you lose it, you can revoke the old one and create a new one from the same settings page.
 
@@ -62,7 +62,7 @@ Create or edit `.mcp.json` in your project root:
 }
 ```
 
-Replace `<your-api-key>` and `<your-workspace-id>` with your actual values. Commit this file to your repo so teammates can use the same config — they will need their own API keys.
+Replace `<your-api-key>` and `<your-workspace-id>` with your actual values. Commit this file to your repo so teammates can use the same config - they will need their own API keys.
 
 ### Option B: Global Claude Code settings
 
@@ -99,27 +99,27 @@ A successful response looks like:
 }
 ```
 
-If the server connects successfully, your Agent Lead's tools will appear in Claude Code's tool list.
+If the server connects successfully, your Agent Lead's skills will be available as slash commands in Claude Code.
 
 ---
 
-## Available Tools
+## Available Skills
 
-Once connected, Claude Code gains access to the following Celune tools:
+Once connected, Claude Code gains access to the following Celune skills:
 
-| Tool                      | Category | What it does                                  |
-| ------------------------- | -------- | --------------------------------------------- |
-| `celune_create_task`      | Tasks    | Create a new task in your workspace           |
-| `celune_list_tasks`       | Tasks    | List tasks by status, assignee, or project    |
-| `celune_update_task`      | Tasks    | Update task status, priority, or description  |
-| `celune_complete_task`    | Tasks    | Mark a task as complete with an outcome       |
-| `celune_list_projects`    | Projects | View all projects and their current status    |
-| `celune_get_project`      | Projects | Get details for a specific project            |
-| `celune_remember`         | Memory   | Store a memory for your Agent Lead            |
-| `celune_recall`           | Memory   | Retrieve relevant memories by semantic search |
-| `celune_get_agent_config` | Agents   | Read configuration for a specific agent       |
+| Skill               | Category | What it does                                  |
+| ------------------- | -------- | --------------------------------------------- |
+| /create-task        | Tasks    | Create a new task in your workspace           |
+| /list-tasks         | Tasks    | List tasks by status, assignee, or project    |
+| /update-task        | Tasks    | Update task status, priority, or description  |
+| /complete-task      | Tasks    | Mark a task as complete with an outcome       |
+| /list-projects      | Projects | View all projects and their current status    |
+| /get-project        | Projects | Get details for a specific project            |
+| /remember           | Memory   | Store a memory for your Agent Lead            |
+| /recall             | Memory   | Retrieve relevant memories by semantic search |
+| /get-agent-config   | Agents   | Read configuration for a specific agent       |
 
-> The tools your Agent Lead can call are governed by your workspace role. Members and above can manage tasks. Only owners and admins can modify agent configuration.
+> The skills your Agent Lead can use are governed by your workspace role. Members and above can manage tasks. Only owners and admins can modify agent configuration.
 
 ---
 
@@ -137,25 +137,25 @@ CELUNE_API_KEY=<your-key> CELUNE_WORKSPACE_ID=<your-id> npx -y @celune/mcp-serve
 
 ### "Invalid API key" or 401 errors
 
-- Double-check you copied the full key — they are long and easy to truncate
+- Double-check you copied the full key - they are long and easy to truncate
 - Verify the key is still active in **Settings → API Keys**
 - Make sure you are using the key for the correct workspace
 
 ### "Workspace not found" or 404 errors
 
 - Confirm the `CELUNE_WORKSPACE_ID` matches exactly what is shown in **Settings → General**
-- Workspace IDs are UUID format — they do not use your workspace handle/slug
+- Workspace IDs are UUID format - they do not use your workspace handle/slug
 
-### Tools appear but calls fail silently
+### Skills appear but calls fail silently
 
 - Check that your plan includes MCP access (Pro and above)
-- Review the MCP server logs — Claude Code surfaces these in the Output panel under **MCP**
+- Review the MCP server logs - Claude Code surfaces these in the Output panel under **MCP**
 - Try revoking and recreating your API key
 
 ---
 
 ## Next Steps
 
-- **[Getting Started](/getting-started)** — Full onboarding walkthrough if you have not set up your workspace yet
-- **[Concepts: Agents](/concepts/agents)** — Understand agent roles, permissions, and how task routing works
-- **[API Reference](/api/overview)** — Direct REST API access for custom integrations
+- **[Getting Started](/getting-started)** - Full onboarding walkthrough if you have not set up your workspace yet
+- **[Concepts: Agents](/concepts/agents)** - Understand agent roles, permissions, and how task routing works
+- **[API Reference](/api/overview)** - Direct REST API access for custom integrations

@@ -31,12 +31,18 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Turbopack's MDX loader requires serializable options — function references
-// (remark/rehype plugins) cannot be passed. remark-gfm for tables and
-// rehypeShiki for syntax highlighting are both blocked by this limitation.
-// Tables are converted to HTML in sync-vault.mjs at sync time instead.
+// remark-gfm enables GFM tables, strikethrough, etc. in MDX.
+// Because remark plugins are non-serializable functions, this requires
+// the --webpack flag (Turbopack cannot handle them). The flag is set
+// in package.json dev/build scripts.
 // Syntax highlighting uses the <CodeBlock> server component with codeToHtml().
-const withMDX = createMDX({});
+import remarkGfm from 'remark-gfm';
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm],
+  },
+});
 
 // Only wrap with Sentry if auth token is available (prevents build failures on Vercel)
 const mdxConfig = withMDX(nextConfig);
