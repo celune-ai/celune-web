@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Source_Code_Pro } from 'next/font/google';
+import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
@@ -16,6 +17,20 @@ const sourceCodePro = Source_Code_Pro({
   variable: '--font-source-code-pro',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
+});
+
+const soehneLeicht = localFont({
+  src: '../public/fonts/soehne-leicht.woff2',
+  variable: '--font-soehne-leicht',
+  display: 'swap',
+  weight: '300',
+});
+
+const soehneKraftig = localFont({
+  src: '../public/fonts/soehne-kraftig.woff2',
+  variable: '--font-soehne-kraftig',
+  display: 'swap',
+  weight: '500',
 });
 
 export const metadata: Metadata = {
@@ -41,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${sourceCodePro.variable} bg-background font-sans antialiased`}
+        className={`${inter.variable} ${sourceCodePro.variable} ${soehneLeicht.variable} ${soehneKraftig.variable} bg-background font-sans antialiased`}
       >
         <DocsLayout>{children}</DocsLayout>
         <Analytics />

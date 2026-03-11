@@ -299,9 +299,11 @@
   --color-celune-400: #4ade80;
   --color-celune-500: #22c55e;
 
-  /* Typography — Inter 300 for UI, Source Code Pro for code */
+  /* Typography — Soehne display fonts, Inter fallback, Source Code Pro for code */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-source-code-pro);
+  --font-display: var(--font-soehne-leicht), var(--font-inter);
+  --font-display-bold: var(--font-soehne-kraftig), var(--font-inter);
 
   /* Radius */
   --radius-sm: var(--radius-sm);

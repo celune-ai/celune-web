@@ -63,7 +63,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-md px-3 py-1.5 text-[13px] transition-colors ${
+                className={`rounded-md px-3 py-1.5 text-[14px] transition-colors ${
                   isActive(link.href)
                     ? 'text-foreground'
                     : 'text-foreground-lighter hover:text-foreground'
@@ -77,14 +77,23 @@ export function DocsLayout({ children }: { children: ReactNode }) {
           {/* Right: action buttons */}
           <div className="flex items-center gap-2 pr-[18px]">
             <a
+              href="/support"
+              className="rounded-md px-4 py-1.5 text-[13px] text-foreground-light transition-colors hover:text-foreground"
+              style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+            >
+              Support
+            </a>
+            <a
               href={`${URL_APP}/login`}
-              className="rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-[13px] font-medium text-white transition-all hover:bg-white/[0.08]"
+              className="rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-[13px] text-white transition-all hover:bg-white/[0.08]"
+              style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
             >
               Log in
             </a>
             <a
               href={`${URL_APP}/signup`}
-              className="ml-2 rounded-md bg-celune-500 px-4 py-1.5 text-[13px] font-semibold text-black transition-colors hover:bg-celune-400"
+              className="ml-2 rounded-md bg-celune-500 px-4 py-1.5 text-[13px] text-black transition-colors hover:bg-celune-400"
+              style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
             >
               Get Started
             </a>
@@ -106,27 +115,27 @@ export function DocsLayout({ children }: { children: ReactNode }) {
           {/* Footer */}
           <footer className="border-border border-t">
             <div className="mx-auto flex max-w-[64rem] flex-col items-center gap-4 px-6 py-8 sm:flex-row sm:justify-between sm:px-10">
-              <p className="text-foreground-muted text-xs font-light">&copy; 2026 Celune</p>
+              <p className="text-foreground-light text-xs font-light">&copy; 2026 Celune</p>
               <nav className="flex items-center gap-6">
                 <a
                   href="https://celune.ai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground-lighter hover:text-foreground text-xs transition-colors"
+                  className="text-foreground-light hover:text-foreground text-xs transition-colors"
                 >
-                  Website
+                  Celune.ai
                 </a>
                 <a
                   href="https://app.celune.ai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground-lighter hover:text-foreground text-xs transition-colors"
+                  className="text-foreground-light hover:text-foreground text-xs transition-colors"
                 >
                   App
                 </a>
                 <a
-                  href="mailto:hello@celune.ai"
-                  className="text-foreground-lighter hover:text-foreground text-xs transition-colors"
+                  href="/support"
+                  className="text-foreground-light hover:text-foreground text-xs transition-colors"
                 >
                   Support
                 </a>

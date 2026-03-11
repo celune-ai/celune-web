@@ -27,6 +27,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.9.3",
     "shiki": "^3.23.0"
   },
   "devDependencies": {

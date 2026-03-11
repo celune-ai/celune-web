@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { Metadata } from 'next';
 
 const TOPICS = [
   'Account & billing',
@@ -14,15 +13,6 @@ const TOPICS = [
   'Feature request',
 ] as const;
 
-function generateTicketNumber() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let id = '';
-  for (let i = 0; i < 6; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `CEL-${id}`;
-}
-
 export default function SupportPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,18 +21,41 @@ export default function SupportPage() {
   const [submitted, setSubmitted] = useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
   const [copied, setCopied] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const canSubmit = name.trim() && email.trim() && topic && message.trim();
+  const canSubmit = name.trim() && email.trim() && topic && message.trim() && !submitting;
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       if (!canSubmit) return;
-      const ticket = generateTicketNumber();
-      setTicketNumber(ticket);
-      setSubmitted(true);
+      setSubmitting(true);
+      setError('');
+
+      try {
+        const res = await fetch('/api/support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, topic, message }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || 'Something went wrong. Please try again.');
+          return;
+        }
+
+        setTicketNumber(data.ticketNumber);
+        setSubmitted(true);
+      } catch {
+        setError('Failed to submit. Please try again.');
+      } finally {
+        setSubmitting(false);
+      }
     },
-    [canSubmit],
+    [canSubmit, name, email, topic, message],
   );
 
   const handleCopy = useCallback(() => {
@@ -166,12 +179,16 @@ export default function SupportPage() {
           />
         </div>
 
+        {error && (
+          <p className="text-red-400 text-sm">{error}</p>
+        )}
+
         <button
           type="submit"
           disabled={!canSubmit}
           className="bg-brand hover:bg-brand/80 border-brand-600 hover:border-brand-600/80 disabled:bg-surface-200 disabled:border-border disabled:text-foreground-muted w-full rounded-md border px-4 py-2.5 text-sm font-semibold text-black transition-colors disabled:cursor-not-allowed"
         >
-          Submit Request
+          {submitting ? 'Submitting...' : 'Submit Request'}
         </button>
       </form>
     </div>
