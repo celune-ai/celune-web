@@ -2,41 +2,42 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Components - Design System',
-  description: 'All atom components in the @repo/ui shared library with usage guidance.',
+  description:
+    'Browse all UI components in the Celune design system with usage guidance, live previews, and API documentation.',
 };
 
 const FORM_COMPONENTS = [
-  { href: '/design/components/button', name: 'Button', description: 'Primary action component with semantic variants' },
-  { href: '/design/components/input', name: 'Input', description: 'Text input with brand focus ring' },
-  { href: '/design/components/textarea', name: 'Textarea', description: 'Multi-line text input' },
-  { href: '/design/components/select', name: 'Select', description: 'Radix Select dropdown' },
-  { href: '/design/components/checkbox', name: 'Checkbox', description: 'Radix Checkbox with brand checked state' },
-  { href: '/design/components/switch', name: 'Switch', description: 'Toggle switch for binary options' },
-  { href: '/design/components/radio-group', name: 'Radio Group', description: 'Single-choice selection group' },
-  { href: '/design/components/label', name: 'Label', description: 'Accessible form field label' },
+  { href: '/design/components/button', name: 'Button', description: 'Triggers actions with semantic intent variants' },
+  { href: '/design/components/input', name: 'Input', description: 'Captures single-line text with brand focus ring' },
+  { href: '/design/components/textarea', name: 'Textarea', description: 'Captures multi-line text input' },
+  { href: '/design/components/select', name: 'Select', description: 'Presents a list of options in a dropdown' },
+  { href: '/design/components/checkbox', name: 'Checkbox', description: 'Toggles a boolean value on or off' },
+  { href: '/design/components/switch', name: 'Switch', description: 'Toggles a setting between two states' },
+  { href: '/design/components/radio-group', name: 'Radio Group', description: 'Selects one option from a set' },
+  { href: '/design/components/label', name: 'Label', description: 'Associates accessible text with a form control' },
 ];
 
 const DISPLAY_COMPONENTS = [
-  { href: '/design/components/badge', name: 'Badge', description: 'Status indicators and classification tags' },
-  { href: '/design/components/card', name: 'Card', description: 'Surface container with header, content, footer' },
-  { href: '/design/components/alert', name: 'Alert', description: 'Callout boxes with semantic variants' },
-  { href: '/design/components/avatar', name: 'Avatar', description: 'User avatar with fallback initials' },
-  { href: '/design/components/skeleton', name: 'Skeleton', description: 'Animated loading placeholder' },
-  { href: '/design/components/progress', name: 'Progress', description: 'Progress bar with brand fill' },
-  { href: '/design/components/table', name: 'Table', description: 'Styled table primitives for data display' },
+  { href: '/design/components/badge', name: 'Badge', description: 'Displays status, counts, or classification tags' },
+  { href: '/design/components/card', name: 'Card', description: 'Groups related content in a surface container' },
+  { href: '/design/components/alert', name: 'Alert', description: 'Communicates contextual feedback to the user' },
+  { href: '/design/components/avatar', name: 'Avatar', description: 'Represents a user with an image or initials' },
+  { href: '/design/components/skeleton', name: 'Skeleton', description: 'Indicates loading state with animated placeholders' },
+  { href: '/design/components/progress', name: 'Progress', description: 'Shows completion percentage of a task' },
+  { href: '/design/components/table', name: 'Table', description: 'Organizes data in rows and columns' },
 ];
 
 const OVERLAY_COMPONENTS = [
-  { href: '/design/components/dialog', name: 'Dialog', description: 'Modal dialog with surface background' },
-  { href: '/design/components/popover', name: 'Popover', description: 'Floating content panel' },
-  { href: '/design/components/tooltip', name: 'Tooltip', description: 'Dark tooltip on hover' },
+  { href: '/design/components/dialog', name: 'Dialog', description: 'Interrupts with a modal requiring user action' },
+  { href: '/design/components/popover', name: 'Popover', description: 'Floats supplementary content near a trigger' },
+  { href: '/design/components/tooltip', name: 'Tooltip', description: 'Shows brief context on hover or focus' },
 ];
 
 const NAVIGATION_COMPONENTS = [
-  { href: '/design/components/tabs', name: 'Tabs', description: 'Pill-style tab navigation' },
-  { href: '/design/components/accordion', name: 'Accordion', description: 'Collapsible content sections' },
-  { href: '/design/components/scroll-area', name: 'Scroll Area', description: 'Custom scrollbar styling' },
-  { href: '/design/components/toggle', name: 'Toggle', description: 'Binary on/off toggle button' },
+  { href: '/design/components/tabs', name: 'Tabs', description: 'Switches between content panels' },
+  { href: '/design/components/accordion', name: 'Accordion', description: 'Expands and collapses content sections' },
+  { href: '/design/components/scroll-area', name: 'Scroll Area', description: 'Provides custom-styled scrollbars' },
+  { href: '/design/components/toggle', name: 'Toggle', description: 'Presses on or off for a single option' },
 ];
 
 function ComponentGrid({ items }: { items: { href: string; name: string; description: string }[] }) {
@@ -62,59 +63,60 @@ export default function ComponentsPage() {
       <h1>Components</h1>
 
       <p className="lead">
-        All components live in <code>packages/ui/src/components/</code> and are consumed via the
-        workspace alias <code>@repo/ui/components/[name]</code>. Each follows the CVA + Radix UI +
-        Tailwind pattern and accepts a <code>className</code> prop for overrides.
+        A library of production-ready UI components built with CVA, Radix UI, and Tailwind CSS v4.
+        Import any component via <code>@repo/ui/components/[name]</code>. Every component accepts
+        a <code>className</code> prop for one-off overrides.
       </p>
 
       <blockquote>
         <p>
-          The component library uses Tailwind CSS v4. Class names reference design tokens via{' '}
-          <code>@theme inline</code>. All color classes like <code>bg-brand</code>,{' '}
-          <code>text-foreground-muted</code>, and <code>border-border-control</code> resolve to the
-          token values defined in <code>@repo/ui/theme.css</code>.
+          All color classes like <code>bg-brand</code>, <code>text-foreground-muted</code>, and{' '}
+          <code>border-border-control</code> resolve to design tokens defined in{' '}
+          <code>@repo/ui/theme.css</code> via Tailwind v4&apos;s <code>@theme inline</code> directive.
         </p>
       </blockquote>
 
-      <h2>Form</h2>
+      <h2>Form controls</h2>
+      <p>Components for capturing user input in forms, settings panels, and onboarding flows.</p>
       <ComponentGrid items={FORM_COMPONENTS} />
 
-      <h2>Display</h2>
+      <h2>Data display</h2>
+      <p>Components for presenting content, status indicators, and loading states.</p>
       <ComponentGrid items={DISPLAY_COMPONENTS} />
 
       <h2>Overlays</h2>
+      <p>Components that float above the page to capture attention or provide context.</p>
       <ComponentGrid items={OVERLAY_COMPONENTS} />
 
       <h2>Navigation</h2>
+      <p>Components for organizing and navigating between content sections.</p>
       <ComponentGrid items={NAVIGATION_COMPONENTS} />
 
-      <h2>Fragment patterns</h2>
+      <h2>Composition patterns</h2>
 
       <p>
-        Fragment components are higher-order patterns composed from atoms. They are built in each
-        app rather than shared via <code>@repo/ui</code> since they are layout-specific. Common
-        patterns:
+        These higher-order patterns are composed from the atom components above. They live in each
+        app rather than in <code>@repo/ui</code> because they are layout-specific.
       </p>
 
       <ul>
-        <li><strong>Page header</strong> - Breadcrumb + h1 + description + action button(s)</li>
-        <li><strong>Form item layout</strong> - Label + Input/Select + description + error message</li>
-        <li><strong>Confirmation modal</strong> - Dialog + destructive Button + cancel</li>
-        <li><strong>Data table</strong> - Table + sort headers + pagination</li>
-        <li><strong>Metric card</strong> - Card + large value + label + trend indicator</li>
-        <li><strong>Empty state</strong> - Icon + heading + description + CTA Button</li>
+        <li><strong>Page header</strong> — Breadcrumb + heading + description + action buttons</li>
+        <li><strong>Form item</strong> — Label + Input/Select + helper text + error message</li>
+        <li><strong>Confirmation modal</strong> — Dialog + destructive Button + cancel</li>
+        <li><strong>Data table</strong> — Table + sortable headers + pagination controls</li>
+        <li><strong>Metric card</strong> — Card + large value + label + trend indicator</li>
+        <li><strong>Empty state</strong> — Icon + heading + description + CTA Button</li>
       </ul>
 
-      <h2>Chart components</h2>
+      <h2>Charts</h2>
 
       <p>
-        The chart library lives in <code>@repo/ui</code> alongside the atom components. It wraps
-        recharts with consistent token-based styling and composable slot components.
+        Chart components wrap Recharts with consistent token-based styling and composable slots.
       </p>
 
       <ul>
-        <li><a href="/design/charts"><strong>Charts</strong></a> - <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>, <code>LogsBarChart</code>, <code>ChartTooltip</code></li>
-        <li><a href="/design/metrics"><strong>Metric Cards</strong></a> - <code>MetricCard</code>, <code>MetricCardValue</code>, <code>MetricCardDifferential</code>, <code>MetricCardSparkline</code></li>
+        <li><a href="/design/charts"><strong>Charts</strong></a> — <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>, <code>LogsBarChart</code>, <code>ChartTooltip</code></li>
+        <li><a href="/design/metrics"><strong>Metric cards</strong></a> — <code>MetricCard</code>, <code>MetricCardValue</code>, <code>MetricCardDifferential</code>, <code>MetricCardSparkline</code></li>
       </ul>
     </>
   );
