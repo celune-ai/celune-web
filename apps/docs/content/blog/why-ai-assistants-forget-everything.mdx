@@ -1,0 +1,99 @@
+# Why Your AI Coding Assistant Forgets Everything (And Why It Matters More Than You Think)
+
+*By Eric Smejkal*
+
+---
+
+For the third time this week, I explained to my AI assistant that we use Supabase, not Prisma.
+
+Not because I forgot. Because it forgot. Again.
+
+The session had ended. The context window had closed. And somewhere in the computational ether, every piece of institutional knowledge I had shared — our schema conventions, the edge function pattern we use for auth, the fact that we tried and abandoned a particular approach to row-level security six weeks ago — simply ceased to exist.
+
+This is the quiet tax that every developer building with AI tools pays, every single day. It doesn't show up in benchmarks. It doesn't make headlines. But if you've spent serious time working with AI coding assistants, you know exactly what I mean. The AI context window is, by design, a goldfish bowl. Everything that mattered yesterday is gone today.
+
+---
+
+## The Frustration Nobody Talks About Loudly Enough
+
+There's a reason AI memory — or more precisely, the lack of it — consistently ranks as the top frustration among developers who use AI tools daily. In surveys of AI tool users, context loss and memory amnesia come in as the number one pain point, above hallucinations, above slow responses, above cost.
+
+That surprised me when I first saw it. Hallucinations are embarrassing. Slowness is annoying. But amnesia? Amnesia is quietly devastating.
+
+Here's why it stings more than it should: the problem doesn't announce itself. You don't get an error message that says "I have forgotten your entire codebase architecture." Instead, you get subtly wrong suggestions. You get recommendations for patterns you explicitly moved away from three months ago. You get a confident assistant who is, in the most polite way possible, completely lost.
+
+And so you explain. Again. And again. The architectural decisions, the preferred libraries, the things you tried that didn't work, the reasons behind every non-obvious choice. You become the memory that your assistant doesn't have. Which is fine when you have an hour to spare. Which is almost never.
+
+---
+
+## Intelligence Is Overrated. Context Is Everything.
+
+Here is something I've come to believe deeply after building software with AI agents for over a year: a less intelligent teammate who knows your codebase will outperform a genius who doesn't.
+
+This isn't a knock on capability. The frontier models are genuinely remarkable. When I hand Claude or GPT-4o a well-defined problem with sufficient context, the output is often better than what I would have produced myself. The raw reasoning ability is there.
+
+But raw reasoning ability is not what makes a collaborator valuable over time. What makes a collaborator valuable is accumulated context. The six-month engineer who has sat through your architecture reviews, watched your bugs get filed and closed, read your commit messages, absorbed your aesthetic preferences — that person is worth more to your team than a more talented hire who walked in yesterday.
+
+AI coding assistant limitations, as we currently experience them, are not primarily intelligence problems. They are memory problems. Persistent AI memory — the ability to carry context forward from session to session, project to project — would do more to increase the practical value of these tools than another jump in model capability.
+
+I'm convinced of this.
+
+---
+
+## What Actually Exists (And What's Missing)
+
+To be fair, the industry has noticed. GitHub Copilot added memory features in 2026. It now captures code context — your file structure, your recent edits, your most-used patterns. That's genuinely useful. It's a step.
+
+But code context and process context are not the same thing.
+
+Code context tells your AI what your codebase looks like right now. Process context tells it how you got here. What you tried. What failed. Why you made the call you made at 11pm on a Tuesday when you were staring at two imperfect options. The reasoning behind the architecture, not just the architecture itself.
+
+Cursor, as of 2026, has no persistent memory across sessions. Devin, the autonomous agent that made waves for its ability to complete complex software tasks, has no long-term memory either. You can build something remarkable with these tools. But every engagement starts from scratch. Every session, you're meeting for the first time.
+
+This is the gap. And it's a wide one.
+
+---
+
+## What Compound Learning Actually Looks Like
+
+Imagine a different model. One where your AI agent's understanding of you and your work compounds over time, the way a great employee's does.
+
+After one project together, the system knows you prefer explicit error handling over silent failures. After five projects, it knows your estimation accuracy — that when you say two days, you mean four, and it adjusts. After ten projects, it's seen your common mistakes: the authentication edge case you always miss on first pass, the tendency to over-engineer data models early. After twenty projects, it knows your communication style, your aesthetic preferences, the libraries you trust and the ones you've been burned by.
+
+At that point, you're not working with a tool. You're working with a collaborator who has genuine institutional knowledge of you and your work.
+
+At our studio, we built a retrospective loop where agent learnings persist across projects. After a few months, the difference was staggering — not in raw output quality, but in the speed at which we reached good output. The AI agent memory that accumulated over time meant fewer wrong turns, fewer conversations rehashing decisions already made, fewer moments of "no, that's not how we do it here."
+
+It sounds simple. It turns out to be transformative.
+
+---
+
+## The Moat Nobody Is Talking About
+
+There is a competitive implication here that the industry has mostly missed, or at least hasn't said clearly: persistent AI memory, compounded across projects, is one of the most defensible moats available to an AI product company right now.
+
+Consider the Salesforce parallel. Salesforce is not the best CRM on a feature-by-feature basis. It has never been the most elegant software. But Salesforce has something more valuable than elegance: years of your customer data, your pipeline history, your team's activity, your integrations. Switching costs that compound with every month of use. The longer you're in, the more painful it becomes to leave.
+
+AI agent memory creates the same dynamic. A system that has learned your architecture patterns, your common mistakes, your preferred libraries, your estimation tendencies — that system becomes more valuable to you with every project. And the gap between it and a fresh alternative grows with every project, too.
+
+This is why I believe the companies that invest seriously in persistent, compounding AI memory will build moats that are genuinely difficult to compete with. Not because the underlying model will be better. Because the accumulated context will be irreplaceable.
+
+The switching cost isn't the software. It's the memory.
+
+---
+
+## What Changes When It Actually Remembers
+
+I want to close with something personal, because this whole essay is ultimately personal.
+
+Building software alone — or with a very small team — requires you to be the institutional memory for everything. The decision log, the failure log, the "here's why we did it this way" document that exists nowhere but your own head. That's an enormous cognitive load. And it's one of the reasons small teams struggle to scale: the knowledge doesn't transfer, and eventually the person carrying it burns out or leaves.
+
+AI tools, in their current amnesiac form, don't solve this. They add capability without solving the memory problem. They're a faster horse that still forgets where the barn is each morning.
+
+But AI tools with persistent, compounding memory — tools that actually learn from your history and carry it forward — could change the fundamental economics of small-team software development. Not because they'd make developers obsolete, but because they'd make individual developers genuinely more leveraged. The institutional knowledge problem, the "what did we try and why did it fail" problem, the "explain our architecture for the hundredth time" problem — these go away.
+
+That's not a marginal improvement. That's a qualitative shift in what it means to build things with a small team.
+
+The AI coding assistants that figure this out — that move from session-scoped intelligence to relationship-scoped intelligence — will be the ones that actually change how software gets built.
+
+And I'm looking forward to the day I never have to explain Supabase again.

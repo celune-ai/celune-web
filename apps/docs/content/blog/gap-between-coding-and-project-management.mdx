@@ -1,0 +1,91 @@
+## The Daily Stack
+
+Open a typical developer's laptop in 2026 and count the tabs. Cursor for writing code. Linear or Jira for tracking what needs to be built. GitHub for pull requests and code review. Slack for the coordination that falls through the cracks between the other three. Maybe Notion for specs. Maybe Confluence for documentation nobody reads.
+
+That's four to six tools before lunch, and none of them know what the others are doing.
+
+I run a small product studio. We build software products using AI agents, and the most persistent friction in our workflow isn't writing code — it's the distance between the thing we decided to build and the system doing the building. Every feature starts as a thought, becomes a task in a project management tool, gets broken into subtasks, eventually lands in an editor, produces a pull request, and then requires someone to manually update the PM tool to reflect what actually happened. The loop closes by hand, every time.
+
+This isn't a personal productivity complaint. It's a structural market problem, and the numbers make it legible.
+
+---
+
+## Two Markets, Facing Away From Each Other
+
+The AI developer tools market — Cursor, GitHub Copilot, Windsurf, and their peers — is currently valued at **$7.37 billion** and growing at 26.6% annually toward a projected $23.97 billion by 2030. These tools are extraordinary at what they do: they write code, suggest completions, explain unfamiliar functions, catch bugs. They have fundamentally changed what it means to sit down and write software.
+
+On the other side of the workflow sits AI-powered project management: Linear's smart issue tracking, Notion AI's document summarization, the slowly-AI-ifying enterprise PM platforms. That market is valued at **$3.67 billion**, growing at 15.7% CAGR toward $13.29 billion by 2034. These tools are excellent at organizing intent — capturing what needs to be done, who's responsible, what the current status is.
+
+| Market | 2025 Size | Projected Size | CAGR |
+|---|---|---|---|
+| AI Code Tools | $7.37B | $23.97B (2030) | 26.6% |
+| AI Project Management | $3.67B | $13.29B (2034) | 15.7% |
+| AI Agent Orchestration | $7.84B | $52.62B (2034) | 46.3% |
+
+Both markets are growing. Both are well-funded. Both are producing genuinely useful software. And they are almost completely disconnected from each other.
+
+---
+
+## The Gap in the Middle
+
+Between "what to build" and "how to build it" sits a third market category that most people outside the AI infrastructure space haven't spent much time with: agent orchestration. Systems that coordinate AI agents, manage their context, direct their actions, and stitch together multi-step workflows.
+
+That market is currently valued at **$7.84 billion** and is projected to reach **$52.62 billion** by 2034 — a 46.3% compound annual growth rate. That is the fastest growth rate of any category in the AI software stack by a significant margin. The orchestration market is growing nearly twice as fast as AI coding tools and three times faster than AI project management.
+
+This isn't a coincidence. It's a signal.
+
+The market is betting that the real value isn't in better code completion or smarter kanban boards. It's in the layer that connects them — the layer that currently doesn't exist in any mature commercial form.
+
+---
+
+## Why This Gap Exists
+
+Coding tools and project management tools didn't fail to integrate because nobody thought of it. They grew in opposite directions from fundamentally different starting points, and their architectures reflect that origin.
+
+Cursor, Copilot, and Windsurf descended from text editors. Their DNA is the IDE — a workspace optimized for a single developer's attention on a single file or function. The editor is where individual focus happens. It's inherently local, inherently present-tense. The question it answers is: *what should this line of code say?*
+
+Linear and its predecessors descended from databases. A task is a record. A sprint is a filtered view. A roadmap is a relationship between records over time. Project management tools are optimized for organizational memory — capturing decisions, tracking state, surfacing what's late and what's next. The question they answer is: *what are we doing and where does it stand?*
+
+These are profoundly different cognitive modes. One is about execution at the character level. The other is about intention at the organizational level. The tools built to serve each mode are excellent precisely because they're narrow. But that narrowness means they don't talk to each other — not really, not in a way that preserves context.
+
+When a developer picks up a Linear ticket and opens Cursor, everything in that ticket — the acceptance criteria, the linked design file, the comment thread where a key decision was made three weeks ago — exists in a different system with no live connection to the coding environment. The developer reads the ticket, forms a mental model, and then carries that model in their head while they work. When something unexpected comes up mid-implementation, they switch back to Linear to update it, or they don't. Usually they don't.
+
+Research on context switching is unambiguous on the cost: it takes approximately 23 minutes for a knowledge worker to fully regain focus after an interruption. Developers aren't switching tools once per feature — they're switching multiple times per hour, every hour, across the entire software development lifecycle. The cognitive overhead compounds.
+
+---
+
+## What Unification Would Actually Look Like
+
+The missing thing isn't a Slack integration or a browser extension. Those exist. They move data between systems without unifying them.
+
+Genuine unification would mean a system where defining a task and executing it happen in the same context. Where the acceptance criteria written in plain language directly inform the agent doing the implementation. Where the pull request, when it merges, automatically resolves the task and updates the roadmap. Where a question that arises mid-implementation can be answered by the system itself, because the system holds both the organizational intent and the codebase state simultaneously.
+
+This isn't science fiction. It's an architectural choice. The reason it hasn't been built at scale is that it requires solving problems on both ends of the stack and in the middle simultaneously. You need code execution capability. You need project state modeling. And you need an orchestration layer that can move coherent context between them without losing anything in translation.
+
+The investor activity reflects this. Total AI venture capital in 2025 reached **$202.3 billion**, up 77% year-over-year. A meaningful portion of that is flowing into infrastructure plays — companies building the orchestration substrate, the agent frameworks, the context management systems that could eventually make this unification possible. The infrastructure is being laid even if the application layer hasn't arrived yet.
+
+---
+
+## The Bet the Market Is Making
+
+Cursor is valued at $29.3 billion with over $2 billion in ARR. That's a remarkable number for a coding tool, and it reflects genuine user love — Cursor is exceptional at its narrow purpose. But Cursor has no project management. It doesn't know what sprint you're in, what ticket you're working on, or what the product team decided last Thursday. It knows your codebase and your cursor position.
+
+Linear is the best project management tool built specifically for developers. Its design is coherent and its opinions are strong in the good way. But Linear can't write a line of code. It doesn't know what your repository looks like or whether the thing it's tracking has actually been built.
+
+Both companies have made conscious choices to stay in their lane. Those are defensible product decisions. But they leave the space between the lanes open.
+
+A handful of early-stage companies are beginning to occupy that space — building systems where task management and code execution aren't separate products connected by an integration, but a single workflow that spans both. Celune is one of several startups making this bet. So are others building on top of agent orchestration frameworks, trying to find the right abstraction for unified development workflows.
+
+None of them have fully solved it yet. The problem is genuinely hard. Organizational context and code context are different kinds of state, stored differently, changing at different rates, owned by different stakeholders. Unifying them without creating something bloated and incoherent is a design challenge as much as an engineering one.
+
+---
+
+## Reading the Growth Rates
+
+The three numbers that matter here aren't the market sizes — it's the growth rates: 26.6% for coding tools, 15.7% for project management, and 46.3% for agent orchestration.
+
+If you were going to read one signal from that table, it would be this: the fastest money isn't flowing to better code completion, and it isn't flowing to smarter task boards. It's flowing to the infrastructure that sits between them. The market has already placed its bet on where the value will ultimately accumulate.
+
+The software development lifecycle has always been fragmented — specification, design, implementation, review, deployment, monitoring, all in different tools, all requiring manual handoffs. AI made individual steps dramatically faster. The next movement will be about eliminating the handoffs themselves.
+
+That's the gap. It's $52 billion worth of gap, and it's mostly empty.

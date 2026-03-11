@@ -1,0 +1,91 @@
+## The Generalist Fallacy
+
+There's a seductive logic to the idea of one AI that does everything.
+
+It maps cleanly onto how we first imagined artificial intelligence would work: a single, omniscient mind that could absorb any problem and return a solution. No coordination overhead. No miscommunication between parts. Just capability, applied directly.
+
+When autonomous AI developers began arriving in 2023 and 2024, that's more or less the shape they took. A single agent — one context window, one model, one thread of reasoning — handed a software task and left to run. The pitch was compelling: describe your app, walk away, ship the result.
+
+The problem is that software development isn't a single cognitive task. It never has been.
+
+---
+
+## What the Evidence Actually Showed
+
+Devin, from Cognition AI, launched in early 2024 as the first autonomous AI software engineer. The announcement was striking. The demo was impressive. The independent testing was sobering.
+
+Researchers at Cognition's Devin ran through SWE-bench — a standard benchmark using real GitHub issues from open-source repositories. Independent evaluation put the success rate at roughly 15 percent. Three out of twenty tasks completed successfully.
+
+That's not a small model or a resource-constrained product. Devin launched at $500 per month. Within a year, the price had dropped to $20. Draw your own conclusions about what that pricing trajectory suggests about retention.
+
+To be clear: 15 percent is not nothing. For a genuinely novel category of software, early results like that can be meaningful signal. But the failure mode is worth understanding, because it isn't random. The tasks that failed weren't just harder versions of the tasks that succeeded. They were structurally different — multi-step, multi-concern problems requiring the agent to hold planning, implementation, and verification in mind simultaneously across a long execution horizon.
+
+That's a cognitive load problem. And it's one humans solved a long time ago, not by building smarter generalists, but by building teams.
+
+---
+
+## Why Specialization Works
+
+Consider what actually happens when a software team builds a product.
+
+A product manager translates business goals into requirements. A designer translates requirements into interfaces. An engineer translates interfaces into code. A QA engineer translates code back into questions: does this actually work? Does it work the way the user expects? These roles exist not because organizations are inefficient, but because they represent genuinely different cognitive modes.
+
+A designer thinking about visual hierarchy is not doing the same kind of thinking as an engineer tracing a bug through an async call stack. Asking one person to context-switch between those modes continuously — across an eight-hour day, across a two-week sprint — degrades output. The research on this is substantial. Cognitive load theory, developed by psychologist John Sweller in the 1980s, describes how working memory has real constraints, and how splitting attention across dissimilar problem types compounds errors rather than distributing them.
+
+This is why the modern software team looks like it does. Not because specialization is intellectually satisfying, but because it produces better software at higher velocity.
+
+Biology figured this out much earlier. Multicellular organisms didn't emerge because single cells failed to thrive. They emerged because differentiation — cells becoming highly specialized at particular functions — unlocked orders-of-magnitude more complex capability. A neuron and a red blood cell are made of the same base material. What they do is entirely different, and that difference is the point.
+
+The assumption that one AI agent could master the full scope of software engineering — requirements parsing, architectural reasoning, implementation, test generation, review, deployment — is the equivalent of assuming one cell type could build a nervous system.
+
+---
+
+## What Agent Teams Look Like in Practice
+
+The emerging architecture for serious AI software development involves multiple specialized agents operating in coordinated sequence, with defined handoffs between them.
+
+At our studio, we run a team of nine specialized agents with distinct roles — planning, design, implementation, review, and research — each operating within a defined scope rather than trying to reason across all of them at once.
+
+The pattern, broadly, looks like this:
+
+A **planning agent** receives the high-level goal and decomposes it into a specification: what needs to exist, what it needs to do, what constraints apply. This agent is optimized for requirements clarity and structured output. It does not write code.
+
+A **design agent** takes the specification and produces interface patterns, component structures, and visual logic. It is reasoning about user experience, not implementation. It does not write code.
+
+An **implementation agent** takes the specification and design artifacts and writes code against them. It is not trying to understand the business rationale or redesign the interface. It has a narrow, well-defined problem.
+
+A **review agent** reads the implementation and evaluates it — not just for correctness but for edge cases, accessibility, security considerations, and alignment with the original specification. It is adversarial by design. It is not trying to write better code itself; it is trying to find what's wrong with the existing code.
+
+The handoff protocols matter as much as the specializations. When a planning agent passes a specification to an implementation agent, that specification needs to be structured in a way the implementation agent can consume without re-interpreting the intent. The format of the handoff is part of the system design.
+
+This is, functionally, how well-run human teams work. The designer hands the engineer a spec with enough detail to build from, not a vision document they have to decode. The engineer hands QA a build with a test plan, not a hope that QA already knows what to look for.
+
+---
+
+## The Coordination Challenge
+
+None of this is frictionless.
+
+Coordinating multiple agents introduces a class of problems that single-agent systems don't have: context synchronization, conflict resolution when agents produce incompatible outputs, token cost that scales with the number of agents in the loop, and latency from sequential handoffs.
+
+There's also the question of what to do when an agent produces bad output. In a single-agent system, you either accept the result or restart. In a multi-agent system, you need to know which agent failed, why, and how to re-run only the relevant stage. That requires observability infrastructure that most teams haven't built yet.
+
+Orchestration is genuinely hard. It's tempting to treat it as a solved problem — set up a few agents, write some prompt templates, call it a pipeline — but robust multi-agent systems require the same engineering rigor as any distributed system. There are race conditions, there are failure modes, there are parts of the state that need to be durable and parts that can be ephemeral.
+
+The enterprises that Gartner projects will embed AI agents into 40 percent of enterprise applications by the end of 2026 are going to discover this. The 1,445 percent surge in multi-agent system inquiries between Q1 2024 and Q2 2025 represents organizations moving from curiosity to procurement — which means many of them are about to find out what production multi-agent systems actually require.
+
+The teams that will navigate this well are the ones who treat agent coordination as an engineering problem, not a prompt engineering problem. It requires the same disciplines as any other distributed systems work: clear interfaces, observable state, defined failure modes, and a plan for what to do when something goes wrong.
+
+---
+
+## Where This Is Heading
+
+The transition from single-agent to multi-agent AI in software development is following a trajectory that should feel familiar to anyone who has watched enterprise software adoption before. An early product appears, makes a strong claim, generates excitement, hits real-world constraints, and then the market recalibrates around what actually works.
+
+What actually works — in human teams, in biology, in manufacturing, in every domain where complex output is required from limited cognitive resources — is specialization combined with coordination.
+
+The AI agents being built now are, in a meaningful sense, the first generation of cognitive workers with genuinely programmable specialization. You can define exactly what a planning agent knows and cares about, exactly how it formats its output, exactly what it hands off and to what. The precision that human organizations try to achieve through training and culture, agent systems can encode directly.
+
+That's a significant capability. But it requires thinking about AI engineering the way you'd think about team design: not just what capability you need, but how that capability integrates with everything around it, what interfaces it exposes, and who it's accountable to.
+
+The super-agent was a compelling first chapter. The next chapter is about what happens when these systems actually have to ship.
