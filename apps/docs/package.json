@@ -7,7 +7,7 @@
     "lint-docs": "node scripts/lint-docs.mjs",
     "lint-docs:fix": "node scripts/lint-docs.mjs --fix",
     "dev": "node scripts/sync-vault.mjs && node scripts/lint-docs.mjs && next dev --port 3004 --webpack",
-    "build": "node scripts/sync-vault.mjs && node scripts/lint-docs.mjs && next build --webpack",
+    "build": "node scripts/sync-vault.mjs && node scripts/lint-docs.mjs && cp instrumentation.prod.ts instrumentation.ts && next build --webpack && rm instrumentation.ts",
     "start": "next start --port 3004",
     "lint": "eslint",
     "type-check": "tsc --noEmit"

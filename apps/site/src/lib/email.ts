@@ -2,6 +2,7 @@ import { Resend } from 'resend';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'Celune <hello@celune.ai>';
+const AGENTMAIL_INBOX = process.env.AGENTMAIL_INBOX;
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
@@ -33,6 +34,23 @@ export async function sendWaitlistWelcome(email: string): Promise<boolean> {
         </p>
       </div>
     `,
+  });
+
+  return true;
+}
+
+/**
+ * Forward waitlist signup to an agentmail inbox for agent processing.
+ * Degrades gracefully if AGENTMAIL_INBOX or RESEND_API_KEY is not set.
+ */
+export async function forwardToAgentmail(email: string, source: string): Promise<boolean> {
+  if (!resend || !AGENTMAIL_INBOX) return false;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: AGENTMAIL_INBOX,
+    subject: `New waitlist signup: ${email}`,
+    text: `New early access request:\n\nEmail: ${email}\nSource: ${source}\nTime: ${new Date().toISOString()}`,
   });
 
   return true;

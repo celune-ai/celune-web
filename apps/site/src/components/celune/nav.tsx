@@ -4,12 +4,10 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { posthog } from '@/lib/posthog';
 import { URL_DOCS, URL_APP } from '@/lib/branding';
 
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
-  { label: 'How It Works', href: '#how-it-works' },
   { label: 'Docs', href: URL_DOCS, external: true },
   { label: 'Support', href: '/contact' },
 ];
@@ -62,14 +60,7 @@ export function CeluneNav() {
             href={`${URL_APP}/login`}
             className="ml-4 rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-[13px] font-medium text-white transition-all hover:bg-white/[0.08]"
           >
-            Log in
-          </a>
-          <a
-            href={`${URL_APP}/signup`}
-            onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'Get Started' })}
-            className="ml-2 rounded-md bg-celune-500 px-4 py-1.5 text-[13px] font-semibold text-black transition-colors hover:bg-celune-400"
-          >
-            Get Started
+            Sign in
           </a>
         </div>
 
@@ -107,14 +98,7 @@ export function CeluneNav() {
               onClick={() => setMobileOpen(false)}
               className="mt-2 rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-2.5 text-center text-sm font-medium text-white"
             >
-              Log in
-            </a>
-            <a
-              href={`${URL_APP}/signup`}
-              onClick={() => { posthog.capture('cta_clicked', { location: 'nav_mobile', label: 'Get Started' }); setMobileOpen(false); }}
-              className="rounded-md bg-celune-500 px-4 py-2.5 text-center text-sm font-semibold text-black transition-colors hover:bg-celune-400"
-            >
-              Get Started
+              Sign in
             </a>
           </div>
         </div>

@@ -1,377 +1,351 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import {
-  motion,
-  useReducedMotion,
-  useMotionValue,
-  type MotionValue,
-} from 'framer-motion';
+import { useState } from 'react';
 import { cn } from '@/lib/cn';
 import { posthog } from '@/lib/posthog';
-import {
-  staggerContainer,
-  fadeUp,
-  reducedVariants,
-  duration,
-  ease,
-} from '@/lib/motion';
-import { URL_APP, URL_DOCS } from '@/lib/branding';
 
-const QUICK_START_STEPS = [
-  { label: 'Connect', command: 'celune connect --project "my-app"' },
-  { label: 'Plan', command: 'celune plan "Build user auth system"' },
-  { label: 'Ship', command: 'celune build --agents 3 --auto-review' },
-  { label: 'Review', command: 'celune status  # PRs ready to merge' },
-];
+// Quick-start install commands — hidden for now, will re-enable post-launch
+// const QUICK_START_STEPS = [
+//   { label: 'npx', command: 'npx celune init' },
+//   { label: 'curl', command: 'curl -fsSL celune.ai/install | sh' },
+//   { label: 'brew', command: 'brew install celune' },
+//   { label: 'pip', command: 'pip install celune' },
+// ];
 
-interface ConversationLine {
-  agent?: string;
-  color?: string;
-  text: string;
-  type: 'command' | 'status' | 'agent' | 'divider' | 'result';
-  delay: number;
+// ─── Hero data ──────────────────────────────────────────────────────────────
+
+const HOURS_SAVED_POINTS = [80, 120, 140, 115, 180, 210, 195, 260, 235, 290, 320, 380];
+
+type TaskStatus = 'Planned' | 'In Progress' | 'Review' | 'Done';
+type Priority = 'High' | 'Normal' | 'Low';
+type Agent = 'RICK' | 'SCAN' | 'SAGE' | 'NOIR' | 'Eric';
+
+interface HeroTask {
+  title: string;
+  project?: string;
+  status: TaskStatus;
+  priority: Priority;
+  agent: Agent;
 }
 
-const CONVERSATION: ConversationLine[] = [
-  { text: 'celune build --project "User Auth System"', type: 'command', delay: 0 },
-  { text: '', type: 'divider', delay: 800 },
+const STATUS_COLOR: Record<TaskStatus, string> = {
+  'Planned': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+  'In Progress': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  'Review': 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
+  'Done': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+};
+
+const PRIORITY_COLOR: Record<Priority, string> = {
+  'High': 'border-red-500/30 bg-red-500/10 text-red-400',
+  'Normal': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+  'Low': 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
+};
+
+const AGENT_COLOR: Record<Agent, string> = {
+  'RICK': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  'SCAN': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  'SAGE': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  'NOIR': 'border-pink-500/30 bg-pink-500/10 text-pink-400',
+  'Eric': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+};
+
+const TASK_GROUPS: { label: TaskStatus; count: number; tasks: HeroTask[] }[] = [
   {
-    agent: 'SAGE',
-    color: 'text-purple-400',
-    text: 'Drafting PRD — analyzing requirements, edge cases, security constraints...',
-    type: 'agent',
-    delay: 1200,
+    label: 'Planned',
+    count: 4,
+    tasks: [
+      { title: 'Add Stripe subscription billing flow', status: 'Planned', priority: 'High', agent: 'RICK' },
+      { title: 'Write onboarding email drip sequence', status: 'Planned', priority: 'Normal', agent: 'SAGE' },
+      { title: 'Design mobile-responsive dashboard', status: 'Planned', priority: 'Normal', agent: 'NOIR' },
+      { title: 'Build team invite and permissions system', status: 'Planned', priority: 'High', agent: 'RICK' },
+    ],
   },
   {
-    agent: 'SAGE',
-    color: 'text-purple-400',
-    text: 'PRD complete. 12 tasks created across 3 sprints.',
-    type: 'agent',
-    delay: 3000,
-  },
-  { text: '✓ Research phase complete — moving to implementation', type: 'status', delay: 4200 },
-  { text: '', type: 'divider', delay: 4800 },
-  {
-    agent: 'RICK',
-    color: 'text-celune-400',
-    text: 'Claiming Sprint 1: DB schema + auth middleware',
-    type: 'agent',
-    delay: 5200,
+    label: 'In Progress',
+    count: 2,
+    tasks: [
+      { title: 'Implement OAuth login with Google and GitHub', status: 'In Progress', priority: 'High', agent: 'RICK' },
+      { title: 'Set up CI/CD pipeline with staging deploys', status: 'In Progress', priority: 'High', agent: 'SCAN' },
+    ],
   },
   {
-    agent: 'NOIR',
-    color: 'text-pink-400',
-    text: 'Claiming Sprint 1: Login/signup UI components',
-    type: 'agent',
-    delay: 5800,
-  },
-  { text: '▸ 2 agents working in parallel on Sprint 1', type: 'status', delay: 6400 },
-  {
-    agent: 'RICK',
-    color: 'text-celune-400',
-    text: 'Schema migrations applied. Auth middleware passing 23 tests.',
-    type: 'agent',
-    delay: 8000,
+    label: 'Review',
+    count: 1,
+    tasks: [
+      { title: 'Landing page copy and SEO meta tags', status: 'Review', priority: 'Normal', agent: 'Eric' },
+    ],
   },
   {
-    agent: 'NOIR',
-    color: 'text-pink-400',
-    text: 'UI complete — login, signup, forgot password flows.',
-    type: 'agent',
-    delay: 9200,
+    label: 'Done',
+    count: 2,
+    tasks: [
+      { title: 'Security audit: user auth and API keys', status: 'Done', priority: 'High', agent: 'SCAN' },
+      { title: 'Brand kit — logo, colors, and typography', status: 'Done', priority: 'Normal', agent: 'NOIR' },
+    ],
   },
-  { text: '✓ Sprint 1 complete — starting code review', type: 'status', delay: 10000 },
-  { text: '', type: 'divider', delay: 10400 },
-  {
-    agent: 'SCAN',
-    color: 'text-blue-400',
-    text: 'Code review: 2 issues found — SQL injection risk, missing rate limit on /login',
-    type: 'agent',
-    delay: 11000,
-  },
-  {
-    agent: 'RICK',
-    color: 'text-celune-400',
-    text: 'Both fixed. Parameterized queries + rate limiter added.',
-    type: 'agent',
-    delay: 12400,
-  },
-  {
-    agent: 'SCAN',
-    color: 'text-blue-400',
-    text: 'Re-review passed. All clear.',
-    type: 'agent',
-    delay: 13600,
-  },
-  { text: '', type: 'divider', delay: 14000 },
-  { text: '✓ 12/12 tasks complete', type: 'result', delay: 14600 },
-  { text: '✓ Type check: PASS (0 errors)', type: 'result', delay: 15000 },
-  { text: '✓ Tests: 47/47 passing', type: 'result', delay: 15400 },
-  { text: '✓ Security audit: PASS', type: 'result', delay: 15800 },
-  { text: '✓ Branch afk/user-auth ready to merge', type: 'result', delay: 16200 },
 ];
 
-function AnimatedTerminal() {
-  const [visibleLines, setVisibleLines] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  // Respect reduced-motion preference for in-terminal animations
-  const shouldReduceMotion = useReducedMotion();
+// ─── Mini sparkline ─────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    let timers: NodeJS.Timeout[] = [];
-
-    function runCycle() {
-      setVisibleLines(0);
-      timers = [];
-      CONVERSATION.forEach((line, i) => {
-        timers.push(setTimeout(() => setVisibleLines(i + 1), line.delay));
-      });
-      timers.push(setTimeout(() => runCycle(), 20000));
-    }
-
-    runCycle();
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [visibleLines]);
-
+function MiniSparkline({ data, color = '#22c55e' }: { data: number[]; color?: string }) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const points = data.map(
+    (v, i) => `${(i / (data.length - 1)) * 120},${36 - ((v - min) / range) * 32}`,
+  ).join(' ');
+  const gradId = `heroSparkGrad-${color.replace('#', '')}`;
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.06] bg-[#0C0C0F]">
-      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-4 py-3">
-        <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-        <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-        <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-        <span className="ml-2 font-mono text-[11px] text-neutral-600">celune agent session</span>
-      </div>
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto p-5 font-mono text-[13px] leading-[1.7]"
-        style={{ scrollbarWidth: 'none' }}
-      >
-        {CONVERSATION.slice(0, visibleLines).map((line, i) => {
-          if (line.type === 'divider') {
-            return <div key={i} className="my-2.5 border-t border-white/[0.04]" />;
-          }
-          if (line.type === 'command') {
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-neutral-500"
-              >
-                <span className="text-celune-400">$</span> {line.text}
-              </motion.div>
-            );
-          }
-          if (line.type === 'agent') {
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mt-1.5 flex items-start gap-2"
-              >
-                <span className={cn('shrink-0 font-bold', line.color)}>{line.agent}</span>
-                <span className="text-neutral-400">{line.text}</span>
-              </motion.div>
-            );
-          }
-          if (line.type === 'status') {
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-1.5 text-neutral-500"
-              >
-                {line.text}
-              </motion.div>
-            );
-          }
-          return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-celune-400 mt-1"
-            >
-              {line.text}
-            </motion.div>
-          );
-        })}
-        {visibleLines < CONVERSATION.length && (
-          <div className="mt-2 text-neutral-700">
-            <span className="animate-pulse">▊</span>
+    <svg viewBox="0 0 120 40" className="h-8 w-full" preserveAspectRatio="none">
+      <polyline points={points} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
+      <polyline points={`0,40 ${points} 120,40`} fill={`url(#${gradId})`} stroke="none" />
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity={0.15} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+// ─── Badge helper ───────────────────────────────────────────────────────────
+
+function Badge({ label, colorClass }: { label: string; colorClass: string }) {
+  return (
+    <span className={cn('shrink-0 rounded px-1.5 py-0.5 text-[9px] font-medium border', colorClass)}>
+      {label}
+    </span>
+  );
+}
+
+// ─── Hero dashboard preview ─────────────────────────────────────────────────
+
+function HeroDashboard() {
+  return (
+    <div className="relative min-w-0">
+      <div className="grid grid-cols-[200px_1fr] gap-3">
+        {/* Left — ROI metric cards */}
+        <div className="flex flex-col gap-3">
+          {/* Hours Saved */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
+              Hours Saved / Week
+            </div>
+            <div className="flex items-end justify-between">
+              <div className="font-heading text-3xl font-medium text-white">380h</div>
+              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
+                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 2 L10 7 H2Z" fill="currentColor" /></svg>
+                +18%
+              </div>
+            </div>
+            <div className="mt-2"><MiniSparkline data={HOURS_SAVED_POINTS} /></div>
           </div>
-        )}
+
+          {/* Cost per Task */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
+              Cost per Task
+            </div>
+            <div className="flex items-end justify-between">
+              <div className="font-heading text-3xl font-medium text-white">$0.42</div>
+              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
+                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 10 L10 5 H2Z" fill="currentColor" /></svg>
+                -18%
+              </div>
+            </div>
+            <div className="mt-1 text-[11px] text-neutral-500">vs $3.80 manual avg</div>
+          </div>
+
+          {/* Avg Time to Ship */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
+              Avg Time to Ship
+            </div>
+            <div className="flex items-end justify-between">
+              <div className="font-heading text-3xl font-medium text-white">45m</div>
+              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
+                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 10 L10 5 H2Z" fill="currentColor" /></svg>
+                -82%
+              </div>
+            </div>
+            <div className="mt-1 text-[11px] text-neutral-500">From task to merged PR</div>
+          </div>
+
+          {/* Code Quality */}
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
+              Code Quality Score
+            </div>
+            <div className="flex items-end justify-between">
+              <div className="font-heading text-3xl font-medium text-white">9.4</div>
+              <div className="text-[11px] text-neutral-500">/ 10</div>
+            </div>
+            <div className="mt-2 h-1.5 w-full rounded-full bg-white/[0.06]">
+              <div className="h-full rounded-full bg-celune-500" style={{ width: '94%' }} />
+            </div>
+            <div className="mt-1 text-[11px] text-neutral-500">First-pass approval: 94%</div>
+          </div>
+        </div>
+
+        {/* Right — task table */}
+        <div className="relative min-w-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+          {TASK_GROUPS.map((group) => (
+            <div key={group.label}>
+              {/* Group header */}
+              <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-2">
+                <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 text-neutral-600"><path d="M2 3 L5 6 L8 3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
+                <span className="text-[11px] font-semibold text-neutral-300">{group.label}</span>
+                <span className="rounded bg-celune-500/15 px-1.5 py-0.5 text-[9px] font-bold text-celune-400">{group.count}</span>
+              </div>
+              {/* Task rows */}
+              {group.tasks.length > 0 && (
+                <div>
+                  {group.tasks.map((task, i) => (
+                    <div
+                      key={i}
+                      className="relative flex items-center gap-3 border-b border-white/[0.04] px-4 py-2.5"
+                    >
+                      {/* Pulsing green background for in-progress rows */}
+                      {task.status === 'In Progress' && (
+                        <div className="pointer-events-none absolute inset-0 animate-pulse bg-celune-500/[0.04]" />
+                      )}
+                      {/* Checkbox circle */}
+                      <span className="relative h-4 w-4 shrink-0 rounded-full border border-white/[0.12]" />
+                      {/* Title */}
+                      <span className="relative min-w-0 flex-1 truncate text-[12px] text-neutral-300">
+                        {task.title}
+                      </span>
+                      {/* Agent badge */}
+                      <Badge label={task.agent} colorClass={AGENT_COLOR[task.agent]} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          {/* Bottom fade */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+            style={{ background: 'linear-gradient(to bottom, transparent, rgb(10 10 15))' }}
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-interface TerminalCardProps {
-  terminalOpacity: MotionValue<number>;
-  dur: { fast: number; normal: number; slow: number; xSlow: number };
-  ez: { enter: number[]; exit: number[]; parallax: number[]; bounce: number[]; fade: number[] };
-}
+// ─── Main hero ──────────────────────────────────────────────────────────────
 
-function TerminalCard({ terminalOpacity, dur, ez }: TerminalCardProps) {
+function HeroEmailInput() {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || loading) return;
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'hero' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong.');
+        setLoading(false);
+        return;
+      }
+      posthog.capture('waitlist_signup', { location: 'hero', email });
+      setSubmitted(true);
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <p className="mt-8 text-sm text-celune-400">
+        Thanks! We&apos;ll be in touch soon.
+      </p>
+    );
+  }
+
   return (
-    <motion.div
-      initial={{ x: 20 }}
-      animate={{ x: 0 }}
-      transition={{ duration: dur.xSlow, delay: 0.3, ease: ez.enter as [number, number, number, number] }}
-      style={{ opacity: terminalOpacity }}
-      className={cn(
-        'h-[520px] rounded-xl lg:h-[560px]',
-        'shadow-[0_48px_100px_-16px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.04)]',
-      )}
-    >
-      <div className="h-full">
-        <AnimatedTerminal />
-      </div>
-    </motion.div>
+    <div className="mt-8 max-w-md">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <div className="flex gap-2">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors focus:border-celune-500/50"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-celune-500 hover:bg-celune-400 cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold text-black transition-colors whitespace-nowrap disabled:opacity-50"
+          >
+            {loading ? 'Sending...' : 'Get Early Access'}
+          </button>
+        </div>
+        {error && <p className="text-xs text-red-400">{error}</p>}
+      </form>
+    </div>
   );
 }
 
 export function CeluneHero() {
-  const [activeTab, setActiveTab] = useState(0);
-  const reduced = useReducedMotion();
-
-  // Terminal opacity — no parallax fade, always fully visible.
-  const terminalOpacity = useMotionValue(1);
-
-  // Stagger container variant — respects reduced motion.
-  const containerVariant = reduced ? reducedVariants.staggerContainer : staggerContainer;
-  // Child reveal variant — respects reduced motion.
-  const childVariant = reduced ? reducedVariants.fadeUp : fadeUp;
 
   return (
     <section id="hero" className="relative overflow-hidden pt-16">
       <div className="relative z-10 container py-[160px]">
         <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left — text content with staggered reveal */}
-          <motion.div variants={containerVariant} initial="hidden" animate="visible">
-            {/* Badge — first staggered child */}
-            <motion.div
-              variants={childVariant}
+          {/* Left — text content */}
+          <div>
+            {/* Badge */}
+            <div
               className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5"
             >
               <span className="bg-celune-500 animate-pulse-dot h-1.5 w-1.5 rounded-full" />
               <span className="text-xs font-medium text-neutral-400">Now in Private Beta</span>
-            </motion.div>
+            </div>
 
             {/* Heading */}
-            <motion.h1
-              variants={childVariant}
+            <h1
               className="font-heading text-4xl font-medium tracking-tight text-white sm:text-5xl lg:text-6xl"
             >
               Ship faster with
               <br />
               <span className="text-celune-500 glow-green-text">autonomous agent teams</span>
-            </motion.h1>
+            </h1>
 
-            {/* Subtitle — third staggered child */}
-            <motion.p
-              variants={childVariant}
+            {/* Subtitle */}
+            <p
               className="mt-6 max-w-lg font-sans text-lg font-light leading-relaxed text-neutral-500"
             >
               Agent teams that research, plan, build, review, and ship production code. A full R&D
               process — not a copilot.
-            </motion.p>
+            </p>
 
-            {/* Quick-start steps — fourth staggered child */}
-            <motion.div variants={childVariant} className="mt-12 max-w-md">
-              <p className="mb-3 text-xs font-medium uppercase tracking-widest text-neutral-600">
-                How it works
-              </p>
-              <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-[#111114]">
-                <div className="relative flex items-center border-b border-white/[0.06]">
-                  {QUICK_START_STEPS.map((tab, i) => (
-                    <button
-                      key={tab.label}
-                      onClick={() => setActiveTab(i)}
-                      className={cn(
-                        'relative px-4 py-2.5 text-xs font-medium transition-colors',
-                        activeTab === i
-                          ? 'text-celune-400'
-                          : 'text-neutral-600 hover:text-neutral-400',
-                      )}
-                    >
-                      {tab.label}
-                      {activeTab === i && (
-                        <motion.div
-                          layoutId="hero-tab-indicator"
-                          className="bg-celune-500 absolute inset-x-0 bottom-0 h-px"
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex items-center gap-3 p-4" style={{ minHeight: '4.25rem' }}>
-                  <code className="flex-1 font-mono text-sm leading-relaxed text-neutral-300">
-                    <span className="text-neutral-600 select-none">$ </span>
-                    {QUICK_START_STEPS[activeTab].command}
-                  </code>
-                </div>
-              </div>
+            {/* Email signup */}
+            <HeroEmailInput />
+          </div>
 
-              {/* CTA buttons */}
-              <div className="mt-8 flex items-center gap-3">
-                <motion.a
-                  href={`${URL_APP}/signup`}
-                  onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'Start Free' })}
-                  whileHover={reduced ? undefined : { scale: 1.02, boxShadow: '0 4px 20px rgba(34, 197, 94, 0.25)' }}
-                  whileTap={reduced ? undefined : { scale: 0.98 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                  className="bg-celune-500 hover:bg-celune-400 inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-black transition-colors"
-                >
-                  Start Free
-                </motion.a>
-                <a
-                  href={`${URL_APP}/login`}
-                  onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'Sign in' })}
-                  className="inline-block rounded-lg border border-white/[0.1] bg-white/[0.04] px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-white/[0.08]"
-                >
-                  Sign in
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Docs link — fifth staggered child */}
-            <motion.div variants={childVariant} className="mt-8">
-              <a
-                href={URL_DOCS}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'Docs' })}
-                className="inline-block rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-[13px] font-medium text-white transition-all hover:bg-white/[0.08]"
-              >
-                View our docs &rarr;
-              </a>
-            </motion.div>
-          </motion.div>
-
-          {/* Right — animated terminal */}
-          <TerminalCard
-            terminalOpacity={terminalOpacity}
-            dur={duration}
-            ez={ease}
-          />
+          {/* Right — dashboard preview */}
+          <div className="hidden lg:block">
+            <HeroDashboard />
+          </div>
         </div>
-      </div>
-
-      {/* Decorative rounded border — bottom corners */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
-        <div className="h-12 w-[calc(100%-3rem)] max-w-6xl rounded-b-[20px] border-x border-b border-white/[0.07]" />
       </div>
     </section>
   );

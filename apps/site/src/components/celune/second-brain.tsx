@@ -1,15 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import {
-  scrollTrigger,
-  staggerContainer,
-  fadeUp,
-  slideInLeft,
-  slideInRight,
-  reducedVariants,
-} from '@/lib/motion';
+import { useReducedMotion } from 'framer-motion';
 import { SectionLabel } from './grid-frame';
 import { URL_APP } from '@/lib/branding';
 
@@ -143,15 +135,11 @@ const SECOND_BRAIN_POINTS = [
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function CeluneSecondBrain() {
-  const shouldReduceMotion = useReducedMotion();
-  const containerVariant = shouldReduceMotion ? reducedVariants.staggerContainer : staggerContainer;
-  const headingVariant = shouldReduceMotion ? reducedVariants.fadeUp : fadeUp;
-  const leftVariant = shouldReduceMotion ? reducedVariants.slideInLeft : slideInLeft;
-  const rightVariant = shouldReduceMotion ? reducedVariants.slideInRight : slideInRight;
   const [hovering, setHovering] = useState(false);
 
   return (
-    <section id="second-brain" className="relative py-24 md:py-32">
+    <section id="second-brain" className="relative py-24 md:py-32 overflow-visible">
+
       {/* Decorative rounded border — top corners (mirrors features section) */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
         <div className="h-12 w-[calc(100%-3rem)] max-w-6xl rounded-t-[20px] border-x border-t border-white/[0.07]" />
@@ -159,13 +147,7 @@ export function CeluneSecondBrain() {
 
       <div className="container relative z-10">
         {/* Heading */}
-        <motion.div
-          variants={headingVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={scrollTrigger.default}
-          className="mb-16"
-        >
+        <div className="mb-16">
           <SectionLabel>Second Brain</SectionLabel>
           <h2 className="font-heading text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">
             <span className="text-white">AI That Remembers Everything.</span>
@@ -176,20 +158,14 @@ export function CeluneSecondBrain() {
             Every conversation, decision, and preference is stored and recalled. Your agents learn from past
             interactions — so you never repeat yourself, and they never forget what matters.
           </p>
-        </motion.div>
+        </div>
 
         {/* Two-column: points + illustration (reversed) */}
         <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
           {/* Key points — left on desktop */}
-          <motion.div
-            variants={containerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={scrollTrigger.default}
-            className="space-y-6 md:order-1"
-          >
+          <div className="space-y-6 md:order-1">
             {SECOND_BRAIN_POINTS.map((point) => (
-              <motion.div key={point.label} variants={headingVariant} className="flex gap-4">
+              <div key={point.label} className="flex gap-4">
                 <div className="mt-0.5 shrink-0">
                   <div className="flex h-5 w-5 items-center justify-center border border-celune-500/30 bg-celune-500/[0.08]">
                     <div className="h-1.5 w-1.5 bg-celune-500" />
@@ -199,17 +175,11 @@ export function CeluneSecondBrain() {
                   <p className="font-medium text-white">{point.label}</p>
                   <p className="mt-1 text-sm leading-relaxed text-neutral-500">{point.detail}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
 
             {/* CTA */}
-            <motion.div
-              variants={headingVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={scrollTrigger.default}
-              className="pt-2"
-            >
+            <div className="pt-2">
               <a
                 href={`${URL_APP}/signup`}
                 className="inline-flex items-center gap-2 border border-celune-500/40 bg-celune-500/10 px-6 py-3 font-mono text-sm font-medium text-celune-400 transition-colors duration-200 hover:border-celune-500/60 hover:bg-celune-500/15 hover:text-celune-300"
@@ -219,22 +189,18 @@ export function CeluneSecondBrain() {
                   <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Illustration — right on desktop */}
-          <motion.div
-            variants={rightVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={scrollTrigger.default}
+          <div
             className="flex flex-col border border-white/[0.06] bg-white/[0.015] transition-colors duration-500 md:order-2"
             style={{ minHeight: 380 }}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
           >
             <SecondBrainIllustration hovering={hovering} />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

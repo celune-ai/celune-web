@@ -4,14 +4,12 @@ import { CeluneStats } from '@/components/celune/stats';
 import { CeluneFeatures } from '@/components/celune/features';
 import { CeluneFeatureCards } from '@/components/celune/feature-cards';
 import { CeluneDemoShowcase } from '@/components/celune/demo-showcase';
-import { CeluneHowItWorks } from '@/components/celune/how-it-works';
-import { CeluneAgentLead } from '@/components/celune/agent-lead';
-import { CeluneSecondBrain } from '@/components/celune/second-brain';
+import { ProductShowcase } from '@/components/celune/product-showcase';
 import { CelunePricing } from '@/components/celune/pricing';
 import { CeluneWaitlist } from '@/components/celune/waitlist';
 import { CeluneFooter } from '@/components/celune/footer';
+import { FooterArea } from '@/components/celune/footer-area';
 import { SectionTracker } from '@/components/celune/section-tracker';
-import { NebulaBg } from '@/components/celune/nebula-bg';
 import { GridFrame, SectionDivider } from '@/components/celune/grid-frame';
 import { StarField } from '@/components/celune/star-field';
 
@@ -24,6 +22,8 @@ export default function Home() {
       <GridFrame>
         <CeluneHero />
         <SectionDivider />
+        <ProductShowcase />
+        <SectionDivider />
         <CeluneDemoShowcase />
         <SectionDivider />
         <CeluneStats />
@@ -32,20 +32,13 @@ export default function Home() {
         <SectionDivider />
         <CeluneFeatureCards />
         <SectionDivider />
-        <CeluneHowItWorks />
-        <SectionDivider />
-        <CeluneAgentLead />
-        <SectionDivider />
-        <CeluneSecondBrain />
-        <SectionDivider />
         <CelunePricing />
         <SectionDivider />
-        <div className="relative">
-          <NebulaBg />
+        <FooterArea>
           <CeluneWaitlist />
-        </div>
-        <SectionDivider />
-        <CeluneFooter />
+          <SectionDivider />
+          <CeluneFooter />
+        </FooterArea>
       </GridFrame>
     </>
   );

@@ -51,20 +51,20 @@ const PLANS = [
   {
     key: 'build',
     name: 'Build',
-    price: '$0',
+    price: '$19',
     period: '/month',
     description: 'For individuals getting started with AI agents.',
     features: [
-      '1 workspace',
-      '2 agents',
-      '1,000 memories',
-      '100 tasks/month',
+      '3 workspaces',
+      '3 agents',
+      '20,000 memories',
+      '1,000 tasks/month',
       '10 TTS minutes/month',
       '1,000 API calls/month',
       'Basic dashboard',
       'Task management',
     ],
-    cta: 'Get Started Free',
+    cta: 'Request Access',
     ctaHref: `${URL_APP}/signup`,
     highlighted: false,
   },
@@ -86,7 +86,7 @@ const PLANS = [
       'API access',
       'BYOK (bring your own key)',
     ],
-    cta: 'Start Pro',
+    cta: 'Request Access',
     ctaHref: `${URL_APP}/signup?plan=pro`,
     highlighted: true,
   },
@@ -108,7 +108,7 @@ const PLANS = [
       'Audit log',
       'BYOK (bring your own key)',
     ],
-    cta: 'Start Team',
+    cta: 'Request Access',
     ctaHref: `${URL_APP}/signup?plan=team`,
     highlighted: false,
   },
@@ -123,14 +123,13 @@ const PLANS = [
       'Unlimited agents',
       'Unlimited everything',
       'SSO',
-      'Custom integrations',
       'Dedicated support',
       'SLA guarantee',
       'Custom agent personas',
       'BYOK (bring your own key)',
     ],
     cta: 'Contact Us',
-    ctaHref: 'mailto:hello@celune.ai',
+    ctaHref: 'https://docs.celune.ai/support',
     highlighted: false,
   },
 ] as const;
@@ -172,7 +171,6 @@ const COMPARISON_FEATURES: ComparisonFeature[] = [
       { label: 'Audit log',        build: false,        pro: false,         team: true,          enterprise: true },
       { label: 'AFK modes',        build: false,        pro: false,         team: true,          enterprise: true },
       { label: 'SSO',              build: false,        pro: false,         team: false,         enterprise: true },
-      { label: 'Custom integrations', build: false,     pro: false,         team: false,         enterprise: true },
     ],
   },
   {
@@ -260,13 +258,16 @@ export default function PricingPage() {
           {/* ── Hero ── */}
           <section className="relative pt-32 pb-16 text-center">
             <div className="container">
-              <p className="mb-3 text-sm font-medium text-celune-500">Pricing</p>
+              <div className="mb-3 inline-flex items-center gap-1.5 font-mono text-xs tracking-wider text-neutral-500">
+                <span className="text-neutral-600">[</span>
+                <span className="uppercase">Expected Pricing</span>
+                <span className="text-neutral-600">]</span>
+              </div>
               <h1 className="font-heading text-4xl font-medium tracking-tight text-white md:text-5xl">
                 Simple, transparent pricing
               </h1>
               <p className="mx-auto mt-4 max-w-xl text-lg text-neutral-400">
-                Start free during beta. Scale as your team grows.
-                No hidden fees, no surprise overages.
+                We&apos;re launching soon. Pricing may change before general availability.
               </p>
             </div>
           </section>
@@ -442,17 +443,17 @@ export default function PricingPage() {
               </h2>
               <p className="mx-auto mt-4 max-w-lg text-neutral-400">
                 Join hundreds of engineers already running autonomous agents on Celune.
-                Start free — no credit card required.
+                Request early access — we&apos;re onboarding select teams now.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a
                   href={`${URL_APP}/signup`}
                   className="rounded-lg bg-celune-500 px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-celune-400"
                 >
-                  Get Started Free
+                  Request Access
                 </a>
                 <a
-                  href="mailto:hello@celune.ai"
+                  href="https://docs.celune.ai/support"
                   className="rounded-lg border border-white/[0.08] px-6 py-3 text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
                 >
                   Talk to Sales

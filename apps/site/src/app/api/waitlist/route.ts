@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendWaitlistWelcome } from '@/lib/email';
+import { sendWaitlistWelcome, forwardToAgentmail } from '@/lib/email';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -70,8 +70,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 
-  // Send welcome email (fire-and-forget, degrades gracefully without RESEND_API_KEY)
+  // Send welcome email + forward to agentmail inbox (fire-and-forget)
   sendWaitlistWelcome(email).catch(() => {});
+  forwardToAgentmail(email, body.source || 'landing').catch(() => {});
 
   return NextResponse.json({ success: true });
 }

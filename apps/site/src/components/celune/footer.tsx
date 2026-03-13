@@ -1,18 +1,16 @@
 import Image from 'next/image';
-import { Github, Twitter } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 const FOOTER_LINKS = [
   { label: 'Features', href: '#features' },
-  { label: 'How It Works', href: '#how-it-works' },
   { label: 'Docs', href: 'https://docs.celune.ai', external: true },
-  { label: 'Blog', href: '#' },
-  { label: 'Status', href: '#' },
+  { label: 'Blog', href: 'https://docs.celune.ai/blog', external: true },
   { label: 'Contact', href: 'mailto:hello@celune.ai' },
 ];
 
 export function CeluneFooter() {
   return (
-    <footer className="border-t border-dashed border-white/[0.06]">
+    <footer className="relative bg-[#08080A]">
       <div className="container py-12">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           {/* Brand */}
@@ -27,9 +25,6 @@ export function CeluneFooter() {
             <div className="flex items-center gap-3">
               <a href="https://github.com/celune-ai" target="_blank" rel="noopener noreferrer" className="text-neutral-700 transition-colors hover:text-white">
                 <Github className="h-3.5 w-3.5" />
-              </a>
-              <a href="https://x.com/celune_ai" target="_blank" rel="noopener noreferrer" className="text-neutral-700 transition-colors hover:text-white">
-                <Twitter className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>
@@ -51,7 +46,10 @@ export function CeluneFooter() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-dashed border-white/[0.04]">
+      <div className="relative mx-12">
+        <div className="border-t border-dashed border-white/[0.08]" />
+      </div>
+      <div>
         <div className="container flex items-center justify-between py-5">
           <p className="text-[11px] text-neutral-700">
             &copy; {new Date().getFullYear()} Celune. All rights reserved.

@@ -473,88 +473,22 @@ const OVERNIGHT_LINES = [
 ];
 
 function OvernightLog() {
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [currentLoading, setCurrentLoading] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const shouldReduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (shouldReduceMotion) {
-      setVisibleCount(OVERNIGHT_LINES.length);
-      return;
-    }
-
-    function revealNext() {
-      // Show spinner on current line
-      setCurrentLoading(true);
-
-      // After 8–15s, "complete" it
-      const spinDuration = 8000 + Math.random() * 7000;
-      timerRef.current = setTimeout(() => {
-        setCurrentLoading(false);
-        setVisibleCount((prev) => {
-          const next = prev + 1;
-          if (next >= OVERNIGHT_LINES.length) {
-            // Restart cycle after a long pause
-            setTimeout(() => {
-              setVisibleCount(1);
-              setTimeout(revealNext, 2000);
-            }, 12000);
-            return OVERNIGHT_LINES.length;
-          }
-          // Schedule next reveal (30–50s)
-          const nextDelay = 30000 + Math.random() * 20000;
-          setTimeout(revealNext, nextDelay);
-          return next;
-        });
-      }, spinDuration);
-    }
-
-    const initial = setTimeout(revealNext, 20000);
-    return () => {
-      clearTimeout(initial);
-      clearTimeout(timerRef.current);
-    };
-  }, [shouldReduceMotion]);
-
-  const lines = OVERNIGHT_LINES.slice(0, visibleCount);
-
   return (
-    <div className="font-mono text-xs leading-relaxed">
+    <div className="flex h-full flex-col font-mono text-xs leading-relaxed">
       <div className="text-neutral-500">
         <span className="text-celune-400">$</span> celune overnight --mode build
       </div>
-      <div className="mt-3 space-y-1.5">
-        <AnimatePresence initial={false}>
-          {lines.map((line, i) => {
-            const isNewest = i === lines.length - 1;
-            const showSpinner = isNewest && currentLoading;
-
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center gap-1.5 text-neutral-400"
-              >
-                {showSpinner ? (
-                  <TinySpinner />
-                ) : line.icon === 'info' ? (
-                  <span className="text-yellow-400">i</span>
-                ) : (
-                  <span className="text-celune-500">✓</span>
-                )}
-                <span>{line.text}</span>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-        {visibleCount < OVERNIGHT_LINES.length && !currentLoading && (
-          <div className="text-neutral-700">
-            <span className="animate-pulse">▊</span>
+      <div className="mt-3 flex-1 space-y-1.5">
+        {OVERNIGHT_LINES.map((line) => (
+          <div key={line.text} className="flex items-center gap-1.5 text-neutral-400">
+            {line.icon === 'info' ? (
+              <span className="text-yellow-400">i</span>
+            ) : (
+              <span className="text-celune-500">✓</span>
+            )}
+            <span>{line.text}</span>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
@@ -570,7 +504,7 @@ export function CeluneDemoShowcase() {
   const headingVariant = shouldReduceMotion ? reducedVariants.fadeUp : fadeUp;
 
   return (
-    <section id="demo" className="relative py-24 md:py-32">
+    <section id="demo" className="relative overflow-hidden py-24 md:py-32">
       <div className="container">
         {/* Section heading — fades up once */}
         <motion.div
