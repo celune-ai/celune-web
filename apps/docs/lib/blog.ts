@@ -10,6 +10,16 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'ship-features-while-you-sleep',
+    title: 'How We Ship Features While We Sleep',
+    description:
+      'Inside the overnight build system that lets a solo founder wake up to merged PRs — structured tasks, sprint gates, and the discipline that makes it work.',
+    date: '2026-03-15',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Building in Public', 'Productivity', 'Engineering'],
+    published: true,
+  },
+  {
     slug: 'building-with-ai-agents',
     title: 'Building with AI Agents: What Actually Works',
     description:
