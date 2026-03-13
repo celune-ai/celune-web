@@ -10,6 +10,16 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'ai-agent-job-description',
+    title: 'Why Your AI Agent Needs a Job Description',
+    description:
+      'Generic agents produce generic output. Defined roles, clear boundaries, and explicit quality standards transform AI agent performance — the same way they transform human teams.',
+    date: '2026-03-16',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Agents', 'Productivity', 'Engineering'],
+    published: true,
+  },
+  {
     slug: 'building-with-ai-agents',
     title: 'Building with AI Agents: What Actually Works',
     description:
