@@ -10,6 +10,16 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'ai-agent-persistent-memory',
+    title: 'How to Give Your AI Agent Persistent Memory',
+    description:
+      'A practical guide to implementing persistent memory for AI agents — typed categories, write-on-learn patterns, and the architecture that actually scales.',
+    date: '2026-03-13',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Agents', 'Memory', 'Engineering'],
+    published: true,
+  },
+  {
     slug: 'building-with-ai-agents',
     title: 'Building with AI Agents: What Actually Works',
     description:
