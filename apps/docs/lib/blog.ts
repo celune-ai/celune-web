@@ -10,6 +10,16 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'mcp-servers-ai-agents',
+    title: 'A Practical Guide to MCP Servers for AI Agents',
+    description:
+      'How to set up MCP servers that give your AI agents access to databases, Slack, GitHub, and custom tools — with patterns, anti-patterns, and real examples.',
+    date: '2026-03-17',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'MCP', 'Engineering', 'Agents'],
+    published: true,
+  },
+  {
     slug: 'building-with-ai-agents',
     title: 'Building with AI Agents: What Actually Works',
     description:
