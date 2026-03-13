@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const PARTICLE_COUNT = 44;
+const PARTICLE_COUNT = 62;
 const SPEED = 0.19;
 
 interface Star {

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { posthog } from '@/lib/posthog';
 
-const SECTIONS = ['hero', 'stats', 'features', 'how-it-works', 'demo', 'signup'];
+const SECTIONS = ['hero', 'stats', 'features', 'demo', 'signup'];
 
 export function SectionTracker() {
   const firedRef = useRef<Set<string>>(new Set());

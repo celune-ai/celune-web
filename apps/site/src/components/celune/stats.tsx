@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, useReducedMotion, animate } from 'framer-motion';
-import { staggerContainer, scaleIn, reducedVariants, scrollTrigger, ease } from '@/lib/motion';
+import { useInView, useMotionValue, useReducedMotion, animate } from 'framer-motion';
+import { ease } from '@/lib/motion';
 
 // ---------------------------------------------------------------------------
 // Stat definitions
@@ -134,10 +134,8 @@ function StatCard({ stat }: StatCardProps) {
   // useReducedMotion is SSR-safe and avoids hydration mismatches
   const reduced = useReducedMotion();
 
-  const cardVariant = reduced ? reducedVariants.scaleIn : scaleIn;
-
   return (
-    <motion.div ref={ref} variants={cardVariant} className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]">
+    <div ref={ref} className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]">
       <div className="font-heading text-3xl font-medium text-white md:text-4xl">
         {stat.count ? (
           <AnimatedNumber
@@ -152,7 +150,7 @@ function StatCard({ stat }: StatCardProps) {
         )}
       </div>
       <div className="mt-2 text-sm text-neutral-500">{stat.label}</div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -161,24 +159,16 @@ function StatCard({ stat }: StatCardProps) {
 // ---------------------------------------------------------------------------
 
 export function CeluneStats() {
-  // useReducedMotion is SSR-safe and avoids hydration mismatches
-  const reduced = useReducedMotion();
-  const containerVariant = reduced ? reducedVariants.staggerContainer : staggerContainer;
-
   return (
-    <section id="stats" className="relative">
+    <section id="stats" className="relative overflow-hidden">
       <div className="container">
-        <motion.div
-          variants={containerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={scrollTrigger.default}
+        <div
           className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4"
         >
           {STATS.map((stat) => (
             <StatCard key={stat.label} stat={stat} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
