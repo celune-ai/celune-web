@@ -511,7 +511,7 @@ export function CeluneFeatureCards() {
   }, [jumpTo, index]);
 
   return (
-    <section id="platform" className="relative overflow-hidden py-24 md:py-32">
+    <section id="platform" className="relative z-[1] overflow-hidden py-24 md:py-32">
       <div className="container">
         {/* Header row */}
         <div className="mb-10 flex items-end justify-between">

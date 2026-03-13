@@ -5,7 +5,7 @@ const FOOTER_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'Docs', href: 'https://docs.celune.ai', external: true },
   { label: 'Blog', href: 'https://docs.celune.ai/blog', external: true },
-  { label: 'Contact', href: 'mailto:hello@celune.ai' },
+  { label: 'Contact', href: 'https://docs.celune.ai/support', external: true },
 ];
 
 export function CeluneFooter() {

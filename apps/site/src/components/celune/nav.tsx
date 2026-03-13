@@ -7,9 +7,7 @@ import { cn } from '@/lib/cn';
 import { URL_DOCS, URL_APP } from '@/lib/branding';
 
 const NAV_LINKS = [
-  { label: 'Features', href: '#features' },
-  { label: 'Docs', href: URL_DOCS, external: true },
-  { label: 'Support', href: '/contact' },
+{ label: 'Docs', href: URL_DOCS, external: true },
 ];
 
 export function CeluneNav() {
