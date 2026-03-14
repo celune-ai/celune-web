@@ -4,11 +4,11 @@ import { CeluneFooter } from '@/components/celune/footer';
 import { GridFrame } from '@/components/celune/grid-frame';
 
 export const metadata: Metadata = {
-  title: 'Design Subscription — Smejkal Design | $2,500/mo',
+  title: 'Design Subscription — Celune | $2,500/mo',
   description:
     'Unlimited design requests for $2,500/month. One active request at a time, 48–72hr turnaround. UI/UX, landing pages, marketing assets, and brand work. Powered by AI-assisted production.',
   openGraph: {
-    title: 'Design Subscription — Smejkal Design',
+    title: 'Design Subscription — Celune',
     description:
       'Quality design at a fraction of agency cost. $2,500/mo, pause or cancel anytime. One active request at a time, 48–72hr turnaround.',
     url: 'https://celune.ai/design-subscription',
@@ -121,7 +121,7 @@ export default function DesignSubscriptionPage() {
 
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href="https://buy.stripe.com/smejkal-design-sub"
+                href="https://buy.stripe.com/celune-design-sub"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-md bg-celune-500 px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-celune-400"
@@ -234,7 +234,7 @@ export default function DesignSubscriptionPage() {
                     { option: 'Design agency', cost: '$8–20k', speed: '2-3 week projects', flex: 'Contract lock-in' },
                     { option: 'DesignJoy (Brett Williams)', cost: '$5,995', speed: '2-3 days', flex: 'Pause anytime' },
                     { option: 'Fiverr / Upwork', cost: '$500–2k', speed: '5-7 days typical', flex: 'Per project, inconsistent' },
-                    { option: 'Smejkal Design ← you are here', cost: '$2,500', speed: '48–72 hours', flex: 'Pause anytime, no contract', highlight: true },
+                    { option: 'Celune ← you are here', cost: '$2,500', speed: '48–72 hours', flex: 'Pause anytime, no contract', highlight: true },
                   ].map((row) => (
                     <tr key={row.option} className={row.highlight ? 'bg-celune-500/5' : ''}>
                       <td className={`px-5 py-3.5 text-xs font-medium ${row.highlight ? 'text-celune-400' : 'text-white'}`}>{row.option}</td>
@@ -276,7 +276,7 @@ export default function DesignSubscriptionPage() {
                 First month pro-rated from the day you start.
               </p>
               <a
-                href="https://buy.stripe.com/smejkal-design-sub"
+                href="https://buy.stripe.com/celune-design-sub"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex items-center gap-2 rounded-md bg-celune-500 px-8 py-3.5 text-sm font-semibold text-black transition-colors hover:bg-celune-400"

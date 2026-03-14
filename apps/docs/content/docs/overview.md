@@ -5,7 +5,7 @@ description: What the second brain is, why it exists, and how it works.
 
 # Overview
 
-Smejkal Design runs on an AI-augmented second brain: an Obsidian vault wired to Claude, automated with Python scripts, and monitored through a live dashboard. It's the operating system for the studio.
+Celune runs on an AI-augmented second brain: an Obsidian vault wired to Claude, automated with Python scripts, and monitored through a live dashboard. It's the operating system for the studio.
 
 ## What It Is
 
@@ -53,7 +53,7 @@ The immediate milestone is **$1,000 in revenue** within 2-3 months to break even
 
 ## Guiding Principles
 
-Everything built under Smejkal Design follows three principles:
+Everything built under Celune follows three principles:
 
 1. **People Before Pixels** - solve real problems for real people
 2. **Celebrate the Journey** - the process matters, acknowledge wins

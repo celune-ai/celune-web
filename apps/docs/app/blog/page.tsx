@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getAllPosts, formatDate } from '@/lib/blog';
 
 export const metadata: Metadata = {
-  title: 'Blog - Smejkal Design',
-  description: 'Articles, tutorials, and thought leadership from the Smejkal Design studio.',
+  title: 'Blog - Celune',
+  description: 'Articles, tutorials, and thought leadership from the Celune studio.',
 };
 
 export default function BlogIndexPage() {

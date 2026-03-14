@@ -3,7 +3,7 @@ import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
   title: 'Tailwind Classes - Design System',
-  description: 'How our design tokens map to Tailwind CSS utilities in the Smejkal Design System.',
+  description: 'How our design tokens map to Tailwind CSS utilities in the Celune Design System.',
 };
 
 export default async function TailwindClassesPage() {

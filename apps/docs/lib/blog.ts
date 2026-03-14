@@ -15,7 +15,7 @@ export const posts: BlogPost[] = [
     description:
       'A practical account of running a one-person product studio with an AI agent workforce — what worked, what broke, and what we learned.',
     date: '2026-03-03',
-    author: 'Eric Smejkal',
+    author: 'Celune Team',
     tags: ['AI', 'Claude Code', 'Productivity'],
     published: true,
   },

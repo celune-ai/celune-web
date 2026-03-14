@@ -13,9 +13,9 @@ Tracked automatically during conversations. Updated by Claude.
 
 - [ ] **NEXT PRIORITY:** Design task management system for agent workforce
 - [ ] Manual audit of all core markdown config files
-- [ ] Build out Smejkal Design site, Phase 2: dashboard polish, email triage charts, goal/task widgets
+- [ ] Build out Celune site, Phase 2: dashboard polish, email triage charts, goal/task widgets
 - [ ] Public site: docs section, landing page polish
-- [ ] Domain setup (smejkaldesign.com) + deployment
+- [ ] Domain setup (celune.ai) + deployment
 - [ ] Dashboard auth (token-based or Tailscale restriction)
 - [ ] Finish remote access setup (Tailscale + SSH + Termius)
 - [ ] Flesh out Dot Voter as a real project

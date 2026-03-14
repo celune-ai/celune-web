@@ -3,7 +3,7 @@ import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
   title: 'Typography - Design System',
-  description: 'Font families, type scale, and prose rendering for the Smejkal Design System.',
+  description: 'Font families, type scale, and prose rendering for the Celune Design System.',
 };
 
 export default async function TypographyPage() {

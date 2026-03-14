@@ -3,7 +3,7 @@ import { CodeBlock } from '@/components/code-block';
 
 export const metadata = {
   title: 'Writing - Design System',
-  description: 'Writing conventions for UI text across the Smejkal Design System.',
+  description: 'Writing conventions for UI text across the Celune Design System.',
 };
 
 export default async function WritingPage() {

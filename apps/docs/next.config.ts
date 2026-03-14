@@ -48,7 +48,7 @@ const withMDX = createMDX({
 const mdxConfig = withMDX(nextConfig);
 export default process.env.SENTRY_AUTH_TOKEN
   ? withSentryConfig(mdxConfig, {
-      org: process.env.SENTRY_ORG ?? 'smejkal-design',
+      org: process.env.SENTRY_ORG ?? 'celune',
       project: 'javascript-nextjs',
       silent: !process.env.CI,
     })

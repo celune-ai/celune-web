@@ -15,7 +15,7 @@ The memory system gives Claude persistent context across sessions. It's built on
 │                                                     │
 │   CLAUDE.md                                         │
 │   ├── Identity (who Eric is, how we work)           │
-│   ├── Business context (Smejkal Design, goals)      │
+│   ├── Business context (Celune, goals)               │
 │   ├── Active projects table                         │
 │   ├── MCP tool reference                            │
 │   ├── Memory protocol (this system)                 │

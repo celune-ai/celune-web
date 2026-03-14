@@ -4,7 +4,7 @@ import { CodeBlock } from '@/components/code-block';
 export const metadata = {
   title: 'Theming - Design System',
   description:
-    'How the Smejkal Design System token architecture enables dark-first theming with a two-layer CSS custom property system.',
+    'How the Celune Design System token architecture enables dark-first theming with a two-layer CSS custom property system.',
 };
 
 export default async function ThemingPage() {

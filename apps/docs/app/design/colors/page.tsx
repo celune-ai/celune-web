@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Color Usage - Design System',
   description:
-    'Full color token vocabulary for the Smejkal Design System, with live-rendered swatches.',
+    'Full color token vocabulary for the Celune Design System, with live-rendered swatches.',
 };
 
 export default function ColorsPage() {
