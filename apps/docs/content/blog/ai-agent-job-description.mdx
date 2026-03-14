@@ -1,0 +1,155 @@
+## The Default Agent is Mediocre
+
+Here's what happens when you give an AI agent a task without context about who it is:
+
+You get generic output. Safe, correct-ish, undifferentiated. The same code style, the same communication tone, the same approach to every problem. It works. It doesn't excel.
+
+Now give that same agent a defined role, clear boundaries, and explicit principles. Tell it: "You are a code reviewer. Your job is to find security vulnerabilities and performance bottlenecks. You are skeptical by default. You approve only when confident." The output transforms. It's focused, opinionated, thorough.
+
+The difference isn't the model. It's the job description.
+
+---
+
+## What a Job Description Does for an Agent
+
+When you hire a human, you write a job description. It sets expectations: what you do, what you don't do, how you do it, what success looks like. Nobody thinks this is optional.
+
+Yet most people deploying AI agents skip this entirely. They write a system prompt that says "You are a helpful assistant" and wonder why the output is generic.
+
+A proper agent job description does three things:
+
+### 1. It constrains scope
+
+An agent that can do anything does nothing well. A code reviewer that also tries to be a project manager and a designer produces unfocused reviews. Define the boundary: "You review code. You don't write code. You don't manage the backlog. When asked to do something outside your role, redirect to the appropriate agent."
+
+Constraints are a feature, not a limitation. They focus the model's attention on the domain where it can add the most value.
+
+### 2. It establishes quality standards
+
+"Write good code" is not a standard. "Follow the existing patterns in the codebase, prefer explicit types over inference, never use `any`, always handle the error case before the success case" — that's a standard.
+
+The job description is where you codify what "good" looks like for this specific role. The agent can then evaluate its own output against these criteria before presenting it.
+
+### 3. It enables delegation
+
+You can't delegate to an agent you haven't defined. When you tell a lead agent to "have the researcher look into this," the lead needs to know what the researcher is good at, what model it runs on, and what format its output takes. The job descriptions make delegation a lookup table, not a guessing game.
+
+---
+
+## The Anatomy of an Agent Job Description
+
+After months of iteration, we've converged on a format that works. It's under fifty lines. It covers everything the agent needs to operate independently.
+
+```
+## Identity
+Name, role, one-line purpose.
+
+## Model
+Which model this agent runs on and why.
+
+## Responsibilities
+3-5 bullet points of what this agent does.
+
+## Does NOT Do
+2-3 bullet points of explicit boundaries.
+
+## Quality Standards
+How to evaluate output for this role.
+
+## Communication Style
+Tone, verbosity, format preferences.
+```
+
+That's it. No lengthy backstories. No personality quizzes. No "you're a creative thinker who values innovation." Functional, specific, actionable.
+
+---
+
+## The Nine-Agent Roster
+
+Here's what this looks like in practice. Our studio runs nine agents:
+
+| Agent | Role | Key constraint |
+| ----- | ---- | -------------- |
+| RICK | Lead engineer + coder | Codes directly, delegates only for parallelism |
+| SAGE | PM + writer | Strategy and content, never code |
+| NOIR | Designer | Visual and UX review, never code |
+| SCAN | Code reviewer | Finds problems, doesn't fix them |
+| DELV | Researcher | Fact-finding, no opinions on implementation |
+| TREK | Career strategist | External-facing, networking |
+| ECHO | Brand + content | Social presence, messaging |
+| BOND | CRM | Relationships, follow-ups |
+| VITA | Growth | Goals, habits, personal development |
+
+The constraints column is the most important. SCAN finds problems but doesn't fix them — because a reviewer who also implements their own suggestions loses objectivity. DELV gathers facts but doesn't advocate for technical choices — because a researcher who has opinions on architecture is no longer neutral.
+
+These constraints feel artificial. They're not. They're the same role boundaries that make human teams effective.
+
+---
+
+## Why Model Selection is Part of the Job Description
+
+Not every role needs the most expensive model. This is the part most people miss.
+
+| Tier | Model | Why |
+| ---- | ----- | --- |
+| 1 (reasoning) | Opus | Architecture, implementation, security analysis |
+| 2 (execution) | Sonnet | Code review, design review, content strategy |
+| 3 (bounded tasks) | Haiku | Research, data gathering, formulaic output |
+
+The model tier is in the job description because it prevents cost waste. A researcher running on Opus is burning premium tokens on work that Haiku handles equally well. A lead engineer running on Haiku will make architectural mistakes that cost more to fix than the token savings.
+
+Model selection is a cost decision _and_ a quality decision. The job description is where both are documented.
+
+---
+
+## The Anti-Patterns
+
+### The "super agent"
+
+One agent that does everything. No specialization, no constraints, no boundaries. This is the default when you don't write job descriptions. It produces mediocre output across the board because the model is trying to optimize for too many objectives simultaneously.
+
+### The personality trap
+
+Spending more time on the agent's "personality" (quirky responses, jokes, motivational quotes) than on its functional definition. Personality is cosmetic. Job descriptions are structural. Get the structure right first.
+
+### The over-specified agent
+
+Fifty-page CLAUDE.md files with every conceivable instruction. The agent can't hold all of it in working memory. The important rules get buried under noise. Keep it under fifty lines. If you need more, the role is too broad — split it.
+
+### The static agent
+
+A job description that never changes. Roles evolve as the project evolves. The researcher might need expanded scope when the project enters a new domain. The reviewer might need different quality criteria for a security-critical release. Review and update job descriptions monthly.
+
+---
+
+## The Organizational Insight
+
+Here's the thing nobody told me when I started running agent teams: the same principles that make human organizations effective make agent organizations effective.
+
+Clear roles. Defined boundaries. Explicit quality standards. Appropriate delegation. Minimal hierarchy.
+
+An AI agent team with vague roles performs exactly as poorly as a human team with vague roles. The dysfunction is organizational, not technological.
+
+The job description isn't just a prompt engineering technique. It's the foundational document that turns a collection of language models into a functioning team.
+
+---
+
+## Start Here
+
+If you're running AI agents without job descriptions, here's the minimum viable version:
+
+1. **Name it.** A named agent develops a more consistent identity across sessions than "Assistant" or "Agent 1."
+
+2. **Define 3 responsibilities.** Not ten. Three. The things this agent does every time.
+
+3. **Define 1-2 boundaries.** What it explicitly doesn't do. This prevents scope creep.
+
+4. **Set the model.** Pick the cheapest model that can handle the responsibilities well. Upgrade only when quality degrades.
+
+5. **Write it in a file.** Not in a prompt template — in a file that persists across sessions and can be version-controlled.
+
+Do this for each agent you run. The output quality improvement is immediate and measurable.
+
+---
+
+_Celune ships with pre-configured agent roles for every plan tier — from a two-agent starter team to unlimited custom agents. Each agent gets a structured job description, appropriate model tier, and clear delegation rules. Because we think agent teams should work like real teams._
