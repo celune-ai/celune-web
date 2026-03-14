@@ -1,0 +1,138 @@
+## The 3 AM Commit
+
+Last Tuesday I woke up to a pull request. Fourteen files changed, tests passing, type check green. A complete QA sweep of our API routes — auth checks added to four unprotected endpoints, query performance limits on every analytics route, seven new database indexes, and fifty new tests.
+
+I didn't write any of it. I was asleep.
+
+This isn't a hypothetical. It's how we ship features at Celune. And the system that enables it is simpler than you'd think.
+
+---
+
+## The Overnight Build System
+
+The core idea: define the work before you go to bed. Let agents execute while you sleep. Review and merge in the morning.
+
+Here's the actual workflow:
+
+### Before bed (~11 PM)
+
+1. **Scope the work.** Define exactly what needs to be done. Not "fix the security stuff" but a structured project with individual tasks, dependencies, and sprint ordering.
+
+2. **Validate the project.** Every task has a description with `## What` and `## Approach` sections. Every task has an assignee. Dependencies are wired. The sprint order makes sense.
+
+3. **Launch the build.** A single command kicks off the execution engine. It reads the project, sorts tasks by sprint, and starts working through them sequentially — or in parallel when tasks are independent.
+
+4. **Go to sleep.** Seriously. The point is that this runs unsupervised.
+
+### While you sleep (~11 PM to 7 AM)
+
+The build engine works through sprints:
+
+- **Sprint 1:** Security hardening tasks (independent, can run in parallel)
+- **Sprint 2:** Performance optimization (depends on Sprint 1 completing)
+- **Sprint 3:** Error handling cleanup
+- **Sprint 4:** Test coverage
+- **Sprint 99:** Code review, design feedback, retrospective
+
+Between each sprint, the engine runs a gate check: `pnpm type-check && pnpm build && pnpm test`. If the gate fails, it stops and reports. No broken code makes it to the next sprint.
+
+### Morning (~7 AM)
+
+You wake up to:
+- A PR with all changes
+- A code review document from the QA agent
+- A retrospective with pros, cons, and action items
+- A Slack message summarizing what was built
+
+You read the PR. You review the changes. You merge or request fixes. The work is done — your job is quality control.
+
+---
+
+## Why It Works
+
+### Agents don't get tired
+
+The most obvious benefit: AI agents don't have a circadian rhythm. A task that would take you four focused hours takes the same four hours whether it starts at 2 PM or 2 AM. The overnight slot is free capacity.
+
+### Structured tasks prevent drift
+
+The reason this works unsupervised is that every task is well-defined before execution starts. The agent doesn't need to make judgment calls about scope — that happened during planning. It just needs to execute the approach described in the task.
+
+This is also why vague tasks fail overnight. "Improve the codebase" will produce unpredictable results. "Add .limit(5000) to all analytics queries that currently fetch unbounded rows" will produce exactly what you asked for.
+
+### Sprint gates catch problems early
+
+The inter-sprint verification is the safety net. If Sprint 1 introduces a type error, the build stops before Sprint 2 starts working on top of broken code. In practice, most gate failures are test failures from mock changes — easy to diagnose and fix.
+
+### The morning review is efficient
+
+Because every change is tied to a specific task with a specific description, the PR review is straightforward. You're not reading code and guessing intent. You're reading code and comparing it against the stated approach. The review is "did it do what it said it would do?" not "what was it trying to do?"
+
+---
+
+## The Failure Modes
+
+This isn't magic. The system has clear failure modes, and we've hit all of them.
+
+### Underspecified tasks
+
+If the task description is vague, the agent will fill in the gaps with its best guess. Its best guess is often wrong. The fix: spend more time on task descriptions, less time on implementation. A thirty-second task description produces thirty-minute debugging sessions in the morning.
+
+### Mock chain fragility
+
+Our test suite mocks Supabase at the client level. Every new query pattern requires a corresponding mock. When agents add new queries, the mocks sometimes don't match. This is the most common overnight failure — and it's a tooling problem we haven't fully solved.
+
+### Context window exhaustion
+
+Large projects (10+ tasks, 4+ sprints) can exhaust the context window. The build engine uses context handoff summaries between sprints and compact commands to manage this, but it's still the binding constraint on project size.
+
+### Over-ambition
+
+The temptation is to queue up massive projects. In practice, the sweet spot is 15-25 tasks across 3-5 sprints. Larger than that and the coordination overhead starts to dominate. Better to run two focused projects on consecutive nights than one sprawling project.
+
+---
+
+## The Numbers
+
+From the past month of overnight builds:
+
+| Metric | Value |
+| ------ | ----- |
+| Total overnight sessions | 12 |
+| Average tasks per session | 18 |
+| Average test files created | 4 |
+| Morning review time | ~20 min |
+| Sessions requiring morning fixes | 3 (25%) |
+| PR merge rate without changes | 75% |
+
+The 75% clean merge rate is the number that matters. Three out of four overnight builds produce code that's ready to merge as-is. The other 25% need minor fixes — usually mock adjustments or a test that was too tightly coupled to implementation details.
+
+---
+
+## What You Need
+
+The system has a few prerequisites:
+
+1. **A task database.** Not a project board — a database you can query programmatically. We use Supabase. The task CLI reads from it directly.
+
+2. **A build engine.** Something that reads tasks, sorts by dependencies, and executes them in sprint order with gate checks between sprints. Ours is a skill definition — a structured prompt that an AI agent follows.
+
+3. **Good CI.** Type checking, tests, and linting need to run fast and reliably. If your CI is flaky, the overnight build will fight ghosts.
+
+4. **Discipline in task writing.** This is the real prerequisite. The overnight build is only as good as the tasks it's executing. Garbage in, garbage out.
+
+5. **A review habit.** The morning review needs to happen. Merging overnight PRs without reading them defeats the purpose. The agent built it; you verify it.
+
+---
+
+## The Mindset Shift
+
+The biggest change isn't technical — it's psychological. You go from "I'll build this tomorrow" to "I'll define this tonight and review the build tomorrow." The work shifts from implementation to specification and review.
+
+This sounds like project management. It is. And it turns out that project management — clear scope, good descriptions, explicit dependencies — is exactly the discipline that makes AI agent teams effective.
+
+The overnight build isn't a shortcut. It's a forcing function for the practices that make any team productive.
+
+---
+
+_At Celune, overnight builds are how we ship 2-3x our daylight capacity. The project scaffolding, sprint execution, and QA pipeline are all built into the platform. If you're a solo founder or small team looking to multiply your output, [check it out](https://celune.ai)._
