@@ -4,7 +4,7 @@ import { CodeBlock } from '@/components/code-block';
 export const metadata = {
   title: 'Accessibility - Design System',
   description:
-    'Guidelines for building keyboard-navigable, screen-reader-friendly interfaces with the Smejkal Design System.',
+    'Guidelines for building keyboard-navigable, screen-reader-friendly interfaces with the Celune Design System.',
 };
 
 export default async function AccessibilityPage() {

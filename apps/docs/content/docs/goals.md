@@ -23,4 +23,4 @@ Tracked automatically during conversations. Updated by Claude.
 ## System
 
 - Build monitoring dashboard for second brain infrastructure
-- Smejkal Design site with docs + dashboard (priority project)
+- Celune site with docs + dashboard (priority project)

@@ -3,7 +3,7 @@ title: Design Principles
 description: Three guiding principles that govern what we build, how we work, and how we ship.
 ---
 
-# Smejkal Design Principles
+# Celune Design Principles
 
 > Three principles that govern what we build, how we work, and how we ship.
 
@@ -33,4 +33,4 @@ Quality and craftsmanship over quantity. We hold an incredibly high bar for poli
 
 ---
 
-_Established 2026-02-23. These principles inform all agents, skills, and business decisions across the Smejkal Design ecosystem._
+_Established 2026-02-23. These principles inform all agents, skills, and business decisions across the Celune ecosystem._

@@ -4,7 +4,7 @@ import { CodeBlock } from '@/components/code-block';
 export const metadata = {
   title: 'Icons - Design System',
   description:
-    'How to import, size, color, and make accessible the lucide-react icons used in the Smejkal Design System.',
+    'How to import, size, color, and make accessible the lucide-react icons used in the Celune Design System.',
 };
 
 export default async function IconsPage() {

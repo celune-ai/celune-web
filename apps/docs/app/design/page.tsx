@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Introduction - Design System',
   description:
-    'An overview of the Smejkal Design System: the stack, principles, and package structure.',
+    'An overview of the Celune Design System: the stack, principles, and package structure.',
 };
 
 export default function IntroductionPage() {
@@ -13,7 +13,7 @@ export default function IntroductionPage() {
       <h1>Introduction</h1>
 
       <p className="lead">
-        The Smejkal Design System is a unified set of tokens, components, and conventions that keeps
+        The Celune Design System is a unified set of tokens, components, and conventions that keeps
         the admin dashboard and this documentation site visually consistent. It is built on Tailwind
         CSS v4, Radix UI primitives, class-variance-authority, and a token vocabulary that lives in{' '}
         <code>@repo/ui</code>.
