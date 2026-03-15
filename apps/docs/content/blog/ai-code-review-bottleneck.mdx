@@ -1,0 +1,96 @@
+## The New Bottleneck
+
+Here's a number that should make every engineering leader uncomfortable: 84% of developers now use AI coding tools, but only 33% fully trust the code they produce.
+
+That gap — between adoption and trust — is where the next big problem lives. We're generating code faster than we've ever generated it. And the process designed to catch problems before they ship? Code review. A process that was already a bottleneck when humans wrote all the code.
+
+Now we've 5x'd the volume. The bottleneck didn't go away. It got worse.
+
+---
+
+## The Math Doesn't Work
+
+Before AI coding tools, a senior engineer might review 3-5 pull requests per day. That was the sustainable pace — deep enough to catch real issues, fast enough to not block the team.
+
+With AI-assisted development, the same team produces PRs at a dramatically higher rate. The generators got faster. The reviewers didn't.
+
+Anthropic published a telling stat when they launched their AI code review tool this month: before AI review, only 16% of PRs received substantial review comments. With AI review, that number jumped to 54% — reaching 84% for large PRs.
+
+Read that again. Before automated review, 84% of PRs were getting waved through without meaningful feedback. Not because reviewers didn't care. Because there wasn't enough time to care deeply about every PR when the volume kept climbing.
+
+---
+
+## Why Human Review Alone Can't Scale
+
+The standard response is "hire more reviewers." But code review isn't a commodity skill. The value of a review comes from context — understanding the codebase, the feature intent, the deployment environment, the failure modes. A reviewer who lacks context produces surface-level feedback. "Nit: add a comma here." Not useful.
+
+There are three structural problems with relying solely on human review in an AI-heavy codebase:
+
+**Volume mismatch.** AI generates code in minutes that took days. Review time stays fixed. The queue grows.
+
+**Fatigue dynamics.** Review quality degrades over time. The fifth PR of the day gets less attention than the first. This is well-documented in psychology research on decision fatigue — and it applies directly to code review.
+
+**Pattern blindness.** Humans are good at catching novel bugs. They're terrible at consistently catching the same class of bug across dozens of files. An AI agent that forgets to add input validation will forget it the same way in every file it touches. A human reviewer might catch it in file one and miss it in file twelve.
+
+---
+
+## What AI Review Actually Catches
+
+There's a misconception that AI code review is just "linting with more steps." The reality in 2026 is significantly more sophisticated.
+
+Modern AI review tools — CodeRabbit, Greptile, Anthropic's own multi-agent review system — operate at the logic level. They're not checking indentation. They're asking: "Does this function handle the case where the API returns null?" and "This SQL query doesn't use parameterized inputs — is that intentional?"
+
+Anthropic's approach is particularly interesting because it mirrors how good human review teams work. Multiple agents analyze the PR in parallel: some look for logic errors, others verify the findings to filter false positives, and a final agent aggregates and prioritizes. It's a review team, not a single reviewer.
+
+The tools aren't perfect. They generate false positives. They miss nuanced architectural concerns. They can't tell you "this feature shouldn't exist because it conflicts with the product roadmap." But they catch a class of bug that humans consistently miss under time pressure — and they do it at every PR, every time, without fatigue.
+
+---
+
+## The Hybrid Model
+
+The answer isn't replacing human reviewers. It's restructuring the review process so humans focus on what they're uniquely good at.
+
+Here's what that looks like in practice:
+
+| Layer | Who | Focus |
+| ----- | --- | ----- |
+| Automated checks | CI pipeline | Types, lint, formatting, tests |
+| Logic review | AI reviewer | Null handling, security patterns, error paths, regression risk |
+| Architecture review | Human senior | Design decisions, system impact, product alignment |
+| UX review | Human/AI | User-facing behavior, accessibility, edge cases |
+
+The AI layer handles the high-volume, pattern-matching work. The human layer handles the judgment calls that require context, taste, and product understanding.
+
+This isn't theoretical. We run this exact model at Celune. Every project goes through an automated code review gate before it reaches a human. The AI reviewer (we call it SCAN) runs the test suite, checks for security patterns, performs a line-by-line logic review, and creates fix tasks for anything it finds. By the time a human looks at the PR, the mechanical issues are already resolved. The human review focuses entirely on "should we build this?" and "does this fit the architecture?" — the questions that actually need a human brain.
+
+---
+
+## The Cost Question
+
+AI code review tools typically cost $15-25 per review in token spend. That sounds expensive until you calculate the alternative: a senior engineer spending 30-60 minutes per review at $80-150/hour.
+
+The math favors AI review even at today's token prices. And token costs are falling. The economics will only get more favorable.
+
+But cost isn't really the argument. The argument is coverage. Before AI review, most PRs got shallow review or no review. After AI review, every PR gets a thorough logic pass. The question isn't "is AI review cheaper?" — it's "can you afford to ship code that nobody reviewed carefully?"
+
+For AI-generated code specifically, this matters even more. When a human writes code, they understand (usually) what it does and why. When an AI generates code, even the developer who prompted it may not fully understand every edge case in the output. Review isn't optional for AI-generated code. It's the only quality gate.
+
+---
+
+## What Changes Next
+
+The current generation of AI review tools operates at the PR level — they see the diff and comment on it. The next generation will operate at the project level. They'll understand not just what changed, but why it changed, what it was supposed to accomplish, and whether it actually accomplished it.
+
+This means review tools that can read the product spec, compare it to the implementation, and flag gaps. Review tools that understand your deployment environment and can predict runtime issues. Review tools that maintain memory of past reviews and escalate recurring patterns.
+
+We're early in this shift. But the direction is clear: code review is becoming a multi-layered, AI-augmented process where humans provide judgment and AI provides coverage.
+
+The teams that figure this out first will ship faster and with fewer production incidents. The teams that don't will drown in a review queue that grows every quarter.
+
+---
+
+## The Uncomfortable Truth
+
+The real bottleneck was never the review process. It was the assumption that a single human could meaningfully review everything a team produces. That assumption broke when AI made generation fast. Now we need to make review fast too — without sacrificing depth.
+
+The answer isn't faster humans. It's better systems.
