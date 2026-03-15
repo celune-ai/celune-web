@@ -10,6 +10,36 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'second-brain-ai-agents',
+    title: 'Your Second Brain Is About to Get Its Own Agents',
+    description:
+      'Second brains have been passive filing systems. In 2026, they\'re getting their own AI agents — and that changes everything about knowledge work.',
+    date: '2026-03-18',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Second Brain', 'Agents', 'Productivity'],
+    published: true,
+  },
+  {
+    slug: 'control-ai-agent-costs',
+    title: 'How to Control AI Agent Costs Without Killing Quality',
+    description:
+      'Running AI agents gets expensive fast. Here are the cost levers that actually work — model tiering, prompt caching, and knowing when cheap is good enough.',
+    date: '2026-03-19',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Agents', 'Engineering', 'Productivity'],
+    published: true,
+  },
+  {
+    slug: 'one-person-startup-ai-agents',
+    title: 'The One-Person Startup Is Real Now',
+    description:
+      'Solo founders are building real companies with AI agent teams. Here\'s what changed in 2026 — and why the one-person startup isn\'t a gimmick anymore.',
+    date: '2026-03-20',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Agents', 'Productivity', 'Building in Public'],
+    published: true,
+  },
+  {
     slug: 'mcp-servers-ai-agents',
     title: 'A Practical Guide to MCP Servers for AI Agents',
     description:
