@@ -2,8 +2,12 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPost, getAllPosts, formatDate } from '@/lib/blog';
+import { extractTOC } from '@/lib/toc';
 import { CeluneNav } from '@/components/celune/nav';
 import { CeluneFooter } from '@/components/celune/footer';
+import { AuthorCard } from '@/components/blog/author-card';
+import { HeroImage } from '@/components/blog/hero-image';
+import { StickyTOC } from '@/components/blog/sticky-toc';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -25,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.description,
       url: `https://celune.ai/blog/${slug}`,
       siteName: 'Celune',
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: post.title }],
+      images: [{ url: post.heroImage ?? '/og-image.jpg', width: 1200, height: 630, alt: post.title }],
       locale: 'en_US',
       type: 'article',
       publishedTime: post.date,
@@ -35,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: `${post.title} — Celune`,
       description: post.description,
-      images: ['/og-image.jpg'],
+      images: [post.heroImage ?? '/og-image.jpg'],
       creator: '@celune_ai',
     },
     alternates: { canonical: `https://celune.ai/blog/${slug}` },
@@ -59,25 +63,30 @@ export default async function BlogPostPage({ params }: Props) {
   const PostContent = await loadPostContent(slug);
   if (!PostContent) notFound();
 
+  const tocItems = extractTOC(slug);
+
   return (
     <>
       <CeluneNav />
       <main className="min-h-screen pt-[4.5rem]">
-        <article className="container max-w-3xl py-12 md:py-20">
-          {/* Back link */}
-          <Link
-            href="/blog"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-white"
-          >
-            ← All posts
-          </Link>
+        {/* Post header — full width */}
+        <div className="border-b border-dashed border-white/[0.08]">
+          <div className="container max-w-5xl py-12 md:py-16">
+            <Link
+              href="/blog"
+              className="mb-6 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-white"
+            >
+              ← All posts
+            </Link>
 
-          {/* Post header */}
-          <header className="mb-10">
             <div className="mb-3 flex items-center gap-3">
               <time dateTime={post.date} className="font-mono text-[11px] text-neutral-600">
                 {formatDate(post.date)}
               </time>
+              <span className="font-mono text-[11px] text-neutral-600">·</span>
+              <span className="font-mono text-[11px] text-neutral-600">
+                {post.readingTime} min read
+              </span>
               <div className="flex flex-wrap gap-1.5">
                 {post.tags.map((tag) => (
                   <span
@@ -89,25 +98,95 @@ export default async function BlogPostPage({ params }: Props) {
                 ))}
               </div>
             </div>
-            <h1 className="mb-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
+
+            <h1 className="mb-4 text-3xl font-semibold tracking-tight text-white md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
               {post.title}
             </h1>
-            <p className="text-base leading-relaxed text-neutral-400">{post.description}</p>
-            <div className="mt-6 border-t border-dashed border-white/[0.08]" />
-          </header>
-
-          {/* Post body */}
-          <div className="prose prose-invert prose-sm max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-p:text-neutral-300 prose-p:leading-relaxed prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-emerald-300 prose-code:before:content-none prose-code:after:content-none prose-li:text-neutral-300 prose-hr:border-white/[0.08]">
-            <PostContent />
-          </div>
-
-          {/* Footer */}
-          <div className="mt-12 border-t border-dashed border-white/[0.08] pt-8">
-            <p className="text-sm text-neutral-600">
-              Written by <span className="font-medium text-neutral-400">{post.author}</span>
+            <p className="max-w-2xl text-base leading-relaxed text-neutral-400">
+              {post.description}
             </p>
           </div>
-        </article>
+        </div>
+
+        {/* Hero image */}
+        {post.heroImage && (
+          <div className="container max-w-5xl py-8">
+            <HeroImage src={post.heroImage} alt={post.title} priority />
+          </div>
+        )}
+
+        {/* 3-column layout: author | content | TOC */}
+        <div className="container max-w-5xl pb-16">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[180px_1fr_180px]">
+            {/* Left sidebar — author card (hidden on mobile, shown in header instead) */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <AuthorCard
+                  author={post.author}
+                  date={post.date}
+                  readingTime={post.readingTime}
+                />
+              </div>
+            </aside>
+
+            {/* Center — article content */}
+            <article className="min-w-0">
+              {/* Mobile author info */}
+              <div className="mb-8 flex items-center gap-3 lg:hidden">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-neutral-400">{post.author}</span>
+                  <span className="text-neutral-600">·</span>
+                  <span className="text-sm text-neutral-500">{post.readingTime} min read</span>
+                </div>
+              </div>
+
+              {/* Mobile TOC */}
+              {tocItems.length > 0 && (
+                <details className="mb-8 rounded-lg border border-white/[0.08] bg-white/[0.02] lg:hidden">
+                  <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] tracking-widest text-neutral-500 uppercase">
+                    Table of contents
+                  </summary>
+                  <div className="border-t border-white/[0.08] px-4 py-3">
+                    <ul className="flex flex-col gap-1">
+                      {tocItems.map((item) => (
+                        <li key={item.id}>
+                          <a
+                            href={`#${item.id}`}
+                            className={`block py-1 text-[13px] text-neutral-400 transition-colors hover:text-white ${
+                              item.level === 3 ? 'pl-4' : ''
+                            }`}
+                          >
+                            {item.text}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+              )}
+
+              {/* Post body */}
+              <div className="prose prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-h2:mt-12 prose-h2:text-xl prose-h3:mt-8 prose-h3:text-lg prose-p:text-neutral-300 prose-p:leading-[1.8] prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-emerald-300 prose-code:before:content-none prose-code:after:content-none prose-li:text-neutral-300 prose-li:leading-[1.8] prose-hr:border-white/[0.08]">
+                <PostContent />
+              </div>
+
+              {/* Post footer */}
+              <div className="mt-16 border-t border-dashed border-white/[0.08] pt-8">
+                <p className="text-sm text-neutral-600">
+                  Written by{' '}
+                  <span className="font-medium text-neutral-400">{post.author}</span>
+                </p>
+              </div>
+            </article>
+
+            {/* Right sidebar — TOC */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <StickyTOC items={tocItems} />
+              </div>
+            </aside>
+          </div>
+        </div>
       </main>
       <CeluneFooter />
     </>
