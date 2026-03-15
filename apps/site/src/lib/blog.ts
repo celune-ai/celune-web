@@ -24,7 +24,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Productivity', 'Building in Public'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/one-person-startup-ai-agents.jpg',
   },
   {
     slug: 'control-ai-agent-costs',
@@ -35,7 +35,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Engineering', 'Productivity'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/control-ai-agent-costs.jpg',
   },
   {
     slug: 'second-brain-ai-agents',
@@ -46,7 +46,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Second Brain', 'Agents', 'Productivity'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/second-brain-ai-agents.jpg',
   },
   {
     slug: 'mcp-servers-ai-agents',
@@ -57,7 +57,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'MCP', 'Engineering', 'Agents'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/mcp-servers-ai-agents.jpg',
   },
   {
     slug: 'ai-agent-job-description',
@@ -68,7 +68,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Productivity', 'Engineering'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/ai-agent-job-description.jpg',
   },
   {
     slug: 'ship-features-while-you-sleep',
@@ -79,7 +79,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Building in Public', 'Productivity', 'Engineering'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/ship-features-while-you-sleep.jpg',
   },
   {
     slug: 'ai-code-review-bottleneck',
@@ -90,7 +90,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Engineering', 'Agents', 'Productivity'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/ai-code-review-bottleneck.jpg',
   },
   {
     slug: 'agent-native-task-management',
@@ -101,7 +101,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Task Management', 'Productivity'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/agent-native-task-management.jpg',
   },
   {
     slug: 'ai-agent-persistent-memory',
@@ -112,7 +112,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Memory', 'Engineering'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/ai-agent-persistent-memory.jpg',
   },
   {
     slug: 'building-with-ai-agents',
@@ -123,7 +123,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Claude Code', 'Productivity'],
     published: true,
-    heroImage: '/og-image.jpg',
+    heroImage: '/blog/building-with-ai-agents.jpg',
   },
 ];
 
