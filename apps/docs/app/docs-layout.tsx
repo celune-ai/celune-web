@@ -10,18 +10,18 @@ const URL_APP = 'https://app.celune.ai';
 const NAV_LINKS = [
   { label: 'Docs', href: '/' },
   { label: 'Design', href: '/design' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Blog', href: 'https://celune.ai/blog' },
 ];
 
 export function DocsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const isDesign = pathname.startsWith('/design');
-  const isBlog = pathname.startsWith('/blog');
   const isHome = pathname === '/';
 
   function isActive(href: string) {
-    if (href === '/') return !isDesign && !isBlog;
+    if (href === '/') return !isDesign;
+    if (href.startsWith('http')) return false;
     return pathname.startsWith(href);
   }
 
@@ -32,7 +32,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen">
       {/* Sidebar: logo header + nav */}
-      {!isBlog && (
+      {(
         <aside className="bg-surface-75 border-border flex w-[269px] shrink-0 flex-col border-r">
           {/* Logo container - matches platform app */}
           <div className="border-border flex h-14 shrink-0 items-center border-b px-4">
@@ -103,7 +103,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
         {/* Main content */}
         <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           <div className="flex-1">
-            {isBlog || isHome ? (
+            {isHome ? (
               <>{children}</>
             ) : (
               <div className="px-10 py-10">
