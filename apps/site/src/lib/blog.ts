@@ -6,6 +6,12 @@ export interface BlogPost {
   author: string;
   tags: string[];
   published: boolean;
+  heroImage?: string;
+}
+
+/** Estimate reading time in minutes from word count (200 WPM). */
+export function estimateReadingTime(wordCount: number): number {
+  return Math.max(1, Math.ceil(wordCount / 200));
 }
 
 export const posts: BlogPost[] = [
@@ -18,6 +24,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Productivity', 'Building in Public'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'control-ai-agent-costs',
@@ -28,6 +35,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Engineering', 'Productivity'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'second-brain-ai-agents',
@@ -38,6 +46,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Second Brain', 'Agents', 'Productivity'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'mcp-servers-ai-agents',
@@ -48,6 +57,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'MCP', 'Engineering', 'Agents'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'ai-agent-job-description',
@@ -58,6 +68,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Productivity', 'Engineering'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'ship-features-while-you-sleep',
@@ -68,6 +79,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Building in Public', 'Productivity', 'Engineering'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'ai-code-review-bottleneck',
@@ -78,6 +90,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Engineering', 'Agents', 'Productivity'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'agent-native-task-management',
@@ -88,6 +101,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Task Management', 'Productivity'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'ai-agent-persistent-memory',
@@ -98,6 +112,7 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Memory', 'Engineering'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
   {
     slug: 'building-with-ai-agents',
@@ -108,15 +123,52 @@ export const posts: BlogPost[] = [
     author: 'Celune Team',
     tags: ['AI', 'Claude Code', 'Productivity'],
     published: true,
+    heroImage: '/og-image.jpg',
   },
 ];
 
-export function getAllPosts(): BlogPost[] {
-  return posts.filter((p) => p.published).sort((a, b) => (a.date < b.date ? 1 : -1));
+export interface BlogPostWithMeta extends BlogPost {
+  readingTime: number;
 }
 
-export function getPost(slug: string): BlogPost | undefined {
-  return posts.find((p) => p.slug === slug && p.published);
+/** Read MDX file and count words to estimate reading time. */
+function getWordCount(slug: string): number {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require('fs');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'content', 'blog', `${slug}.mdx`);
+    const content = fs.readFileSync(filePath, 'utf-8') as string;
+    // Strip code blocks, MDX imports, and HTML tags for cleaner word count
+    const stripped = content
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/^import\s.*$/gm, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/[#*`\-_>|]/g, '');
+    return stripped.split(/\s+/).filter(Boolean).length;
+  } catch {
+    return 0;
+  }
+}
+
+export function getAllPosts(): BlogPostWithMeta[] {
+  return posts
+    .filter((p) => p.published)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .map((p) => ({
+      ...p,
+      readingTime: estimateReadingTime(getWordCount(p.slug)),
+    }));
+}
+
+export function getPost(slug: string): BlogPostWithMeta | undefined {
+  const post = posts.find((p) => p.slug === slug && p.published);
+  if (!post) return undefined;
+  return {
+    ...post,
+    readingTime: estimateReadingTime(getWordCount(post.slug)),
+  };
 }
 
 /** Format an ISO date string for display: "March 3, 2026" */
