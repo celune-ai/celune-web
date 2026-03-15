@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: 'Celune',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Celune Pricing — Agentic Engineering on Autopilot',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: 'Pricing — Celune',
     description:
       'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Build, scale up to Pro, Team, or Enterprise.',
-    images: ['/og-image.png'],
+    images: ['/og-image.jpg'],
     creator: '@celune_ai',
   },
 };
