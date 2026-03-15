@@ -17,4 +17,6 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(nextConfig);
+// Cast needed: monorepo hoists Next 16 types from docs app, causing
+// NextConfig type mismatch with createMDX's expected parameter type.
+export default withMDX(nextConfig as Parameters<typeof withMDX>[0]);
