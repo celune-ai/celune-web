@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Hero image */}
         {post.heroImage && (
-          <div className="container max-w-5xl py-8">
+          <div className="container max-w-5xl pt-8 pb-16">
             <HeroImage src={post.heroImage} alt={post.title} priority />
           </div>
         )}

@@ -14,7 +14,7 @@ export function AuthorCard({ author, date, readingTime }: AuthorCardProps) {
       <div className="flex items-center gap-3">
         <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/[0.08]">
           <Image
-            src="/celune-logomark.svg"
+            src="/celune-avatar-dark.svg"
             alt={author}
             width={32}
             height={32}
