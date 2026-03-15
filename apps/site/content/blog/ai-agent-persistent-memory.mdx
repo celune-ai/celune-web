@@ -1,0 +1,135 @@
+## The Problem No One Talks About
+
+Your AI agent is brilliant for thirty minutes. It writes clean code, reasons through tradeoffs, catches edge cases you'd miss. Then the context window fills up, the session ends, and tomorrow it has no idea who it is.
+
+This is the persistent memory problem. And if you're building anything with AI agents beyond one-shot prompts, it's the first bottleneck you'll hit.
+
+---
+
+## What Persistent Memory Actually Means
+
+Persistent memory for AI agents isn't a database. It's not a vector store. It's a system that answers one question: _what does this agent need to know to pick up where it left off?_
+
+There are three distinct layers:
+
+| Layer | What it stores | How it's accessed |
+| ----- | -------------- | ----------------- |
+| Session memory | Current conversation, in-progress work | Automatic (context window) |
+| Working memory | Decisions, preferences, project state | Written/read per session |
+| Long-term memory | Identity, skills, accumulated knowledge | Loaded at session start |
+
+Most agent frameworks give you session memory for free. Working memory is where things get interesting. Long-term memory is where they get hard.
+
+---
+
+## The Naive Approach (and Why It Breaks)
+
+The first thing most people try is stuffing everything into the system prompt. Every decision, every preference, every piece of context — jam it all in at the start of every conversation.
+
+This works until it doesn't. The failure modes:
+
+**Context pollution.** When everything is equally important, nothing is. Your agent spends tokens processing memories about a CSS decision from two weeks ago when you're asking about database schema design.
+
+**Stale state.** Memories that were true yesterday aren't necessarily true today. Without a mechanism to update or invalidate, you accumulate contradictions.
+
+**Token cost.** At scale, loading thousands of tokens of memory into every single request adds up fast. Especially when 80% of it is irrelevant to the current task.
+
+---
+
+## A Better Architecture
+
+The pattern that works — and the one we've converged on after months of iteration — has three components.
+
+### 1. Typed memory categories
+
+Not all memories are the same. A user preference ("don't use semicolons in TypeScript") is fundamentally different from a project fact ("the API uses REST, not GraphQL") or a decision log ("we chose Supabase over Firebase because of row-level security").
+
+Categorizing memories by type lets you load only what's relevant:
+
+```
+user      → How the person works, their expertise, preferences
+feedback  → Corrections and guidance ("don't do X, do Y instead")
+project   → Current state, deadlines, who's working on what
+reference → Where to find things in external systems
+```
+
+When an agent starts a coding task, it loads `project` and `feedback` memories. When it's writing content, it loads `user` preferences. The categories act as a filter that keeps context lean.
+
+### 2. Write-on-learn, not write-on-close
+
+The temptation is to save memories at the end of a session. The problem: you forget to do it, the session crashes, or the context has already compacted and you've lost the details.
+
+Better pattern: write memories _at the moment of learning_. When a user says "don't mock the database in tests — we got burned by that," the agent should persist that immediately. Not as a todo, not in a buffer. Directly to the memory store.
+
+This requires a mechanism for the agent to self-determine what's worth remembering. The heuristic we use: _would a future version of me need this to avoid repeating a mistake or to work more effectively?_
+
+### 3. Memory hygiene as a first-class concern
+
+Memories need maintenance. Outdated project states, resolved bugs, deprecated preferences — they all need to be updated or removed. Without hygiene, your memory store becomes a landfill.
+
+The practice that works: periodic review. At the end of each work session, scan existing memories for staleness. Update what's changed, remove what's resolved, consolidate what's redundant.
+
+This isn't glamorous work. It's the equivalent of cleaning your desk. But the compounding effect on agent quality is significant.
+
+---
+
+## The Implementation Spectrum
+
+How you implement persistent memory depends on your scale:
+
+**Solo / prototyping:** Markdown files in a `.claude/` directory. Dead simple. Version-controlled. Human-readable. Surprisingly effective up to a few hundred memories.
+
+**Small team:** A database table with key-value pairs, categories, and timestamps. Add full-text search for retrieval. This covers most production use cases.
+
+**At scale:** Vector embeddings for semantic retrieval, combined with structured storage for exact-match lookups. The hybrid approach — keyword search for known-entity queries, semantic search for conceptual ones — outperforms either alone.
+
+The mistake is starting with the complex solution. Markdown files will take you further than you think.
+
+---
+
+## What Changes When Memory Works
+
+The shift is subtle but profound. Instead of every session starting from zero, each session starts from the last known good state. Your agent knows:
+
+- What the project is and what's been decided
+- How you prefer to work and what to avoid
+- What's currently in progress and what's blocked
+- What went wrong last time and how to prevent it
+
+The practical impact: less repetition, fewer mistakes, faster ramp-up. The agent stops asking questions it's already been answered. It remembers that you prefer Tailwind over CSS modules, that the API key is in `.env.local` not `.env`, that the deploy target is Vercel not AWS.
+
+It sounds small. Over hundreds of interactions, it's transformative.
+
+---
+
+## The Honest Limitations
+
+Persistent memory doesn't solve everything. The current limitations are real:
+
+**Retrieval quality matters more than storage.** Storing ten thousand memories is easy. Retrieving the right three when they're needed is the hard problem. Most failures in agent memory aren't storage failures — they're retrieval failures.
+
+**Memories can conflict.** Early in a project you decided on REST. Later you switched to GraphQL. If both memories exist without versioning, the agent gets confused. Temporal ordering and explicit supersession ("this replaces the March 5 decision") helps, but it's not solved.
+
+**Cross-agent memory is harder.** When multiple agents share a memory store, coordination matters. Agent A shouldn't overwrite Agent B's working context. Namespacing by agent identity helps, but shared project-level memories still need merge logic.
+
+These are solvable problems. But they're problems you should know about before you invest in building a memory system.
+
+---
+
+## Start Here
+
+If you're building with AI agents and haven't implemented persistent memory yet, start with the simplest version:
+
+1. Create a `memory/` directory in your project
+2. Write memories as markdown files with frontmatter (type, description)
+3. Load relevant memories at the start of each session
+4. Write new memories immediately when you learn something worth keeping
+5. Review and prune weekly
+
+This gets you 80% of the value with 5% of the complexity. Graduate to a database when the file count makes retrieval slow. Graduate to vectors when semantic search becomes necessary.
+
+The point isn't the technology. It's the practice: _treat agent memory as a first-class concern, not an afterthought._
+
+---
+
+_We're building persistent memory into Celune as a core primitive — typed categories, real-time persistence, and cross-agent sharing. If you're solving the same problem, we'd love to hear how._

@@ -1,0 +1,106 @@
+## The Gap in the Market
+
+Every project management tool built in the last decade was designed for humans. Jira, Linear, Notion, Asana — they all assume the person reading the task is a person. The interface is visual. The descriptions are written for human comprehension. The workflow assumes someone will drag a card across a board.
+
+In 2026, a growing share of that work is done by AI agents. And the tools haven't caught up.
+
+---
+
+## What "Agent-Native" Means
+
+Agent-native task management isn't about adding an AI chatbot to your existing project board. It's about rethinking what a task system looks like when agents are first-class participants.
+
+The differences are fundamental:
+
+| Human-native | Agent-native |
+| ------------ | ------------ |
+| Visual kanban boards | Programmatic APIs and CLIs |
+| Drag-and-drop reordering | Dependency graphs with topological sorting |
+| Status updates via UI clicks | Claim/complete via command |
+| Descriptions in natural language | Structured descriptions with machine-readable sections |
+| Context lives in the reader's head | Context is explicit and attached to the task |
+| Time estimates | Token cost tracking |
+
+The most telling difference: in a human-native tool, the board _is_ the interface. In an agent-native tool, the board is a visualization of an underlying data model that agents interact with directly.
+
+---
+
+## Why This Matters Now
+
+Three trends converged to make agent-native task management relevant:
+
+### 1. Agents can actually complete tasks
+
+A year ago, AI agents were mostly summarizers and chatbots. Today, Claude Code can claim a task from a database, read the description, implement the solution, run tests, commit, and mark the task done — autonomously. The agent doesn't need a human to interpret the task or push it through the pipeline.
+
+When agents can _complete_ work, the task system needs to support the full lifecycle: assignment, claiming, progress tracking, verification, and completion — all via API.
+
+### 2. Agent teams are real
+
+Solo agents are useful. Agent teams — where multiple specialized agents collaborate on a project — are where the real productivity multiplier lives. A lead engineer, a code reviewer, a researcher, a designer, each with their own model and expertise.
+
+But teams create coordination problems. Who's working on what? What's blocked? What's done? The task board becomes the coordination layer. Without it, agent teams devolve into chaos.
+
+### 3. Cost accountability requires tracking
+
+When you're paying per token, you need to know what each token bought. A task system that tracks which agent worked which task, for how long, at what model tier — that's not a nice-to-have. It's how you answer "are we spending our AI budget effectively?"
+
+---
+
+## The Architecture Shift
+
+Traditional task management is UI-first. The database serves the board. Agent-native task management is data-first. The board serves the data.
+
+What this looks like in practice:
+
+**Tasks are rows, not cards.** Every task is a database record with structured fields: status, assignee, priority, dependencies, metadata. The visual board is one possible view. The CLI is another. The API is a third. All three are equal citizens.
+
+**Descriptions are structured.** Instead of freeform text, task descriptions use a consistent format: `## What` (the goal), `## Approach` (the steps), `## Blockers` (what's preventing progress). An agent can parse these sections directly. A human can read them naturally.
+
+**Status transitions are events.** When an agent claims a task, that's an event. When it completes, that's an event. These events feed real-time dashboards, cost tracking, and audit logs. The kanban isn't updated manually — it reflects the stream of events.
+
+**Dependencies are first-class.** Not "related to" or "blocked by" as loose associations, but explicit dependency chains that determine sprint ordering. Task B can't start until Task A is done. The system enforces this, so agents don't start work on tasks whose prerequisites aren't met.
+
+---
+
+## What Existing Tools Get Wrong
+
+**Linear** is the closest to agent-native among existing tools. Its API is excellent, the data model is clean, and it's fast. But it's still designed for human workflows — the status lifecycle, the project structure, the notification model all assume human actors.
+
+**Notion** is too flexible. When everything can be anything, nothing is well-structured enough for agents to consume reliably. The same flexibility that makes it great for human knowledge management makes it poor for programmatic task execution.
+
+**Jira** is the opposite problem — too rigid, too complex, too much ceremony. The overhead of configuring workflows and screens is already painful for humans. Agents have even less patience for it.
+
+None of these tools were designed to answer the questions agent teams need answered: "What task should I work on next?" "Who claimed this?" "What was the outcome?" "How much did this task cost in tokens?"
+
+---
+
+## The Emerging Pattern
+
+Across the teams building agent-native workflows, a pattern is emerging:
+
+1. **Supabase or Postgres as the task store.** Not a SaaS tool — a database you control. Row-level security for multi-tenant isolation. Real-time subscriptions for live updates.
+
+2. **CLI as the primary interface for agents.** `task claim <id> --agent rick`. `task complete <id> --outcome "Implemented auth middleware, 3 files changed"`. No UI required.
+
+3. **Structured metadata.** Sprint numbers, cost tracking, claim timestamps, active session flags — all stored as JSON metadata on the task row.
+
+4. **Event-sourced activity log.** Every state transition produces a log entry. This feeds analytics, cost allocation, and audit trails.
+
+5. **Visual board as a read-only dashboard.** The kanban board shows what's happening, but agents don't interact with it. They interact with the CLI and API.
+
+This isn't hypothetical. It's what we're running in production at Celune. The task board is the coordination layer for a team of AI agents that build features, review code, and write documentation — often while the founder sleeps.
+
+---
+
+## Where This Goes
+
+The logical next step is _self-managing task boards_. An agent that looks at the project state, identifies what needs to be done, creates tasks, assigns them to the right agents, and kicks off execution. The human becomes the reviewer, not the project manager.
+
+We're not there yet. The current state requires human judgment for prioritization, scope definition, and quality review. But the trajectory is clear: task management is moving from a human activity that agents assist with, to an agent activity that humans oversee.
+
+The tools that win this transition will be the ones that were designed for agents from the start — not the ones that retrofitted an AI chatbot onto a kanban board.
+
+---
+
+_We're building Celune as an agent-native task management platform — CLI-first, structured tasks, real-time cost tracking, and dependency-driven sprint execution. If you're building agent workflows and outgrowing human-native tools, [we'd love to talk](https://celune.ai)._
