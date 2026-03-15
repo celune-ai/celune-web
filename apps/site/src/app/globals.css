@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@repo/ui/theme.css';
+@plugin '@tailwindcss/typography';
 
 /* Scan @repo/ui components so Tailwind generates their utility classes */
 @source '../../../../packages/ui/src';
@@ -223,4 +224,168 @@ body {
   margin-right: auto;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+/* ============================================================
+   Blog Prose — matches docs site typography exactly
+   ============================================================ */
+.prose {
+  line-height: 1.8;
+  --tw-prose-body: var(--foreground-light);
+  --tw-prose-headings: var(--foreground-default);
+  --tw-prose-lead: var(--foreground-lighter);
+  --tw-prose-links: var(--brand-link);
+  --tw-prose-bold: var(--foreground-default);
+  --tw-prose-counters: var(--foreground-lighter);
+  --tw-prose-bullets: var(--brand-default);
+  --tw-prose-hr: var(--border-default);
+  --tw-prose-quotes: var(--foreground-lighter);
+  --tw-prose-quote-borders: var(--brand-default);
+  --tw-prose-captions: var(--foreground-muted);
+  --tw-prose-code: var(--brand-default);
+  --tw-prose-pre-code: var(--foreground-default);
+  --tw-prose-pre-bg: var(--background-surface-200);
+  --tw-prose-th-borders: var(--border-alternative);
+  --tw-prose-td-borders: var(--border-default);
+}
+
+.prose a {
+  text-decoration-color: color-mix(in srgb, var(--brand-default) 40%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--brand-default);
+}
+
+/* Inline code — emerald-tinted dark background */
+.prose code:not(pre code) {
+  background: hsl(152.92deg 53.41% 13.09%);
+  border: 1px solid hsl(152.92deg 53.41% 18%);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 0.9em;
+  font-weight: 400;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Hide backtick characters added by Tailwind Typography */
+.prose code::before,
+.prose code::after {
+  content: none !important;
+}
+
+.prose pre {
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-lg, 8px);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Table styling */
+.prose table {
+  font-size: 1rem;
+}
+
+.prose th {
+  color: var(--foreground-default);
+  font-weight: 600;
+}
+
+.prose td {
+  color: var(--foreground-light);
+}
+
+/* Blockquotes — emerald left border, no italic */
+.prose blockquote {
+  font-style: normal;
+  border-left-width: 3px;
+}
+
+.prose strong {
+  color: var(--foreground-default);
+}
+
+/* Heading sizes — matches docs site exactly */
+.prose h1 {
+  font-size: 1.5rem;
+  line-height: 1.333;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+  color: var(--foreground-default);
+}
+
+.prose h2 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--foreground-default);
+}
+
+.prose h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--foreground-default);
+}
+
+.prose h4 {
+  font-size: 0.875rem;
+  line-height: 1.429;
+  font-weight: 500;
+  color: var(--foreground-default);
+}
+
+.prose hr {
+  border-color: var(--border-default);
+}
+
+/* Shiki syntax highlighting */
+.shiki-block pre,
+pre.shiki {
+  background: var(--background-surface-200) !important;
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1rem;
+  line-height: 1.75;
+  border-radius: 0;
+}
+
+.shiki-block code,
+pre.shiki code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: inherit;
+  line-height: inherit;
+  border-radius: 0;
+  color: inherit;
+}
+
+/* Plain pre blocks (no shiki) */
+.prose pre:not(.shiki) {
+  background: var(--background-surface-200) !important;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-lg, 8px);
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.prose pre.shiki {
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-lg, 8px);
+}
+
+.prose pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit;
 }

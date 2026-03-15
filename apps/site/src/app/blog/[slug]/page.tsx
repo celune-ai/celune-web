@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="container max-w-5xl py-12 md:py-16">
             <Link
               href="/blog"
-              className="mb-6 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-white"
+              className="mb-6 inline-flex items-center gap-1.5 rounded-md border border-white/[0.12] px-3 py-1.5 text-sm text-neutral-400 transition-colors hover:border-white/[0.24] hover:text-white"
             >
               ← All posts
             </Link>
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: Props) {
               )}
 
               {/* Post body */}
-              <div className="prose prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-h2:mt-12 prose-h2:text-xl prose-h3:mt-8 prose-h3:text-lg prose-p:text-neutral-300 prose-p:leading-[1.8] prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-emerald-300 prose-code:before:content-none prose-code:after:content-none prose-li:text-neutral-300 prose-li:leading-[1.8] prose-hr:border-white/[0.08] max-w-none">
+              <div className="prose max-w-none">
                 <PostContent />
               </div>
 
