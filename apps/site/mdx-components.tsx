@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types';
 import { CodeBlock } from '@/components/blog/code-block';
+import { ProductScreenshot, ClearFloat } from '@/components/blog/product-screenshot';
 
 function slugify(text: string): string {
   return text
@@ -52,5 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     pre: MdxPre,
     h2: createHeading(2),
     h3: createHeading(3),
+    ProductScreenshot,
+    ClearFloat,
   };
 }
