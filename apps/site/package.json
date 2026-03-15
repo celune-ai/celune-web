@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "generate-images": "tsx scripts/generate-hero-images.ts",
+    "generate-images:dry-run": "tsx scripts/generate-hero-images.ts --dry-run"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -52,7 +54,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "remark-gfm": "^4.0.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.1.10",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.3"
   }
 }
