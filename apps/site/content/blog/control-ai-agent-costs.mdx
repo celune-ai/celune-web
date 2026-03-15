@@ -150,6 +150,8 @@ Spend on judgment. Save on labor.
 
 ## Putting It Together: A Real Cost Breakdown
 
+<ProductScreenshot src="/blog/screenshots/cost-tracking.jpg" alt="Celune cost analytics dashboard showing per-agent cost breakdown and model usage distribution" width={1200} height={750} layout="full" caption="Per-agent cost tracking in Celune — see exactly where your AI spend is going and which optimizations are working." />
+
 Here's what a 5-agent team looks like with and without these optimizations:
 
 | Agent | Role | Model | Daily Tokens | Unoptimized Monthly | Optimized Monthly |
@@ -163,7 +165,11 @@ Here's what a 5-agent team looks like with and without these optimizations:
 
 That's a 60% reduction. The optimized column applies model tiering, prompt caching (80% hit rate), batch processing for the reviewer, and context management across all agents.
 
+<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard with real-time metrics, usage charts, and activity feed" width={1200} height={750} layout="float-right" caption="The usage dashboard surfaces cost-per-agent trends so you can catch bloat before it hits your invoice." />
+
 In Celune, I track these costs per agent on the usage dashboard — each agent has its own cost attribution, so I can see exactly where the spend is going and whether the optimization is actually working. If an agent's cost-per-task starts climbing, I know the context window is bloating or the cache hit rate dropped.
+
+<ClearFloat />
 
 ---
 

@@ -55,6 +55,8 @@ reference → Where to find things in external systems
 
 When an agent starts a coding task, it loads `project` and `feedback` memories. When it's writing content, it loads `user` preferences. The categories act as a filter that keeps context lean.
 
+<ProductScreenshot src="/blog/screenshots/memory-system.jpg" alt="Celune memory system interface showing typed memory categories with entries for user preferences, project facts, feedback, and references" width={1200} height={750} layout="full" caption="Typed memory categories in practice — each entry is tagged by type so agents load only what is relevant to the current task." />
+
 ### 2. Write-on-learn, not write-on-close
 
 The temptation is to save memories at the end of a session. The problem: you forget to do it, the session crashes, or the context has already compacted and you've lost the details.
@@ -110,7 +112,11 @@ Persistent memory doesn't solve everything. The current limitations are real:
 
 **Memories can conflict.** Early in a project you decided on REST. Later you switched to GraphQL. If both memories exist without versioning, the agent gets confused. Temporal ordering and explicit supersession ("this replaces the March 5 decision") helps, but it's not solved.
 
+<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team cards showing RICK, SAGE, NOIR, SCAN, and DELV agents — each with their own identity and shared memory access" width={1200} height={750} layout="float-right" caption="Multiple agents sharing a memory store — each has its own identity namespace while accessing shared project-level memories." />
+
 **Cross-agent memory is harder.** When multiple agents share a memory store, coordination matters. Agent A shouldn't overwrite Agent B's working context. Namespacing by agent identity helps, but shared project-level memories still need merge logic.
+
+<ClearFloat />
 
 These are solvable problems. But they're problems you should know about before you invest in building a memory system.
 
