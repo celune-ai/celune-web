@@ -72,9 +72,7 @@ function FeaturedCard({ post }: { post: BlogPostWithMeta }) {
           <h2 className="mb-2 text-2xl font-semibold tracking-tight text-white transition-colors group-hover:text-emerald-400 md:text-3xl">
             {post.title}
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-neutral-400">
-            {post.description}
-          </p>
+          <p className="max-w-2xl text-base leading-relaxed text-neutral-400">{post.description}</p>
           <span className="mt-4 inline-block text-sm font-medium text-emerald-400">
             Read article →
           </span>
@@ -106,16 +104,12 @@ function PostCard({ post }: { post: BlogPostWithMeta }) {
               {formatDate(post.date)}
             </time>
             <span className="font-mono text-[11px] text-neutral-600">·</span>
-            <span className="font-mono text-[11px] text-neutral-500">
-              {post.readingTime} min
-            </span>
+            <span className="font-mono text-[11px] text-neutral-500">{post.readingTime} min</span>
           </div>
           <h2 className="mb-2 text-lg font-semibold text-white transition-colors group-hover:text-emerald-400">
             {post.title}
           </h2>
-          <p className="mb-4 flex-1 text-sm leading-relaxed text-neutral-400">
-            {post.description}
-          </p>
+          <p className="mb-4 flex-1 text-sm leading-relaxed text-neutral-400">{post.description}</p>
           <div className="flex flex-wrap gap-1.5">
             {post.tags.slice(0, 3).map((tag) => (
               <span

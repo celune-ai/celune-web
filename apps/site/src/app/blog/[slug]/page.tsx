@@ -29,7 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.description,
       url: `https://celune.ai/blog/${slug}`,
       siteName: 'Celune',
-      images: [{ url: post.heroImage ?? '/og-image.jpg', width: 1200, height: 630, alt: post.title }],
+      images: [
+        { url: post.heroImage ?? '/og-image.jpg', width: 1200, height: 630, alt: post.title },
+      ],
       locale: 'en_US',
       type: 'article',
       publishedTime: post.date,
@@ -121,11 +123,7 @@ export default async function BlogPostPage({ params }: Props) {
             {/* Left sidebar — author card (hidden on mobile, shown in header instead) */}
             <aside className="hidden lg:block">
               <div className="sticky top-24">
-                <AuthorCard
-                  author={post.author}
-                  date={post.date}
-                  readingTime={post.readingTime}
-                />
+                <AuthorCard author={post.author} date={post.date} readingTime={post.readingTime} />
               </div>
             </aside>
 
@@ -166,15 +164,14 @@ export default async function BlogPostPage({ params }: Props) {
               )}
 
               {/* Post body */}
-              <div className="prose prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-h2:mt-12 prose-h2:text-xl prose-h3:mt-8 prose-h3:text-lg prose-p:text-neutral-300 prose-p:leading-[1.8] prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-emerald-300 prose-code:before:content-none prose-code:after:content-none prose-li:text-neutral-300 prose-li:leading-[1.8] prose-hr:border-white/[0.08]">
+              <div className="prose prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-white prose-h2:mt-12 prose-h2:text-xl prose-h3:mt-8 prose-h3:text-lg prose-p:text-neutral-300 prose-p:leading-[1.8] prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-emerald-300 prose-code:before:content-none prose-code:after:content-none prose-li:text-neutral-300 prose-li:leading-[1.8] prose-hr:border-white/[0.08] max-w-none">
                 <PostContent />
               </div>
 
               {/* Post footer */}
               <div className="mt-16 border-t border-dashed border-white/[0.08] pt-8">
                 <p className="text-sm text-neutral-600">
-                  Written by{' '}
-                  <span className="font-medium text-neutral-400">{post.author}</span>
+                  Written by <span className="font-medium text-neutral-400">{post.author}</span>
                 </p>
               </div>
             </article>
