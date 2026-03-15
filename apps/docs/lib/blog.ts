@@ -10,6 +10,16 @@ export interface BlogPost {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'ai-code-review-bottleneck',
+    title: 'The Code Review Bottleneck: Why AI Needs to Review AI',
+    description:
+      'AI generates code faster than humans can review it. The old model is breaking — here\'s how hybrid AI-human review is replacing it, and why coverage matters more than speed.',
+    date: '2026-03-14',
+    author: 'Eric Smejkal',
+    tags: ['AI', 'Engineering', 'Agents', 'Productivity'],
+    published: true,
+  },
+  {
     slug: 'mcp-servers-ai-agents',
     title: 'A Practical Guide to MCP Servers for AI Agents',
     description:
