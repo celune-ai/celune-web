@@ -6,8 +6,7 @@ import { usePathname } from 'next/navigation';
 export function HeaderNav() {
   const pathname = usePathname();
   const isDesign = pathname.startsWith('/design');
-  const isBlog = pathname.startsWith('/blog');
-  const isDocs = !isDesign && !isBlog;
+  const isDocs = !isDesign;
 
   const base = 'rounded-md px-3 py-1.5 text-sm transition-colors';
   const active = 'text-foreground';
@@ -21,9 +20,9 @@ export function HeaderNav() {
       <Link href="/design" className={`${base} ${isDesign ? active : inactive}`}>
         Design
       </Link>
-      <Link href="/blog" className={`${base} ${isBlog ? active : inactive}`}>
+      <a href="https://celune.ai/blog" className={`${base} ${inactive}`}>
         Blog
-      </Link>
+      </a>
     </nav>
   );
 }

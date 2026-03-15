@@ -4,7 +4,7 @@ import { Github } from 'lucide-react';
 const FOOTER_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'Docs', href: 'https://docs.celune.ai', external: true },
-  { label: 'Blog', href: 'https://docs.celune.ai/blog', external: true },
+  { label: 'Blog', href: '/blog', external: false },
   { label: 'Contact', href: 'https://docs.celune.ai/support', external: true },
 ];
 

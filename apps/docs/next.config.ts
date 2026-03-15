@@ -29,6 +29,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/blog',
+        destination: 'https://celune.ai/blog',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug',
+        destination: 'https://celune.ai/blog/:slug',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 // remark-gfm enables GFM tables, strikethrough, etc. in MDX.

@@ -7,6 +7,7 @@ import { cn } from '@/lib/cn';
 import { URL_DOCS, URL_APP } from '@/lib/branding';
 
 const NAV_LINKS = [
+{ label: 'Blog', href: '/blog', external: false },
 { label: 'Docs', href: URL_DOCS, external: true },
 ];
 
