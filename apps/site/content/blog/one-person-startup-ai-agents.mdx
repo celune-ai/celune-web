@@ -34,6 +34,8 @@ I spend the first hour reviewing what happened overnight. If I kicked off a buil
 
 This is still fully human work. Deciding *what* to build, *why* it matters, and *in what order* — that's the job. Agents don't have product instincts. They have execution capacity.
 
+<ProductScreenshot src="/blog/screenshots/task-board.jpg" alt="Celune kanban task board showing Inbox, In Progress, and Done columns with agent-assigned tasks" width={1200} height={750} layout="full" caption="The morning starts here — reviewing overnight agent output on the shared task board." />
+
 ### Midday: Building With Agents
 
 When I'm actively building, the workflow looks like this:
@@ -59,6 +61,9 @@ This is where the "5-person team" comparison becomes literal. I have the output 
 
 Not all agents are equal, and treating them as interchangeable is a mistake I made early on. Here's what I've landed on:
 
+<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team configuration showing cards for RICK, SAGE, NOIR, SCAN, and DELV agents with their roles and model assignments" width={1200} height={750} layout="float-right" caption="Each agent has a defined role and model tier — the team that runs my one-person startup." />
+
+
 | Role | What It Does | Model Tier |
 |------|-------------|------------|
 | Lead / Coder | Writes implementation code, owns the codebase | Frontier (Opus-class) |
@@ -70,6 +75,8 @@ Not all agents are equal, and treating them as interchangeable is a mistake I ma
 The key insight: **use the cheapest model that can do the job well.** Your lead coder needs the best reasoning available. Your researcher doesn't. This keeps costs manageable and avoids the trap of throwing frontier models at everything.
 
 At Celune, we built this structure into the platform — each agent has a defined role, assigned tasks on a shared kanban, and a specific model tier. It's not a gimmick. It's how I actually run my day.
+
+<ClearFloat />
 
 ---
 

@@ -14,6 +14,8 @@ The studio runs on a Turborepo monorepo with three apps — a portfolio site, an
 
 The agent workforce looks like this:
 
+<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team configuration showing named agent cards for RICK, SAGE, NOIR, SCAN, and DELV with roles and model assignments" width={1200} height={750} layout="float-right" caption="The agent team — five named agents, each with a defined role and model tier." />
+
 | Agent | Role                  | Model         |
 | ----- | --------------------- | ------------- |
 | RICK  | Lead engineer + coder | Claude Opus   |
@@ -23,6 +25,8 @@ The agent workforce looks like this:
 | DELV  | Researcher            | Claude Haiku  |
 
 Flat structure. No hierarchy. RICK codes directly rather than delegating through layers.
+
+<ClearFloat />
 
 ---
 
@@ -36,11 +40,15 @@ The discipline sounds tedious. In practice it creates something valuable: a pape
 
 ### 2. Claiming and completing in real time
 
+<ProductScreenshot src="/blog/screenshots/task-board.jpg" alt="Celune kanban task board with Inbox, In Progress, and Done columns showing real-time task assignments" width={1200} height={750} layout="full" caption="Real-time kanban state — every task has a status, assignee, and description. No batch updates, no stale boards." />
+
 The kanban must reflect real-time state. No batch updates after the fact. When an agent picks up a task, it claims it immediately. When it's done, it completes it immediately.
 
 This sounds obvious but it breaks down fast when you're working across multiple sessions. The rule holds because the tooling enforces it — the CLI makes it a single command.
 
 ### 3. Prompt caching with a stable prefix
+
+<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard with metrics, charts tracking agent performance, and activity feed" width={1200} height={750} layout="full" caption="The system dashboard — monitoring agent performance, token usage, and cache hit rates across the team." />
 
 The most impactful performance change was structuring prompts with a stable prefix: Identity → Rules → Process → Task. The stable portion gets cached by Anthropic's API. Token costs dropped significantly once this was in place.
 

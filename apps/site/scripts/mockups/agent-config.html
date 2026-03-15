@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Team — Celune</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #0a0a0f;
+    color: #e4e4e7;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .page {
+    width: 1440px;
+    min-height: 900px;
+    padding: 64px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle radial glow behind the header */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fafafa;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.02em;
+  }
+
+  .header p span {
+    color: #22c55e;
+    font-weight: 600;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    width: 380px;
+    background: #111116;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0.7;
+  }
+
+  .card:hover {
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  .card[data-accent="green"]::before { background: #22c55e; }
+  .card[data-accent="green"]:hover { box-shadow: 0 0 40px rgba(34,197,94,0.06); }
+
+  .card[data-accent="blue"]::before { background: #3b82f6; }
+  .card[data-accent="blue"]:hover { box-shadow: 0 0 40px rgba(59,130,246,0.06); }
+
+  .card[data-accent="purple"]::before { background: #8b5cf6; }
+  .card[data-accent="purple"]:hover { box-shadow: 0 0 40px rgba(139,92,246,0.06); }
+
+  .card[data-accent="orange"]::before { background: #f59e0b; }
+  .card[data-accent="orange"]:hover { box-shadow: 0 0 40px rgba(245,158,11,0.06); }
+
+  .card[data-accent="teal"]::before { background: #14b8a6; }
+  .card[data-accent="teal"]:hover { box-shadow: 0 0 40px rgba(20,184,166,0.06); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0a0a0f;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+
+  .card[data-accent="green"] .avatar { background: #22c55e; }
+  .card[data-accent="green"] .avatar::after { box-shadow: 0 0 20px #22c55e; }
+
+  .card[data-accent="blue"] .avatar { background: #3b82f6; }
+  .card[data-accent="blue"] .avatar::after { box-shadow: 0 0 20px #3b82f6; }
+
+  .card[data-accent="purple"] .avatar { background: #8b5cf6; }
+  .card[data-accent="purple"] .avatar::after { box-shadow: 0 0 20px #8b5cf6; }
+
+  .card[data-accent="orange"] .avatar { background: #f59e0b; }
+  .card[data-accent="orange"] .avatar::after { box-shadow: 0 0 20px #f59e0b; }
+
+  .card[data-accent="teal"] .avatar { background: #14b8a6; }
+  .card[data-accent="teal"] .avatar::after { box-shadow: 0 0 20px #14b8a6; }
+
+  .card-identity h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fafafa;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+
+  .card-identity .role-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-opus {
+    background: rgba(245,158,11,0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+
+  .badge-sonnet {
+    background: rgba(161,161,170,0.1);
+    color: #a1a1aa;
+    border: 1px solid rgba(161,161,170,0.15);
+  }
+
+  .badge-haiku {
+    background: rgba(194,135,105,0.1);
+    color: #c2a278;
+    border: 1px solid rgba(194,162,120,0.18);
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #22c55e;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    position: relative;
+  }
+
+  .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(34,197,94,0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+
+  .tasks {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .tasks span {
+    color: #fafafa;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin-bottom: 16px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+  }
+
+  /* Diamond icon for model badges */
+  .badge svg {
+    width: 12px;
+    height: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>Agent Team</h1>
+    <p><span>5</span> agents configured</p>
+  </div>
+
+  <div class="grid">
+    <!-- RICK -->
+    <div class="card" data-accent="green">
+      <div class="card-top">
+        <div class="avatar">R</div>
+        <div class="card-identity">
+          <h2>RICK</h2>
+          <div class="role-title">Lead Engineer</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="badge badge-opus">
+          <svg viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg>
+          Opus
+        </div>
+        <div class="status"><span class="status-dot"></span> Active</div>
+        <div class="tasks"><span>23</span> tasks</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-desc">Architecture, implementation, security</div>
+    </div>
+
+    <!-- SAGE -->
+    <div class="card" data-accent="blue">
+      <div class="card-top">
+        <div class="avatar">S</div>
+        <div class="card-identity">
+          <h2>SAGE</h2>
+          <div class="role-title">Product Manager</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="badge badge-sonnet">
+          <svg viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg>
+          Sonnet
+        </div>
+        <div class="status"><span class="status-dot"></span> Active</div>
+        <div class="tasks"><span>12</span> tasks</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-desc">Strategy, PRDs, content</div>
+    </div>
+
+    <!-- NOIR -->
+    <div class="card" data-accent="purple">
+      <div class="card-top">
+        <div class="avatar">N</div>
+        <div class="card-identity">
+          <h2>NOIR</h2>
+          <div class="role-title">Designer</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="badge badge-sonnet">
+          <svg viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg>
+          Sonnet
+        </div>
+        <div class="status"><span class="status-dot"></span> Active</div>
+        <div class="tasks"><span>8</span> tasks</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-desc">UX/UI, design system, prototyping</div>
+    </div>
+
+    <!-- SCAN -->
+    <div class="card" data-accent="orange">
+      <div class="card-top">
+        <div class="avatar">S</div>
+        <div class="card-identity">
+          <h2>SCAN</h2>
+          <div class="role-title">Code Reviewer</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="badge badge-sonnet">
+          <svg viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg>
+          Sonnet
+        </div>
+        <div class="status"><span class="status-dot"></span> Active</div>
+        <div class="tasks"><span>15</span> tasks</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-desc">Code review, QA, testing</div>
+    </div>
+
+    <!-- DELV -->
+    <div class="card" data-accent="teal">
+      <div class="card-top">
+        <div class="avatar">D</div>
+        <div class="card-identity">
+          <h2>DELV</h2>
+          <div class="role-title">Researcher</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="badge badge-haiku">
+          <svg viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg>
+          Haiku
+        </div>
+        <div class="status"><span class="status-dot"></span> Active</div>
+        <div class="tasks"><span>6</span> tasks</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-desc">Web research, competitive analysis</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

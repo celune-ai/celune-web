@@ -26,6 +26,8 @@ Agent (Claude Code, etc.)
 
 Each MCP server is a separate process that the agent communicates with over stdio or HTTP. The servers are independently deployable, independently updateable, and share nothing with each other.
 
+<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent configuration panel showing RICK, SAGE, NOIR, SCAN, and DELV agents with their MCP tool access and model assignments" width={1200} height={750} layout="full" caption="Each Celune agent gets access to specific MCP servers based on its role — RICK gets Supabase and GitHub, SAGE gets Slack and Gmail." />
+
 ---
 
 ## Setting Up Your First MCP Server
@@ -191,6 +193,10 @@ MCP servers can fail — the process crashes, the API is down, the auth token ex
 Log which MCP tools are called, how often, and what they cost. This data informs optimization: if your agent calls `execute_sql` forty times per session, maybe it needs a higher-level query abstraction.
 
 ---
+
+<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard showing connected services, uptime metrics, and agent activity across MCP-integrated tools" width={1200} height={750} layout="float-right" caption="The dashboard shows the compound effect — agents working across Supabase, Slack, and GitHub through MCP, all visible in one place." />
+
+<ClearFloat />
 
 ## What MCP Enables
 

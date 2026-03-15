@@ -36,6 +36,8 @@ There are three structural problems with relying solely on human review in an AI
 
 ## What AI Review Actually Catches
 
+<ProductScreenshot src="/blog/screenshots/code-review.jpg" alt="Celune's PR review interface showing inline AI-generated comments catching logic errors and security issues" width={1200} height={750} layout="full" caption="AI review in action — the SCAN agent leaves inline comments on every PR, flagging logic gaps and security patterns before a human ever looks at the code." />
+
 There's a misconception that AI code review is just "linting with more steps." The reality in 2026 is significantly more sophisticated.
 
 Modern AI review tools — CodeRabbit, Greptile, Anthropic's own multi-agent review system — operate at the logic level. They're not checking indentation. They're asking: "Does this function handle the case where the API returns null?" and "This SQL query doesn't use parameterized inputs — is that intentional?"
@@ -62,6 +64,10 @@ Here's what that looks like in practice:
 The AI layer handles the high-volume, pattern-matching work. The human layer handles the judgment calls that require context, taste, and product understanding.
 
 This isn't theoretical. We run this exact model at Celune. Every project goes through an automated code review gate before it reaches a human. The AI reviewer (we call it SCAN) runs the test suite, checks for security patterns, performs a line-by-line logic review, and creates fix tasks for anything it finds. By the time a human looks at the PR, the mechanical issues are already resolved. The human review focuses entirely on "should we build this?" and "does this fit the architecture?" — the questions that actually need a human brain.
+
+<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team configuration showing RICK, SAGE, NOIR, SCAN, and DELV agent cards with their roles and model assignments" width={1200} height={750} layout="float-right" caption="SCAN is one of five specialized agents — each with a defined role and model tier." />
+
+<ClearFloat />
 
 ---
 
