@@ -1,0 +1,150 @@
+"One-person startup" used to be a polite way of saying "pre-team." A founder grinding alone in a coffee shop, trying to do everything, waiting for the moment they could finally hire someone. It was a phase you passed through, not a destination.
+
+That's not what it means anymore.
+
+In 2026, a growing number of founders are choosing to stay solo — not because they can't hire, but because they don't need to. They're running AI agent teams that handle code review, project management, design feedback, research, and overnight builds. They're shipping products that look like they came from a 5-person team, because operationally, they did.
+
+I'm one of them. And I want to talk about what actually changed, what it looks like day-to-day, and where the limits still are.
+
+---
+
+## What Changed (and When)
+
+The idea of AI replacing work isn't new. But for most of 2024 and 2025, AI coding tools were essentially autocomplete with ambition. Good for boilerplate. Unreliable for anything that required understanding a codebase across multiple files.
+
+Three things shifted in late 2025 and early 2026:
+
+**1. Persistent context across sessions.** Agents can now pick up where they left off. They read your codebase, understand your conventions, and don't need to be re-explained the architecture every time you open a terminal. This sounds small. It's the single biggest unlock.
+
+**2. Agents that follow processes, not just instructions.** You can define a workflow — "when a task is marked for review, run the code reviewer agent, then the design feedback agent, then flag blockers" — and it actually happens. Agents don't just generate code; they participate in a development lifecycle.
+
+**3. Multi-agent coordination.** One agent writes code. Another reviews it. A third checks for security issues. They work in parallel, they catch each other's mistakes, and they do it at 3 AM while you're asleep. This isn't theoretical. I run overnight builds regularly.
+
+Dario Amodei predicted that we'd see one-person billion-dollar companies. That's still aspirational. But one-person companies generating real revenue with a team of AI agents? That's already happening.
+
+---
+
+## What a Day Actually Looks Like
+
+I'll walk through a typical day to make this concrete, because the abstract version of "AI agents help you build faster" doesn't capture the shape of it.
+
+### Morning: Planning and Direction
+
+I spend the first hour reviewing what happened overnight. If I kicked off a build session before bed, there are commits to review, PRs to check, and sometimes a completed feature branch waiting for my eyes. I check the task board, review agent output, and decide what to prioritize.
+
+This is still fully human work. Deciding *what* to build, *why* it matters, and *in what order* — that's the job. Agents don't have product instincts. They have execution capacity.
+
+### Midday: Building With Agents
+
+When I'm actively building, the workflow looks like this:
+
+1. I write a task description — the "what" and "why," not the "how"
+2. I assign it to the lead coding agent
+3. The agent writes the implementation, following the codebase conventions it's learned
+4. I review the output, course-correct if needed, and merge
+5. A code review agent automatically flags issues — unused imports, missing error handling, type inconsistencies
+6. A design feedback agent checks UI changes against established patterns
+
+On a good day, I ship 3-5 features that would have taken a small team a full sprint. On a bad day, I spend two hours debugging an agent that misunderstood the task and went in the wrong direction. Both happen.
+
+### Evening: Overnight Builds
+
+Before signing off, I queue up lower-risk tasks — test coverage improvements, refactoring, documentation updates, smaller features with clear specs. The agents work through them overnight. By morning, there are PRs ready for review.
+
+This is where the "5-person team" comparison becomes literal. I have the output capacity of a small team, compressed into the hours I'm actually awake plus the hours I'm not.
+
+---
+
+## The Agent Team Structure
+
+Not all agents are equal, and treating them as interchangeable is a mistake I made early on. Here's what I've landed on:
+
+| Role | What It Does | Model Tier |
+|------|-------------|------------|
+| Lead / Coder | Writes implementation code, owns the codebase | Frontier (Opus-class) |
+| Code Reviewer | Reviews PRs, flags issues, enforces standards | Mid-tier (Sonnet-class) |
+| PM / Writer | Writes specs, PRDs, documentation | Mid-tier |
+| Designer | UI/UX feedback, design system consistency | Mid-tier |
+| Researcher | Background research, competitive analysis | Lightweight (Haiku-class) |
+
+The key insight: **use the cheapest model that can do the job well.** Your lead coder needs the best reasoning available. Your researcher doesn't. This keeps costs manageable and avoids the trap of throwing frontier models at everything.
+
+At Celune, we built this structure into the platform — each agent has a defined role, assigned tasks on a shared kanban, and a specific model tier. It's not a gimmick. It's how I actually run my day.
+
+---
+
+## What Still Requires Humans
+
+I'd be lying if I said agents handle everything. Here's where they consistently fall short:
+
+**Product decisions.** Agents can tell you *how* to build something. They can't tell you *what's worth building.* They don't understand your market, your users' frustrations, or the competitive landscape in a way that produces good strategy.
+
+**Taste.** Design agents can check for consistency — "this button doesn't match your design system" — but they can't tell you whether the page *feels* right. Aesthetic judgment, information hierarchy, the emotional weight of a layout. Still human.
+
+**Ambiguity.** Give an agent a well-scoped task with clear acceptance criteria and it performs well. Give it a vague directive like "make the onboarding feel better" and it'll produce something technically correct and completely wrong.
+
+**Relationships.** Sales calls, investor conversations, partnerships, community building. Agents can draft your emails and prep your talking points. They can't build trust.
+
+**Debugging the weird stuff.** Agents handle straightforward bugs well. But the gnarly ones — race conditions, state management edge cases, issues that require understanding how three systems interact — still need a human who can hold the full picture in their head.
+
+The pattern is clear: agents are exceptional at execution within defined boundaries. Humans are essential for judgment, taste, and navigating ambiguity.
+
+---
+
+## The Economics
+
+Let's talk numbers, because this only works if the math makes sense.
+
+A recent survey found that solopreneurs using AI agents saw an average revenue increase of 340% compared to those who didn't. Daily users of tools like Claude Code save an average of 4.1 hours per week — and that number is almost certainly higher now that agents can run autonomously overnight.
+
+| | AI Agent Team | 3-Person Human Team |
+|--|--------------|-------------------|
+| Monthly cost | $500-1,500 | $25,000-45,000 |
+| Available hours/day | 24 | 24 (across 3 people, 8hr each) |
+| Ramp-up time | Minutes | Weeks to months |
+| Consistency | High (same conventions every time) | Variable |
+| Product judgment | None (you provide it) | Some (if senior) |
+
+The cost difference is staggering. But it's not just about saving money — it's about what becomes *possible.* At $500/month in AI costs, you can experiment. You can build three versions of a feature and pick the best one. You can afford to throw away work that isn't good enough.
+
+That kind of optionality used to require either venture funding or years of savings. Now it requires a laptop and a credit card.
+
+---
+
+## The Skeptic's Counterargument (and Why It's Partially Right)
+
+The most common pushback I hear: "This only works for developer-founders building software products."
+
+And... yeah, partially. If your company requires physical operations, manufacturing, or in-person services, an AI agent team doesn't replace your workforce. This model is strongest for software products, content businesses, and digital services.
+
+But the "developer-founder" part is becoming less true. AI agents are getting better at tasks that used to require technical skill — data analysis, content creation, marketing automation, customer support triage. The bar for what counts as a "technical founder" is dropping fast.
+
+The other valid critique: **this doesn't scale infinitely.** At some point, if your product succeeds, you'll need humans. For enterprise sales, for customer support that requires empathy, for the kind of strategic thinking that comes from a team with diverse perspectives. The one-person startup is a powerful starting point. It's not necessarily an ending point.
+
+---
+
+## Why This Matters Beyond Startups
+
+The one-person startup isn't just a business model. It's a proof of concept for a broader shift.
+
+If a solo founder can ship a production-quality SaaS product with AI agents, what does that mean for small teams? For agencies? For enterprise innovation labs?
+
+It means the minimum viable team is shrinking. It means the bottleneck is shifting from "can we build this?" to "should we build this?" It means the people who thrive will be the ones who can direct AI agents effectively — who can write clear specs, make good product decisions, and maintain quality standards.
+
+The skill that matters most isn't coding anymore. It's judgment.
+
+---
+
+## Getting Started
+
+If you're a solo founder considering this approach, here's what I'd suggest:
+
+1. **Start with one agent, not five.** Get a coding agent working well before you add reviewers and specialists.
+2. **Invest in your task descriptions.** The quality of agent output is directly proportional to the quality of your specs.
+3. **Build review into the process.** Never ship agent code without review — either by you or by another agent.
+4. **Track your costs.** AI costs can creep up. Know what you're spending per task, per agent, per day.
+5. **Keep a human-in-the-loop for anything user-facing.** Agents are great at backend logic. They're inconsistent at UX decisions.
+
+If you want to see how this works with a structured agent team and a shared task board, [Celune](https://celune.ai) is what I built to run my own company this way. It's early, but it's real — and it's built by a one-person startup.
+
+The one-person startup isn't a phase anymore. It's an architecture choice. And for the right founder, it's the best one available.
