@@ -114,6 +114,7 @@ const SLUG_VARIATION_MAP: Record<string, number> = {
   'agent-native-task-management': 7,
   'ai-agent-persistent-memory': 8,
   'building-with-ai-agents': 9,
+  'context-engineering-ai-agents': 5,
 };
 
 function slugToIndex(slug: string): number {
@@ -146,18 +147,12 @@ export function buildPrompt(slug: string): string {
 
 /**
  * Get all blog slugs that need hero images generated.
+ * Reads from the blog registry so new posts are picked up automatically.
  */
 export function getAllSlugs(): string[] {
-  return [
-    'one-person-startup-ai-agents',
-    'control-ai-agent-costs',
-    'second-brain-ai-agents',
-    'mcp-servers-ai-agents',
-    'ai-agent-job-description',
-    'ship-features-while-you-sleep',
-    'ai-code-review-bottleneck',
-    'agent-native-task-management',
-    'ai-agent-persistent-memory',
-    'building-with-ai-agents',
-  ];
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { posts } = require('../src/lib/blog') as { posts: { slug: string; published: boolean; heroImage?: string }[] };
+  return posts
+    .filter((p) => p.published && p.heroImage)
+    .map((p) => p.slug);
 }
