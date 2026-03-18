@@ -1,0 +1,178 @@
+## The Bottleneck Nobody Talks About
+
+Everyone's obsessing over which model to use. GPT-5 vs Claude Opus vs Gemini Ultra — the benchmark wars rage on. Meanwhile, the actual bottleneck in AI agent performance has nothing to do with model capability.
+
+It's context.
+
+The difference between an AI agent that produces useful output and one that hallucinates confidently isn't intelligence — it's what you put in the prompt. Context engineering is the practice of deliberately structuring what your agent sees, when it sees it, and how it's organized. And in 2026, it's the highest-leverage skill in the AI developer toolkit.
+
+---
+
+## What Context Engineering Actually Is
+
+Context engineering isn't prompt engineering with a fancier name. Prompt engineering is about crafting the right question. Context engineering is about building the right environment for the agent to operate in.
+
+Think of it this way: prompt engineering is writing a good email to a contractor. Context engineering is setting up their entire workspace — access to the right files, knowledge of your conventions, understanding of what happened yesterday, and awareness of what matters today.
+
+In practice, context engineering covers four areas:
+
+| Area | What it controls | Example |
+|------|-----------------|---------|
+| **Identity** | Who the agent is | Role definition, behavioral guidelines, personality constraints |
+| **Knowledge** | What the agent knows | Codebase conventions, architecture decisions, project history |
+| **State** | What's happening now | Current task, recent changes, active blockers |
+| **Boundaries** | What the agent shouldn't do | Scope limits, safety rails, approval requirements |
+
+Most teams nail identity and call it done. The teams getting real output from their agents are engineering all four.
+
+---
+
+## Why This Matters Now
+
+Three things converged in 2026 that made context engineering urgent:
+
+### 1. Context windows got huge — and that made things worse
+
+When context windows were 4K tokens, you couldn't fit much in. Constraints forced discipline. Now that we're working with 200K+ token windows, the temptation is to dump everything in and let the model sort it out.
+
+This doesn't work. Research from the Manus team and others has shown that as context length increases, recall accuracy decreases. More tokens doesn't mean more understanding — it often means more noise. The model starts missing critical details buried in a wall of text.
+
+The fix isn't smaller context. It's *structured* context. The right information, in the right order, at the right time.
+
+### 2. Agents are running longer sessions
+
+A one-shot code completion doesn't need much context. An agent that's executing a multi-sprint project overnight needs context management that evolves as the work progresses. What's relevant in Sprint 1 is noise by Sprint 4.
+
+This is where most agent frameworks fall apart. They treat context as static — set it at the beginning and hope it holds. Real agent workflows need context that compresses, rotates, and updates as the work evolves.
+
+### 3. Multi-agent systems need shared context
+
+When you have one agent, context is a monologue. When you have five agents — a coder, a reviewer, a researcher, a designer, a PM — context becomes a coordination problem. Each agent needs a different slice of shared knowledge, and they need to stay in sync without duplicating everything into every prompt.
+
+---
+
+## The Architecture That Works
+
+After months of running a multi-agent team, here's the context architecture that actually produces reliable output.
+
+### Layer 1: Stable Identity (cached, rarely changes)
+
+This is the foundation — who the agent is, how it should behave, what rules it follows. It goes at the top of every prompt and almost never changes.
+
+```
+Identity → Role → Rules → Process → Conventions
+```
+
+Because this section is stable, it gets cached by the API. On Anthropic's platform, cached input tokens cost significantly less than uncached ones. Structuring your prompts with a stable prefix isn't just good engineering — it's a direct cost optimization.
+
+The key discipline: never put request-specific content in this section. The moment you mix dynamic data into your stable prefix, you break the cache and pay full price for every token.
+
+### Layer 2: Project Knowledge (updated per session)
+
+This layer contains everything the agent needs to know about the current state of the project. Architecture decisions, file conventions, recent changes, known gotchas. In our setup, this maps to `CLAUDE.md` files at the repo root and in key directories.
+
+The mistake teams make here is treating this like documentation. It's not. Documentation explains things to humans. Project knowledge tells agents where to look, what to avoid, and what conventions to follow. It should be terse, structured, and actionable.
+
+Good project knowledge:
+```
+## Database
+- ORM: Drizzle. Migrations in packages/db/drizzle/
+- Always use parameterized queries
+- Test against real database, never mock Supabase client
+```
+
+Bad project knowledge:
+```
+## Database
+We use Drizzle ORM for our database layer. Drizzle is a TypeScript-first
+ORM that provides type-safe database access. Our migration files are
+stored in the packages/db/drizzle/ directory. When writing queries, it's
+important to use parameterized queries to prevent SQL injection...
+```
+
+The second version is three times longer and adds zero useful information. Every unnecessary token in your context is a token that could be displacing something that matters.
+
+### Layer 3: Task Context (changes per task)
+
+This is the specific work the agent is doing right now. Task description, acceptance criteria, relevant file paths, dependencies on other tasks.
+
+This layer goes at the end of the prompt — after the stable cached prefix. It's the most dynamic and the most important to get right.
+
+The rule we follow: a task description should contain everything the agent needs to start working without reading anything else first. File paths, function names, expected behavior, edge cases. Front-load the specifics.
+
+### Layer 4: Memory (persistent across sessions)
+
+This is the layer most teams skip entirely, and it's the one that compounds over time. Persistent memory captures what the agent learned in previous sessions — user preferences, past mistakes, architectural decisions that aren't in the code.
+
+We organize memory into typed categories:
+
+| Type | Purpose | Example |
+|------|---------|---------|
+| **Feedback** | Corrections from the user | "Don't mock the database — use real queries in tests" |
+| **Project** | Ongoing initiatives and context | "Auth rewrite driven by compliance, not tech debt" |
+| **User** | Who you're working with | "Senior Go engineer, new to React frontend" |
+| **Reference** | Where to find things | "Pipeline bugs tracked in Linear project INGEST" |
+
+Each memory is a small file with metadata — name, description, type. An index file maps them all. The agent checks relevant memories at the start of each session, so it doesn't repeat mistakes or ask questions that were already answered.
+
+The compound effect is real. An agent with six months of accumulated memory about your project, your preferences, and your patterns produces dramatically better output than a fresh agent with the same model and the same prompt.
+
+---
+
+## The Anti-Patterns
+
+### Dumping everything into the system prompt
+
+I see this constantly. Teams concatenate their entire README, CONTRIBUTING.md, style guide, and API docs into the system prompt. The agent gets 50K tokens of context and can't find the three lines that actually matter.
+
+Be surgical. Include only what's relevant to the current task. If the agent is writing a database migration, it doesn't need your frontend component conventions.
+
+### Context that lies
+
+Stale context is worse than no context. A `CLAUDE.md` that says "we use Jest for testing" when you migrated to Vitest three months ago will produce code that uses the wrong test runner — and the agent will do it confidently because you told it to.
+
+Context files need maintenance. After any session that changes how the system works, update the context immediately. Not tomorrow. Not next sprint. Now.
+
+### Over-structured prompts
+
+There's a point where structure becomes noise. I've seen prompts with XML tags nested four levels deep, role-play instructions spanning paragraphs, and elaborate chain-of-thought scaffolding that the model ignores entirely.
+
+The best prompts are clear, direct, and flat. Use headers and tables for organization. Skip the elaborate frameworks.
+
+### No context compression for long sessions
+
+An agent running for hours accumulates conversation history. Without compression, the early context — often the most important — gets pushed further from the model's attention window.
+
+The fix: periodic context summaries. Between sprints or phases, compress what happened into a compact handoff summary. Carry the conclusions forward, not the conversation.
+
+---
+
+## Measuring Context Quality
+
+How do you know if your context engineering is working? Three metrics:
+
+**1. First-attempt accuracy.** What percentage of agent outputs are usable without revision? If you're constantly correcting the same types of errors, your context is missing something. Track what you correct and add it to the relevant context layer.
+
+**2. Cache hit rate.** If you're using Anthropic's API, monitor your cached vs uncached token ratio. A well-structured prompt with a stable prefix should see 60-80% of input tokens served from cache. If your cache hit rate is low, your "stable" prefix isn't stable.
+
+**3. Context-to-output ratio.** How many tokens of context does it take to produce one token of useful output? This varies by task, but if you're sending 100K tokens to get a 200-token answer, something is wrong. Trim the fat.
+
+---
+
+## Getting Started
+
+If you're running AI agents and haven't thought about context engineering, start here:
+
+1. **Audit your current prompts.** Separate identity, knowledge, state, and task content. Put them in that order. Make sure the stable parts are actually stable.
+
+2. **Write project knowledge files.** One per major directory. Terse, structured, actionable. Update them when things change.
+
+3. **Add persistent memory.** Start with feedback memories — corrections you've given the agent that should carry forward. This alone prevents the most common frustration: repeating yourself.
+
+4. **Measure and iterate.** Track first-attempt accuracy. When the agent gets something wrong, ask whether the answer was in the context. If not, add it. If it was, restructure so it's more prominent.
+
+Context engineering isn't glamorous. There's no framework to install, no API to call. It's the tedious, deliberate work of curating what your agent knows. But it's the difference between an agent that feels like autocomplete and one that feels like a teammate.
+
+---
+
+_At Celune, context engineering is built into the agent architecture — typed memory, layered prompts, and project knowledge files that keep agents effective across sessions. We're building the tools to make this systematic, not manual. [Check it out](https://celune.ai)._

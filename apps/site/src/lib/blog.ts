@@ -16,6 +16,17 @@ export function estimateReadingTime(wordCount: number): number {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'context-engineering-ai-agents',
+    title: 'Context Engineering: The Skill That Separates Good AI Agents from Great Ones',
+    description:
+      'Model capability isn\'t the bottleneck — context is. How to structure identity, knowledge, state, and memory to get reliable output from AI agents.',
+    date: '2026-03-21',
+    author: 'Celune Team',
+    tags: ['AI', 'Agents', 'Engineering', 'Memory'],
+    published: true,
+    heroImage: '/blog/context-engineering-ai-agents.jpg',
+  },
+  {
     slug: 'one-person-startup-ai-agents',
     title: 'The One-Person Startup Is Real Now',
     description:
