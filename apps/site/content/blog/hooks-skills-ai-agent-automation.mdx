@@ -1,0 +1,163 @@
+## The Automation Split
+
+Every AI agent system eventually hits the same fork in the road: some things need to happen the same way every time, and some things need judgment.
+
+Format code before committing? That's not a judgment call. It should happen deterministically, every single time, with zero AI involvement. Decide how to break a feature request into tasks? That requires reasoning, context, and tradeoffs. It's fundamentally probabilistic.
+
+Most agent frameworks blur this line. Everything flows through the LLM, and you end up paying inference costs for tasks that a shell script could handle in milliseconds. Worse, you get inconsistent behavior on operations that should be rock-solid.
+
+The fix is simple: separate your automation into two distinct types. We call them hooks and skills.
+
+---
+
+## Hooks: The Deterministic Layer
+
+Hooks are shell commands that fire automatically in response to events. No AI involved. No inference costs. No variability.
+
+Think of hooks like git hooks or CI checks — they're triggers that run code when something happens. The difference is that they're integrated into your agent's workflow, not bolted on after the fact.
+
+Common hook patterns:
+
+| Event | Hook action | Why deterministic? |
+|-------|------------|-------------------|
+| Before commit | Run linter + type check | Formatting rules don't need judgment |
+| After file edit | Validate import paths | Path resolution is mechanical |
+| Before deploy | Run test suite | Tests either pass or they don't |
+| After task complete | Update task status in database | State transition is a defined operation |
+
+The key property: a hook should produce the same output given the same input, every time. If it requires reasoning about context or making tradeoffs, it's not a hook — it's a skill.
+
+### Why this matters for reliability
+
+When you route deterministic operations through an LLM, you introduce unnecessary failure modes. The model might:
+
+- Forget to run the linter on one out of fifty commits
+- Format the command slightly differently based on conversation context
+- Skip the check entirely because it's "confident" the code is clean
+
+Hooks eliminate these failure modes. They run the same way whether it's 2 PM or 2 AM, whether the agent is on its first task or its fortieth. For operations where consistency matters more than intelligence, determinism wins.
+
+### The cost argument
+
+A hook that runs `pnpm type-check` costs zero inference tokens. The same check routed through an LLM costs tokens for the instruction, the reasoning, the command generation, and the output parsing. Multiply that by every commit across every agent session, and you're burning real money on work that doesn't benefit from AI.
+
+This isn't hypothetical. In our overnight build system, moving pre-commit validation from agent-directed to hook-based reduced per-session token costs by roughly 15%. The checks run faster too — no round-trip to the API, no waiting for the model to decide what to do.
+
+---
+
+## Skills: The Probabilistic Layer
+
+Skills are the opposite of hooks. They're structured prompts that teach an agent how to perform a complex, judgment-heavy task. They fire when invoked — not automatically — and they rely on the LLM's reasoning to produce contextually appropriate output.
+
+A skill might be:
+
+- **Build orchestrator**: Read a project from the task database, sort by dependencies, execute in sprint order with gate checks between phases
+- **Blog writer**: Research a topic, check for duplicate coverage, write a post matching voice guidelines, register it, generate imagery, create a PR
+- **Code reviewer**: Analyze a diff for security issues, performance regressions, and style violations, then produce a structured review document
+
+Each skill is essentially a playbook — detailed enough that the agent produces consistent *quality*, while leaving room for the agent to adapt to the specific *situation*.
+
+### What makes a good skill
+
+The best skills share a few properties:
+
+**Structured but not rigid.** A skill defines the phases of work (research → outline → draft → review) without dictating every word. Too rigid and you're writing a shell script. Too loose and you're back to "do the thing."
+
+**Outcome-focused.** "Write a blog post" is a bad skill description. "Research trending topics, score by SEO potential, write 1,500 words matching voice guidelines, register in the blog system, generate hero image, create draft PR" is a skill.
+
+**Self-contained.** A skill should carry everything the agent needs to complete the task without asking follow-up questions. File paths, conventions, quality criteria, examples — front-load all of it.
+
+### The judgment boundary
+
+The reason skills need AI is that they require decisions the author can't predict in advance:
+
+- Which topic has the best SEO potential *right now*?
+- How should this feature be decomposed into tasks *given the current codebase*?
+- What's the right level of detail for this code review *given the change size*?
+
+These decisions depend on context that changes every time the skill runs. A deterministic script can't make them. An LLM can — and that's exactly where you want to spend your inference budget.
+
+---
+
+## The Architecture
+
+In practice, hooks and skills form two layers of a single automation system:
+
+```
+┌─────────────────────────────────────────┐
+│              Agent Session              │
+│                                         │
+│  ┌─────────────────────────────────┐    │
+│  │         Skills (AI)             │    │
+│  │  /build  /blog  /review  /plan  │    │
+│  │  Judgment, context, adaptation  │    │
+│  └──────────────┬──────────────────┘    │
+│                 │ triggers               │
+│  ┌──────────────▼──────────────────┐    │
+│  │        Hooks (Shell)            │    │
+│  │  pre-commit  post-edit  deploy  │    │
+│  │  Consistency, speed, zero cost  │    │
+│  └─────────────────────────────────┘    │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+Skills invoke the agent's reasoning for high-level decisions. Hooks handle the mechanical operations that fire during execution. The skill might decide *what* to build. The hooks ensure that whatever gets built passes type checking, linting, and tests before it's committed.
+
+This layering is important because it means the AI focuses on what it's good at (reasoning, synthesis, judgment) while deterministic tooling handles what *it's* good at (consistency, speed, enforcement).
+
+---
+
+## When to Use Which
+
+The decision framework is straightforward:
+
+| Use a hook when... | Use a skill when... |
+|---|---|
+| The operation has one correct answer | The operation requires judgment |
+| It should run automatically on every trigger | It should run when deliberately invoked |
+| Speed and consistency matter most | Quality and adaptability matter most |
+| The logic fits in a shell command | The logic requires multi-step reasoning |
+| Failure should block the workflow | Failure should be reported and retried |
+
+### Grey areas
+
+Some operations sit on the boundary. Code review is mostly judgment-based (skill), but checking for known security patterns could be rule-based (hook). The right call depends on your tolerance for false positives and how much context the check needs.
+
+Our approach: start with a hook. If the hook produces too many false positives or can't handle the nuance, promote it to a skill. It's easier to add intelligence than to remove it.
+
+### Anti-pattern: skill-only architectures
+
+Teams that route everything through skills — including formatting, linting, and status updates — pay three penalties:
+
+1. **Cost**: Every mechanical operation burns tokens unnecessarily
+2. **Latency**: Simple checks take seconds instead of milliseconds
+3. **Reliability**: The agent occasionally skips checks it considers "obvious"
+
+The third penalty is the most dangerous. An agent that decides linting is unnecessary because "the code looks clean" will eventually let a formatting error through. A hook doesn't have opinions. It runs.
+
+### Anti-pattern: hook-only architectures
+
+The opposite extreme — trying to encode everything in shell scripts — breaks when tasks require context. You can't write a bash script that produces a good code review. You can't deterministically decompose a feature request into subtasks. Some work genuinely requires reasoning.
+
+The goal isn't to minimize AI usage. It's to use AI where it adds value and skip it where it doesn't.
+
+---
+
+## Building This Into Your Workflow
+
+If you're running AI agents and haven't separated deterministic from probabilistic automation, here's where to start:
+
+**1. Audit your agent's actions.** For each thing your agent does, ask: "Does this require judgment?" If no, it's a hook candidate. Format checks, test runs, status updates, file validation — these are all hooks.
+
+**2. Extract your first hooks.** Pick the highest-frequency deterministic operations and move them out of the agent's prompt. Pre-commit validation is usually the biggest win — it runs on every commit and never needs AI reasoning.
+
+**3. Define your first skill.** Take your most complex, judgment-heavy workflow and write it as a structured playbook. Include the phases, quality criteria, and all the context the agent needs. Test it, iterate on the structure, and refine based on output quality.
+
+**4. Watch the metrics.** Track token usage before and after. Track consistency — are hooks producing more reliable results than agent-directed checks? Track quality — are skills producing better output than unstructured prompts?
+
+The split between hooks and skills isn't a framework you install. It's a design principle for how you think about AI agent automation. Deterministic where you can, probabilistic where you must. The result is agents that are faster, cheaper, and more reliable — because they're only thinking when thinking is actually required.
+
+---
+
+_At Celune, hooks and skills are first-class primitives in the agent architecture. Hooks enforce quality gates automatically. Skills define complex workflows that agents execute with full context. The separation keeps costs down and reliability up. [See how it works](https://celune.ai)._

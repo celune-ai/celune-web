@@ -16,6 +16,17 @@ export function estimateReadingTime(wordCount: number): number {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'hooks-skills-ai-agent-automation',
+    title: 'Hooks, Skills, and the Two Types of AI Agent Automation',
+    description:
+      'Not everything your AI agent does needs AI. Separating deterministic hooks from probabilistic skills makes agents faster, cheaper, and more reliable.',
+    date: '2026-03-22',
+    author: 'Celune Team',
+    tags: ['AI', 'Agents', 'Engineering', 'Productivity'],
+    published: true,
+    heroImage: '/blog/hooks-skills-ai-agent-automation.jpg',
+  },
+  {
     slug: 'context-engineering-ai-agents',
     title: 'Context Engineering: The Skill That Separates Good AI Agents from Great Ones',
     description:
