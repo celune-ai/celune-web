@@ -116,6 +116,7 @@ const SLUG_VARIATION_MAP: Record<string, number> = {
   'building-with-ai-agents': 9,
   'context-engineering-ai-agents': 5,
   'ai-task-management-developers': 3,
+  'google-stitch-ai-design-production': 2,
 };
 
 function slugToIndex(slug: string): number {
@@ -152,8 +153,8 @@ export function buildPrompt(slug: string): string {
  */
 export function getAllSlugs(): string[] {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { posts } = require('../src/lib/blog') as { posts: { slug: string; published: boolean; heroImage?: string }[] };
-  return posts
-    .filter((p) => p.published && p.heroImage)
-    .map((p) => p.slug);
+  const { posts } = require('../src/lib/blog') as {
+    posts: { slug: string; published: boolean; heroImage?: string }[];
+  };
+  return posts.filter((p) => p.published && p.heroImage).map((p) => p.slug);
 }
