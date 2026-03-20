@@ -1,17 +1,16 @@
 # Integrations
 
-Celune connects to the tools your team already uses. Integrations extend what your agents can see, do, and communicate - without replacing your existing workflow.
+Connect your tools to Celune so your agents can work alongside you. This guide covers every integration available today — most take under two minutes to set up.
 
 ---
 
-## Available Integrations
+## IDE Connection (MCP)
 
-### Claude Code (MCP)
-
-The primary way developers connect Celune to their local environment. Claude Code connects to Celune via the **Model Context Protocol (MCP)**, giving your Agent Lead real-time access to your workspace - tasks, projects, memory, and agent configuration - directly inside your IDE.
+Celune uses the **Model Context Protocol (MCP)** to connect directly to your IDE. Once connected, your AI coding assistant can read and manage your Celune tasks, projects, and memory without leaving the editor.
 
 **What it enables:**
-- Create, update, and complete tasks from Claude Code without opening the dashboard.
+
+- Create, update, and complete tasks from your IDE without opening the dashboard.
 - Store and recall memory entries inline while you code.
 - Read agent configuration and delegate to specialists during a coding session.
 
@@ -19,86 +18,85 @@ See the [MCP Setup Guide](/guides/mcp-setup) for setup instructions.
 
 ---
 
-### GitHub
+## GitHub
 
-Connect your GitHub repositories so agents can understand your codebase in context - open pull requests, recent commits, and file structure.
+Connect your GitHub organization or personal account to enable repository access, PR tracking, and project linking across your workspace.
 
 **What it enables:**
-- Agents reference real files and recent changes when working on tasks.
-- Code review agent (SCAN) can read and analyze pull request diffs.
-- Task completion can be linked to the commits that produced the output.
+
+- **Repository access** — browse and link repos to projects.
+- **PR tracking** — see pull request status alongside your tasks.
+- **Code review integration** — agents can provide context-aware code reviews.
+- **Branch awareness** — view branches linked to active tasks.
+- **File conflict detection** — get alerts when multiple tasks touch the same files.
 
 See the [GitHub Integration Guide](/guides/github-integration) for setup instructions.
 
 ---
 
-### Slack
+## AI Provider Keys (BYOK)
 
-Connect your Slack workspace so agents can notify channels, accept commands, and send proactive updates without requiring anyone to check the dashboard.
+Celune supports **Bring Your Own Key** — use your own AI provider API keys for agent conversations. This is optional; Celune provides default AI access on all plans.
 
-**What it enables:**
-- Agents post task completion summaries and escalation alerts to designated channels.
-- Team members can create tasks and check agent status using `/celune` slash commands.
-- Your Agent Lead can send messages to Slack as part of a task workflow.
+**Supported providers:**
 
-See the [Slack Integration Guide](/guides/slack-integration) for setup instructions.
-
----
-
-### ElevenLabs (Voice)
-
-Voice mode is powered by ElevenLabs text-to-speech. This integration runs automatically when voice mode is enabled - there is no separate setup step.
-
-**What it enables:**
-- Your Agent Lead delivers spoken responses in a voice you chose.
-- Voice previews during onboarding and agent settings.
-
-Voice mode is available on Pro, Team, and Enterprise plans. See the [Voice Setup Guide](/guides/voice-setup) for details.
-
----
-
-### AI Providers (BYOK)
-
-Bring your own Anthropic or OpenAI API key to route model inference through your own provider account instead of Celune's managed access.
-
-**What it enables:**
-- Inference costs billed to your own Anthropic or OpenAI account.
-- Compliance with organizational policies requiring use of approved credentials.
-- Use of existing enterprise agreements with AI providers.
+| Provider          | Key Prefix | Default Model     |
+| ----------------- | ---------- | ----------------- |
+| **Anthropic**     | `sk-ant-`  | Claude Sonnet 4.6 |
+| **OpenAI**        | `sk-`      | GPT-4o            |
+| **Groq**          | `gsk_`     | Llama 3.1 70B     |
+| **xAI (Grok)**    | `xai-`     | Grok-2            |
+| **Google Gemini** | `AIza`     | Gemini 2.0 Flash  |
+| **OpenRouter**    | `sk-or-`   | Auto              |
 
 See the [BYOK Guide](/guides/byok) for setup instructions.
 
 ---
 
-## Integration Status
+## Slack
 
-| Integration   | Status         | Plans          |
-| ------------- | -------------- | -------------- |
-| Claude Code   | Available      | All            |
-| GitHub        | Early access   | Pro, Team, Ent |
-| Slack         | Early access   | Pro, Team, Ent |
-| ElevenLabs    | Available      | Pro, Team, Ent |
-| BYOK          | Available      | Pro, Team, Ent |
+Connect your Slack workspace to receive notifications from Celune directly in your team channels.
+
+**What it enables:**
+
+- Agents post task completion summaries and escalation alerts to designated channels.
+- Team members can create tasks and check agent status using `/celune` slash commands.
+- Configure which channel receives each type of notification (tasks, code reviews, alerts, billing).
 
 ---
 
-## Planned Integrations
+## Webhooks
 
-The following integrations are on the roadmap:
+Webhooks let you send real-time event notifications from Celune to any external URL. Use them to trigger automations, update dashboards, or integrate with tools Celune does not natively support.
 
-- **GitLab** - Repository access and MR review, analogous to the GitHub integration.
-- **Linear** - Two-way sync between Celune tasks and Linear issues.
-- **Notion** - Agent knowledge base and document context.
-- **Jira** - Issue import and task status sync for enterprise teams.
+**Supported events:**
 
-If an integration you need isn't listed, contact [hello@celune.ai](mailto:hello@celune.ai) - we prioritize based on demand.
+| Event                     | Fires When                   |
+| ------------------------- | ---------------------------- |
+| `task.created`            | A new task is created        |
+| `task.completed`          | A task is marked complete    |
+| `task.updated`            | A task is modified           |
+| `agent.status_changed`    | An agent goes online/offline |
+| `usage.threshold_reached` | Usage hits a plan limit      |
+| `billing.invoice_paid`    | A billing invoice is paid    |
+
+---
+
+## Plan Availability
+
+| Integration        | Build (Free) | Pro | Team | Enterprise |
+| ------------------ | :----------: | :-: | :--: | :--------: |
+| IDE (MCP)          |     Yes      | Yes | Yes  |    Yes     |
+| GitHub             |     Yes      | Yes | Yes  |    Yes     |
+| BYOK Provider Keys |     Yes      | Yes | Yes  |    Yes     |
+| Slack              |     Yes      | Yes | Yes  |    Yes     |
+| Webhooks           |      --      | --  | Yes  |    Yes     |
 
 ---
 
 ## Related Pages
 
-- [MCP Setup](/guides/mcp-setup) - Step-by-step Claude Code connection guide.
+- [MCP Setup](/guides/mcp-setup) - Step-by-step IDE connection guide.
 - [GitHub Integration](/guides/github-integration) - Repository context and code review setup.
-- [Slack Integration](/guides/slack-integration) - Notifications and slash commands.
 - [BYOK](/guides/byok) - Bring your own AI provider keys.
-- [Voice Setup](/guides/voice-setup) - ElevenLabs voice configuration.
+- [Getting Started](/getting-started) - Set up your workspace and first agent.

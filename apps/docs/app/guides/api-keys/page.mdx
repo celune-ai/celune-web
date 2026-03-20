@@ -1,35 +1,19 @@
 # API Keys
 
-Celune API keys let you connect external tools to your workspace - including Claude Code via MCP, CI/CD pipelines, and your own integrations. This guide covers creating, managing, and securing your API keys.
+Celune API keys let you connect external tools to your workspace — including your IDE via MCP, CI/CD pipelines, and your own integrations. This guide covers creating, managing, and securing your API keys.
 
-For information on bringing your own AI provider keys (Anthropic, OpenAI), see the [BYOK guide](/guides/byok).
+For information on bringing your own AI provider keys (Anthropic, OpenAI, etc.), see the [BYOK guide](/guides/byok).
 
 ---
 
 ## Creating an API Key
 
-1. Open the Celune dashboard and navigate to **Settings → API Keys**.
+1. Open the Celune dashboard and navigate to **Settings > API Keys**.
 2. Click **New API Key**.
-3. Enter a descriptive name - e.g., `claude-code-local`, `ci-pipeline`, `integration-test`.
-4. Select an **environment**: `development` or `production`.
-5. Choose a **scope** (see [Scopes](#scopes) below).
-6. Optionally set an **expiration date** and a **rate limit**.
-7. Click **Create Key**.
+3. Enter a descriptive name — e.g., `claude-code-local`, `ci-pipeline`, `integration-test`.
+4. Click **Create Key**.
 
-> The key is shown **once** at creation. Copy it immediately and store it somewhere safe - Celune only stores a hashed version and cannot retrieve the plaintext key after this point.
-
----
-
-## Key Format
-
-API keys use a prefix that identifies their environment:
-
-| Prefix       | Environment |
-| ------------ | ----------- |
-| clne_live_ | Production  |
-| clne_test_ | Development |
-
-Always use `clne_test_` keys in development environments and `clne_live_` keys for production workloads.
+> The key is shown **once** at creation. Copy it immediately and store it somewhere safe — Celune only stores a hashed version and cannot retrieve the plaintext key after this point.
 
 ---
 
@@ -37,61 +21,37 @@ Always use `clne_test_` keys in development environments and `clne_live_` keys f
 
 Include your key in the `Authorization` header on every request:
 
-```bash
-curl https://app.celune.ai/api/agents/configs \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
-  -G \
-  --data-urlencode "workspace_id=your-workspace-uuid"
+```
+Authorization: Bearer YOUR_API_KEY
 ```
 
-For MCP connections (Claude Code), the key goes in your `.mcp.json` or global Claude Code settings. See the [MCP Setup Guide](/guides/mcp-setup) for details.
+For MCP connections, the key goes in your IDE's MCP configuration file. See the [MCP Setup Guide](/guides/mcp-setup) for details.
 
 ---
 
-## Scopes
+## BYOK (Bring Your Own Key)
 
-API keys are issued with a scope that controls what they can do.
+Celune also supports **Bring Your Own Key** for AI providers. This is separate from Celune API keys — BYOK keys are your own AI provider credentials that Celune uses for agent conversations.
 
-| Scope   | Permissions                                                                            |
-| ------- | -------------------------------------------------------------------------------------- |
-| read  | Read-only access to tasks, projects, agents, and analytics                             |
-| write | Read + create, update tasks and projects; create memory entries                        |
-| admin | Full access: webhooks, API key management, audit logs, agent configuration             |
+Supported providers:
 
-Use the minimum scope required for your integration. CI pipelines that only need to read task status should use `read`, not `admin`.
+| Provider          | Key Prefix | Default Model     |
+| ----------------- | ---------- | ----------------- |
+| **Anthropic**     | `sk-ant-`  | Claude Sonnet 4.6 |
+| **OpenAI**        | `sk-`      | GPT-4o            |
+| **Groq**          | `gsk_`     | Llama 3.1 70B     |
+| **xAI (Grok)**    | `xai-`     | Grok-2            |
+| **Google Gemini** | `AIza`     | Gemini 2.0 Flash  |
+| **OpenRouter**    | `sk-or-`   | Auto              |
 
----
+To add a provider key:
 
-## Rate Limits
+1. Go to **Settings > Provider Keys**.
+2. Click **Add Provider Key**.
+3. Paste your API key — Celune **auto-detects the provider** from the key prefix.
+4. The key is encrypted before storage and never displayed again in full.
 
-The default rate limit is **100 requests per minute** per key. You can configure a custom limit when creating a key.
-
-When exceeded, the API returns:
-
-```
-HTTP 429 Too Many Requests
-{ "error": "Rate limit exceeded" }
-```
-
-Rate limit status is included in response headers:
-
-| Header                  | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `X-RateLimit-Limit`     | Maximum requests per minute              |
-| `X-RateLimit-Remaining` | Requests remaining in the current window |
-| `X-RateLimit-Reset`     | Unix timestamp when the window resets    |
-
----
-
-## Rotating and Revoking Keys
-
-To rotate a key:
-
-1. Create a new key in **Settings → API Keys**.
-2. Update your integration with the new key.
-3. Revoke the old key by clicking the trash icon.
-
-Revoked keys stop working immediately - there is no grace period. Plan your rotation accordingly for production integrations.
+For full details, see the [BYOK Guide](/guides/byok).
 
 ---
 
@@ -99,15 +59,14 @@ Revoked keys stop working immediately - there is no grace period. Plan your rota
 
 - **Never commit keys to source control.** Use environment variables or a secrets manager.
 - **Never include keys in client-side code.** API keys are for server-side and CLI use only.
-- **Set expiration dates** on keys used in automated pipelines.
-- **Scope keys to what they need.** A key that only reads task status does not need `admin` scope.
-- **Audit regularly.** Review your active keys in **Settings → API Keys** and revoke anything unused.
+- **Audit regularly.** Review your active keys in **Settings > API Keys** and revoke anything unused.
+- **Rotate keys periodically.** Create a new key, update your integration, then revoke the old one.
 
 ---
 
 ## Related Pages
 
-- [BYOK: Bring Your Own Key](/guides/byok) - Use your own Anthropic or OpenAI API keys.
-- [MCP Setup](/guides/mcp-setup) - How to use your API key with Claude Code.
-- [API Reference: Authentication](/api-reference/authentication) - Full technical reference for authentication methods.
-- [Billing & Plans](/guides/billing) - Plan tiers and what's included at each level.
+- [BYOK: Bring Your Own Key](/guides/byok) — Use your own AI provider API keys.
+- [MCP Setup](/guides/mcp-setup) — How to use your API key with your IDE.
+- [API Reference](/api-reference/overview) — Full endpoint catalog.
+- [Billing & Plans](/guides/billing) — Plan tiers and what's included at each level.
