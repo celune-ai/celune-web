@@ -23,7 +23,7 @@ export const posts: BlogPost[] = [
     date: '2026-03-23',
     author: 'Celune Team',
     tags: ['AI', 'Design', 'Google Stitch', 'Agents', 'Productivity'],
-    published: true,
+    published: false, // Requires hero image at public/blog/google-stitch-ai-design-production.jpg
     heroImage: '/blog/google-stitch-ai-design-production.jpg',
   },
   {
