@@ -16,10 +16,21 @@ export function estimateReadingTime(wordCount: number): number {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'google-stitch-ai-design-production',
+    title: 'Google Stitch Lowered the Bar for Design. It Didn\u2019t Raise the Bar for Shipping.',
+    description:
+      'Stitch\u2019s March 2026 update is a real step function for design exploration. But the gap between \u201Clooks great\u201D and \u201Cworks for real users\u201D is where product quality lives.',
+    date: '2026-03-23',
+    author: 'Celune Team',
+    tags: ['AI', 'Design', 'Google Stitch', 'Agents', 'Productivity'],
+    published: true,
+    heroImage: '/blog/google-stitch-ai-design-production.jpg',
+  },
+  {
     slug: 'ai-task-management-developers',
     title: 'AI Task Management for Developers: The Layer Your Coding Assistant Is Missing',
     description:
-      'AI coding tools solved code generation. But planning, tracking, and orchestrating work across AI agents is still manual. Here\'s the missing layer in the dev tools stack.',
+      "AI coding tools solved code generation. But planning, tracking, and orchestrating work across AI agents is still manual. Here's the missing layer in the dev tools stack.",
     date: '2026-03-22',
     author: 'Celune Team',
     tags: ['AI', 'Task Management', 'Productivity', 'Agents'],
@@ -30,7 +41,7 @@ export const posts: BlogPost[] = [
     slug: 'context-engineering-ai-agents',
     title: 'Context Engineering: The Skill That Separates Good AI Agents from Great Ones',
     description:
-      'Model capability isn\'t the bottleneck — context is. How to structure identity, knowledge, state, and memory to get reliable output from AI agents.',
+      "Model capability isn't the bottleneck — context is. How to structure identity, knowledge, state, and memory to get reliable output from AI agents.",
     date: '2026-03-21',
     author: 'Celune Team',
     tags: ['AI', 'Agents', 'Engineering', 'Memory'],
