@@ -115,6 +115,7 @@ const SLUG_VARIATION_MAP: Record<string, number> = {
   'ai-agent-persistent-memory': 8,
   'building-with-ai-agents': 9,
   'context-engineering-ai-agents': 5,
+  'ai-task-management-developers': 3,
 };
 
 function slugToIndex(slug: string): number {

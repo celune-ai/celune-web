@@ -1,0 +1,159 @@
+## The Gap in the Stack
+
+AI coding assistants have gotten remarkably good. Claude Code writes entire features. Cursor autocompletes at the speed of thought. GitHub Copilot handles the boilerplate you used to dread. The code generation problem is largely solved.
+
+But here's what nobody talks about: the code was never the bottleneck.
+
+A recent MIT Sloan study found that developers with AI tools cut project management time by 24.9%. Not coding time — *project management* time. The planning, tracking, prioritizing, and coordinating that wraps around every line of code. That's the actual time sink, and your coding assistant doesn't touch it.
+
+AI task management for developers isn't a nice-to-have. It's the missing layer in the entire AI dev tools stack.
+
+---
+
+## What Coding Assistants Actually Solve
+
+Let's be precise about what tools like Copilot, Cursor, and Claude Code do well:
+
+| Task | AI coding assistant | Status |
+|------|-------------------|--------|
+| Write a function | Excellent | Solved |
+| Debug an error | Very good | Mostly solved |
+| Refactor code | Good | Improving fast |
+| Write tests | Good | Improving fast |
+| Generate boilerplate | Excellent | Solved |
+
+These tools answer the question: *"How do I implement this?"*
+
+They don't answer: *"What should I implement next?"*
+
+And that's the question that actually determines whether you ship. A solo founder with a perfect coding assistant and no task system will still struggle to prioritize, track progress, and coordinate work across sessions. The code writes itself — but someone still needs to decide what gets built, in what order, and verify it was done correctly.
+
+---
+
+## What Task Management for AI Teams Actually Looks Like
+
+Traditional project management tools — Linear, Jira, Notion, Asana — were built for human teams. The workflow assumes a human reads the task, does the work, and updates the status. Every step requires manual input.
+
+AI task management flips this. The task system becomes the interface between you and your AI agents. You define the work. Agents execute it. The system tracks state automatically.
+
+Here's how this plays out in practice:
+
+### 1. Tasks as executable specifications
+
+In a human workflow, a task description is a reminder — enough context for a person who already understands the project. In an AI workflow, the task description *is* the specification. It needs to be complete enough for an agent to execute without follow-up questions.
+
+Bad task (human-style):
+> Fix the auth bug
+
+Good task (agent-executable):
+> Add authentication middleware check to POST /api/tasks and PUT /api/tasks/:id endpoints. Use the existing `requireAuth` middleware from `src/middleware/auth.ts`. Return 401 with `{ error: "Unauthorized" }` if no valid session. Add tests in `src/__tests__/api/tasks.test.ts` covering both authenticated and unauthenticated requests.
+
+The second version takes sixty seconds longer to write. It saves hours of back-and-forth and produces code that's right on the first attempt.
+
+### 2. Real-time state tracking
+
+When an AI agent starts a task, it claims it immediately. When it finishes, it completes it immediately. No batch updates. No end-of-day status syncs. The board reflects reality in real time.
+
+This matters because AI agents can work through tasks much faster than humans. If your tracking is async — updated manually after the fact — the board is always stale. And a stale board is worse than no board, because it gives you false confidence about what's actually done.
+
+### 3. Dependency-aware ordering
+
+Tasks aren't independent. The database migration needs to land before the API endpoint, which needs to land before the frontend integration. Traditional tools let you set dependencies, but they don't *enforce* them during execution.
+
+AI task management enforces execution order. Tasks are organized into sprints with explicit dependencies. The system won't start Sprint 2 until Sprint 1 passes a quality gate — type checking, tests, build. This prevents the classic failure mode of agents building on top of broken foundations.
+
+### 4. Programmatic access
+
+This is the one that matters most and gets overlooked constantly. If your task system is a UI-only tool, AI agents can't use it. They need an API — or better, a CLI — that lets them query tasks, claim work, update status, and report results.
+
+The entire value of AI task management hinges on the task database being machine-readable. Your agent shouldn't need to parse a Notion page. It should query a database directly.
+
+---
+
+## The Solo Founder Math
+
+Here's why this matters especially for solo founders and small teams.
+
+A solo developer has roughly 6-8 productive hours per day. Before AI coding tools, most of that went to implementation. With AI coding tools, implementation is 3-5x faster — but the planning and coordination overhead stays constant. In some cases it *increases*, because you're now managing AI output in addition to your own.
+
+The math:
+
+| Activity | Pre-AI | With AI coding tools | With AI task management |
+|----------|--------|---------------------|----------------------|
+| Planning & scoping | 2 hrs | 2 hrs | 1 hr |
+| Implementation | 4 hrs | 1.5 hrs | 1 hr |
+| Review & QA | 1.5 hrs | 2 hrs | 1 hr |
+| Context switching | 0.5 hrs | 0.5 hrs | 0.25 hrs |
+| **Effective output** | **1x** | **2-3x** | **5-8x** |
+
+The jump from "AI coding tools" to "AI task management" isn't incremental. It's the difference between AI that helps you type faster and AI that helps you ship faster. Typing was never the bottleneck.
+
+### The overnight multiplier
+
+The real unlock is what happens outside working hours. With a proper task management layer, you can define a batch of tasks before bed and let agents execute overnight. You wake up to a pull request with all changes, a code review document, and a summary of what was built.
+
+This only works if:
+- Tasks are precise enough to execute unsupervised
+- Dependencies are wired so work happens in the right order
+- Quality gates catch problems between phases
+- The task system tracks state automatically so you know exactly what happened
+
+Try doing this with a Notion board. It doesn't work. The task system needs to be a first-class part of the agent architecture, not an afterthought bolted on top.
+
+---
+
+## Why Existing Tools Don't Work
+
+### Linear / Jira / Asana
+
+Great for human teams. Not designed for AI agents. The core limitation: these tools assume a human is in the loop for every state transition. An agent can't natively claim a Linear ticket, execute the work, and mark it complete without custom integration work. And even with integrations, the task descriptions are optimized for human context, not agent execution.
+
+### GitHub Issues / Projects
+
+Closer to the right model because they're developer-native and API-accessible. But GitHub Issues are designed for tracking bugs and features at the project level, not for sprint-level task orchestration with dependency ordering and quality gates. You can make it work with enough scripting, but you're building a task management system on top of a tracking system.
+
+### Notion / Docs
+
+The worst option for AI task management. Notion databases are technically API-accessible, but the overhead of parsing rich text blocks, handling nested structures, and maintaining sync is enormous. And there's no built-in concept of dependencies, sprint ordering, or quality gates.
+
+### What's actually needed
+
+The task management layer for AI teams needs to be:
+
+1. **Database-first.** Tasks are rows you can query, not documents you read.
+2. **CLI-accessible.** Agents interact via command line, not browser UI.
+3. **Dependency-aware.** Sprint ordering and quality gates are built in.
+4. **Real-time.** Status updates happen at claim/complete time, not in batch.
+5. **Description-rich.** Task descriptions are agent-executable specifications.
+
+This is a different product category from traditional project management. It's not about tracking what humans are doing — it's about orchestrating what AI agents should do next.
+
+---
+
+## Getting Started Without Specialized Tools
+
+You don't need a purpose-built system to start. Here's a minimal setup that works:
+
+**1. Use a real database.** Supabase, Postgres, even SQLite. Create a tasks table with: `id`, `title`, `description`, `status`, `assignee`, `sprint`, `depends_on`, `created_at`, `completed_at`. This beats any project board because it's queryable.
+
+**2. Write a simple CLI.** A script that lets you `create`, `list`, `claim`, and `complete` tasks. Your agents will call this CLI directly. It doesn't need to be pretty — it needs to be fast and reliable.
+
+**3. Structure your descriptions.** Every task description should have a `## What` section (the outcome) and a `## Approach` section (how to implement it). Include file paths, function names, and expected behavior. The more specific you are, the better the output.
+
+**4. Add quality gates.** Between sprints, run `type-check && build && test`. If any gate fails, stop execution. This is a single shell command, not a complex system.
+
+**5. Review everything.** AI task management doesn't mean zero human involvement. It means humans focus on planning and review instead of implementation. Read every PR. Verify every change. The agent builds — you verify.
+
+---
+
+## The Stack Is Incomplete
+
+The AI developer tools market has poured billions into making code generation faster. IDE extensions, coding agents, autocomplete models — all solving the same problem. And they've solved it well.
+
+But the layer above code generation — deciding what to build, tracking what's been built, orchestrating work across agents and sessions — is still mostly manual. Developers are using 2024-era project boards to manage 2026-era AI agents. The mismatch is obvious once you see it.
+
+AI task management for developers isn't a replacement for coding assistants. It's the layer that makes them useful at scale. Without it, you have fast fingers and no direction. With it, you have a system that ships.
+
+---
+
+_Celune is building the task management layer for AI agent teams — database-first, CLI-accessible, with dependency ordering and quality gates built in. If you're a solo founder or small team ready to go from "AI writes my code" to "AI ships my features," [check it out](https://celune.ai)._

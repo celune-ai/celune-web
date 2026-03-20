@@ -1,100 +1,149 @@
 # Agents
 
-Agents are the AI collaborators that power Celune. Instead of a single generic chatbot, Celune gives you a team of purpose-built agents - each with a defined role, personality, and set of capabilities.
+## What are Agents?
+
+Agents are AI teammates that work alongside you inside Celune. Each agent has a specific role  -  like coding, design, project management, or career coaching  -  and a distinct personality you can customize.
+
+Think of agents as specialized colleagues. Instead of one generic AI assistant, you get a team of focused experts, each bringing their own strengths to the table. Agents can read and write to memory, create and update tasks, and communicate with each other through delegation.
+
+Every workspace starts with a **lead agent** that you create during onboarding, plus a roster of specialized agents you can activate based on your needs.
 
 ---
 
-## Your Agent Lead
+## Your Lead Agent
 
-When you first sign up, Celune walks you through creating your **Agent Lead**. This is your primary AI collaborator: the one you talk to, ask questions, and hand off work to. Think of them as your always-on teammate.
+When you first set up Celune, you create a **lead agent** through the onboarding wizard. This is your primary AI teammate  -  the one you interact with most often.
 
-Your Agent Lead has:
+During setup, you choose your lead agent's:
 
-- **A name and personality** - you choose how they communicate: direct, warm, witty, formal.
-- **A voice** - text-to-speech powered by ElevenLabs, so you can have real conversations.
-- **An avatar** - a visual identity that shows up across the platform.
-- **A persona prompt** - the system-level instructions that define how they think and respond.
+- **Name**  -  give them whatever name you like
+- **Archetype**  -  pick a starting personality template
+- **Voice**  -  select or clone a voice for voice mode
+- **Avatar**  -  choose a visual identity
 
-The Agent Lead is the entry point to Celune. Every task, project, and conversation flows through them first.
-
----
-
-## Agent Types
-
-Celune supports three types of agents:
-
-| Type           | Purpose                                                              |
-| -------------- | -------------------------------------------------------------------- |
-| **Lead**       | Your primary collaborator. One per workspace. Handles orchestration. |
-| **Specialist** | Domain-focused agents (e.g., design, research, code review).         |
-| **Utility**    | Lightweight agents for narrow, repeatable tasks.                     |
-
-Most teams start with just a Lead. Specialists get added as the workload grows and you want domain-specific expertise without context-switching.
+Your lead agent sits at the top of your AI team hierarchy (depth 1) and can delegate work to the specialized agents below.
 
 ---
 
-## Agent Configuration
+## Agent Roster
 
-Each agent is configured with a set of fields:
+Celune includes 9 pre-built agents organized into two pods: **Product** (work-focused) and **Personal** (life-focused).
 
-| Field            | Description                                                             |
-| ---------------- | ----------------------------------------------------------------------- |
-| display_name   | The agent's name shown across the UI.                                   |
-| role           | Short role label (e.g., "Lead Coder", "Designer", "Researcher").        |
-| description    | What this agent is responsible for.                                     |
-| agent_type     | `lead`, `specialist`, or `utility`.                                     |
-| model          | The underlying AI model (e.g., claude-opus-4-6, claude-sonnet-4-6).     |
-| color          | Accent color used in the UI for this agent's cards and avatars.         |
-| persona_prompt | The system prompt that shapes this agent's personality and constraints. |
-| capabilities   | What this agent can access: tasks, projects, memory, integrations.      |
+### Lead Agent
 
-You manage all of this from **Team** in the sidebar.
+| Agent    | Role         | Model       | Description                                                                                                     |
+| -------- | ------------ | ----------- | --------------------------------------------------------------------------------------------------------------- |
+| **RICK** | Lead + Coder | Claude Opus | Codes directly, orchestrates delegation, and serves as your execution partner. The default lead agent template. |
 
----
+### Product Pod
 
-## How Agents Collaborate
+These agents handle your professional and project work.
 
-When your Lead receives a request that's outside their domain - or when multiple things need to happen in parallel - they delegate to specialists.
+| Agent    | Role          | Model         | Description                                                                                            |
+| -------- | ------------- | ------------- | ------------------------------------------------------------------------------------------------------ |
+| **SAGE** | PM + Writer   | Claude Sonnet | Product strategy, PRDs, specs, retros, and content. Owns task board quality and description standards. |
+| **NOIR** | Designer      | Claude Sonnet | Product design lead. UX/UI, design system, prototyping, and visual quality review.                     |
+| **SCAN** | Code Reviewer | Claude Sonnet | Code review and QA. Reviews code for correctness, security, and quality.                               |
+| **DELV** | Researcher    | Claude Haiku  | Web research, competitive analysis, codebase exploration, and evidence gathering.                      |
 
-Delegation is tracked automatically:
+### Personal Pod
 
-- **Who** handed off the task (`delegated_by`)
-- **When** the handoff happened (`delegated_at`)
-- **Why** the task was reassigned (`delegation_reason`)
+These agents support your personal and professional growth.
 
-The Team page shows a **Delegations** tab with the full handoff history for any task.
+| Agent    | Role          | Model        | Description                                                                      |
+| -------- | ------------- | ------------ | -------------------------------------------------------------------------------- |
+| **TREK** | Career        | Claude Haiku | Career strategy, networking, skill development, and professional positioning.    |
+| **ECHO** | Brand         | Claude Haiku | Personal brand, social media, thought leadership, and public-facing content.     |
+| **BOND** | Relationships | Claude Haiku | Relationship management, CRM, follow-ups, and professional relationship mapping. |
+| **VITA** | Growth        | Claude Haiku | Personal growth, goal tracking, habits, wellness, and life admin.                |
 
-Agents also share a **memory layer** - durable notes stored in a database that persist across sessions. This means a specialist doesn't start cold; they can recall relevant context from past work.
-
----
-
-## Agent Lifecycle
-
-An agent goes through a simple lifecycle:
-
-1. **Created** - configured with name, role, model, and persona during onboarding or from the Team page.
-2. **Active** - assigned tasks, participating in projects, generating outputs.
-3. **Archived** - removed from the active roster but retained for historical context.
-
-You can create, edit, or archive agents at any time from **Team → Agents**.
+Higher-tier models (Opus, Sonnet) are used for agents that require deeper reasoning. Haiku-powered agents handle lighter, more routine tasks efficiently.
 
 ---
 
-## Model Selection
+## Customizing Agents
 
-Different agents use different AI models based on the complexity of their work:
+Every agent has a set of **personality sliders** you can adjust from 0 to 100. These sliders shape how the agent communicates with you:
 
-| Tier     | Model             | Best For                                           |
-| -------- | ----------------- | -------------------------------------------------- |
-| Heavy    | claude-opus-4-6   | Complex engineering, orchestration, deep reasoning |
-| Standard | claude-sonnet-4-6 | Writing, design, code review, domain work          |
-| Light    | claude-haiku-4-5  | Research, simple tasks, high-volume queries        |
+| Slider             | What it controls                                                            |
+| ------------------ | --------------------------------------------------------------------------- |
+| **Humor**          | Frequency of wit, irony, and deadpan comedy.                                |
+| **Honesty**        | Bluntness of truth delivery. Never dishonest at any setting  -  just softer.  |
+| **Directness**     | How quickly the agent gets to the point.                                    |
+| **Warmth**         | Emotional support in tone, from purely functional to genuinely encouraging. |
+| **Confidence**     | Assertiveness of positions, from hedging to stating things as fact.         |
+| **Formality**      | Professional vs. casual language.                                           |
+| **Verbosity**      | Response length, from terse to detailed.                                    |
+| **Autonomy**       | How independently the agent acts vs. checking in with you.                  |
+| **Sarcasm**        | Sharpness and edge in humor.                                                |
+| **Self-awareness** | How much the agent references being an AI or reflects on its own behavior.  |
 
-Matching the model to the task keeps costs in check without sacrificing quality.
+### Personality Profiles
+
+Instead of adjusting sliders one by one, you can switch between preset **profiles** that configure multiple sliders at once:
+
+| Profile        | Style                                              |
+| -------------- | -------------------------------------------------- |
+| **Default**    | General working mode.                              |
+| **Crunch**     | Deadline mode. No jokes. Maximum efficiency.       |
+| **Brainstorm** | Ideation mode. Open, exploratory, willing to riff. |
+| **Debrief**    | Post-mortem mode. Honest, reflective.              |
+| **Pitch**      | External-facing. Polished, still authentic.        |
+| **Late Night** | Maximum camaraderie. Gloves are off.               |
+
+### Other Customizations
+
+Beyond personality, you can also configure:
+
+- **Display name**  -  rename any agent
+- **Avatar**  -  upload or select a custom avatar image
+- **Role**  -  update the agent's role title
+- **Description**  -  change the agent's bio and focus area
+- **Employed/Benched**  -  toggle agents on or off without deleting them
 
 ---
 
-## Related Concepts
+## Agent Chat
 
-- [Workspaces](/concepts/workspaces) - Agents belong to a workspace. Different workspaces can have different teams.
-- [Permissions](/concepts/permissions) - Control which team members can create, edit, or manage agents.
+Each agent has its own chat interface. Click on any agent in your roster to open a conversation.
+
+Chat features include:
+
+- **Streaming responses**  -  see the agent's reply as it's generated in real time
+- **Thinking indicator**  -  visual feedback while the agent processes your message
+- **Conversation history**  -  past messages are preserved within the session
+- **Voice mode**  -  speak with your agent using text-to-speech and voice cloning (available on Pro plans and above)
+
+Voice capabilities include TTS playback, voice cloning (create a custom voice for your agent), pronunciation dictionaries, and streaming audio.
+
+---
+
+## Agent Memory
+
+Agents remember context from your conversations through the **memory system**. When you share information with an agent, it can store that knowledge and recall it later.
+
+Key points about agent memory:
+
+- Agents with `read_memory` permission can look up past context
+- Agents with `write_memory` permission can save new information for future reference
+- Memory is searchable using full-text search and optional semantic (vector) search
+- All agents on your team share the same memory pool within a workspace, so information shared with one agent is accessible to others
+
+This means your agents build up knowledge about your projects, preferences, and work patterns over time  -  without you having to repeat yourself.
+
+---
+
+## Plan Limits
+
+The number of active agents you can have depends on your plan:
+
+| Plan             | Active Agents | Workspaces |
+| ---------------- | ------------- | ---------- |
+| **Build** (free) | 5             | 3          |
+| **Pro**          | 5             | 10         |
+| **Team**         | Unlimited     | 20         |
+| **Enterprise**   | Unlimited     | Unlimited  |
+
+When you hit your agent limit, you can **bench** agents you are not currently using to free up slots. Benched agents keep their configuration and memory  -  they just will not respond until you employ them again.
+
+To increase your agent limit, upgrade your plan from **Settings > Billing**.

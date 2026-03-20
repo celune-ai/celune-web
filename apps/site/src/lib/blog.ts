@@ -16,6 +16,17 @@ export function estimateReadingTime(wordCount: number): number {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'ai-task-management-developers',
+    title: 'AI Task Management for Developers: The Layer Your Coding Assistant Is Missing',
+    description:
+      'AI coding tools solved code generation. But planning, tracking, and orchestrating work across AI agents is still manual. Here\'s the missing layer in the dev tools stack.',
+    date: '2026-03-22',
+    author: 'Celune Team',
+    tags: ['AI', 'Task Management', 'Productivity', 'Agents'],
+    published: true,
+    heroImage: '/blog/ai-task-management-developers.jpg',
+  },
+  {
     slug: 'context-engineering-ai-agents',
     title: 'Context Engineering: The Skill That Separates Good AI Agents from Great Ones',
     description:
