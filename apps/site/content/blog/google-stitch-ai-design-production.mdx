@@ -1,0 +1,109 @@
+Google dropped the biggest Stitch update yet this week — infinite canvas, voice interaction, a design agent, instant prototypes, and an MCP server that plugs directly into Claude Code. Figma's stock [fell 12% in two days](https://www.cnbc.com/2026/03/19/figma-stock-drops-11percent-after-google-releases-vibe-design-product-stitch.html). The design tool discourse went nuclear.
+
+And somewhere in the noise, the actual question got buried: **can you ship with this?**
+
+The answer is nuanced. Stitch has genuinely lowered the bar for going from idea to interface. But "interface" and "product" are not the same thing. The gap between them is where most AI-generated design goes to die — and it's the gap that matters most if you're building something real.
+
+---
+
+## What Stitch Actually Does Now
+
+For anyone who hasn't played with it since the May 2025 launch: Stitch is a different tool now. The March 2026 "Vibe Design" update added five features that move it from novelty to workflow:
+
+**Infinite canvas** replaces the old single-screen generation model. You can explore multiple directions simultaneously, branch ideas, and compare approaches side by side.
+
+**Design agent** provides real-time critiques, suggests alternatives, and manages multiple design directions. Think version control for creative exploration.
+
+**Voice canvas** lets you speak to the canvas directly — "give me three menu layouts" or "try this in a dark palette" — and watch it happen live. The agent asks clarifying questions as you go.
+
+**Instant prototypes** convert static screens into clickable flows. Click a button in the design and Stitch automatically generates the destination screen. Up to five screens at once with no manual linking.
+
+**DESIGN.md** introduces an agent-friendly design system format. Extract a design system from any URL, export it as markdown, and import it into other tools. Every new project auto-generates a design system that propagates updates across connected screens.
+
+The killer detail: it's still free. 350 generations a month, no subscription. As CNBC [reported](https://www.cnbc.com/2026/03/19/figma-stock-drops-11percent-after-google-releases-vibe-design-product-stitch.html), "Google isn't charging for Stitch, nor does it make promises about the availability of the service. But with Wall Street on edge regarding all potential threats from AI, Figma is getting punished." When your competitors charge $20/month and Google charges nothing, the adoption curve is predictable — Figma's stock is now down roughly 35% year-to-date.
+
+---
+
+## The Design Slop Problem
+
+Here's where the conversation gets honest.
+
+Stitch produces beautiful mockups. They look polished. They screenshot well. And they share a quality that professional designers have started calling **design slop** — the visual equivalent of AI-generated content that reads fluently but says nothing.
+
+The symptoms are consistent:
+
+- **Generic layouts.** Every SaaS dashboard looks the same. Every landing page follows the same hero-features-testimonials-CTA pattern. The designs are competent but interchangeable.
+- **Industry blindness.** A healthcare app, a fintech dashboard, and an e-commerce storefront all get the same Tailwind treatment. The conventions that make each domain work — the trust signals in finance, the information density in healthcare, the conversion patterns in commerce — are absent.
+- **No edge cases.** Empty states, error states, loading states, first-run experiences — these are where real product design lives. Stitch generates the happy path and nothing else.
+- **Static output.** The prototypes click through, but there's no state management, no data binding, no responsive behavior. As one developer put it: _"It looks perfect and does nothing."_
+
+The ["Stop Generating AI Slop"](https://dev.to/seifalmotaz/stop-generating-ai-slop-the-developers-guide-to-google-stitch-jen) guide on DEV Community went semi-viral for a reason. It breaks down how Stitch tokenizes prompts into four layers — **Context** (who is this for?), **Structure** (layout topology), **Aesthetic** (the "vibe"), and **Tech Stack** (execution medium). Leave any layer out and the AI fills it with the most generic defaults available.
+
+The difference between naive and expressive prompting is stark:
+
+|               | Naive Prompt         | Expressive Prompt                                                                                   |
+| ------------- | -------------------- | --------------------------------------------------------------------------------------------------- |
+| **Aesthetic** | "Make it look cool." | "Apply a retro-futurist aesthetic with neon accents and cyberpunk typography."                      |
+| **Layout**    | "Show some photos."  | "Arrange images in a bento box grid with varying aspect ratios and hover-state scaling."            |
+| **Color**     | "Use blue."          | "Utilize a monochromatic indigo palette with electric blue highlights and matte black backgrounds." |
+
+Words like "editorial," "bespoke," or "museum-curatorial" trigger completely different layout behaviors. Referencing "Awwwards-style" or "Apple-inspired" yields noticeably different results than generic prompts. You can coax genuinely beautiful output out of Stitch — but you have to speak its language.
+
+The problem: prompt engineering for design is patching a structural gap. The tool doesn't understand your users. It doesn't know your brand. It hasn't studied your competitors. It generates from a median aesthetic that's competent but unremarkable.
+
+This is the fundamental tension: **tools that democratize design also risk homogenizing it.** When everyone uses the same model with similar prompts, outputs converge. The ceiling is high enough to look professional. The floor is high enough that non-designers can participate. But the range is narrow enough that everything starts to feel the same.
+
+---
+
+## The Emerging Stack
+
+The most productive teams aren't choosing between tools. They're chaining them.
+
+The pattern showing up across indie hackers, small teams, and solo founders:
+
+1. **Stitch** for rapid visual exploration (free, fast, multiple directions)
+2. **Figma** for refinement (design systems, responsive specs, handoff)
+3. **Claude Code or Cursor** for production implementation (real components, real logic)
+4. **v0, Lovable, or Bolt** for scaffolding if speed matters more than architecture
+
+Each tool has a sweet spot. Stitch is best at the 0→1 phase — exploring what something could look like before committing to building it. Figma is best at the 1→10 phase — refining designs into specifications that account for real-world constraints. Code tools are best at the 10→production phase — turning designs into components that handle state, accessibility, responsive behavior, and edge cases.
+
+Google clearly sees this pipeline too. They built [Antigravity](https://www.nxcode.io/resources/news/google-stitch-complete-guide-vibe-design-2026) — their AI-powered IDE — with deep Stitch integration. You can install "Stitch Skills" directly into your workspace as AI design agents, export designs, then tell Antigravity's agent to import the design and add functionality. The Stitch MCP server extends this to non-Google tools: Claude Code, Cursor, Gemini CLI.
+
+As NxCode's [complete guide](https://www.nxcode.io/resources/news/google-stitch-complete-guide-vibe-design-2026) puts it: "Stitch is best understood as the beginning of the design process, not the end. The practical workflow for most teams in 2026: explore in Stitch, refine in Figma, build in code."
+
+The mistake is skipping steps. Stitch-to-production leaves you with beautiful screenshots and broken products. Figma-from-scratch is slower than it needs to be when AI can generate the first draft in seconds.
+
+---
+
+## Where Celune Fits: Agents That Bridge the Gap
+
+This is the part that's relevant to what we're building.
+
+Here's a detail that gets lost in the discourse: Stitch's code output is HTML and CSS only. No React components, no Vue, no SwiftUI. No responsive breakpoints. No semantic HTML best practices. No accessibility beyond what Gemini infers. The [current limitations](https://www.nxcode.io/resources/news/google-stitch-complete-guide-vibe-design-2026) are real — no design system management across projects, no team collaboration, no animation or micro-interaction design.
+
+But Stitch now has an MCP server and SDK with direct Claude Code integration. That means an AI agent running in your terminal can call Stitch's design capabilities programmatically — generate UI concepts, extract design systems, pull design tokens — and then do everything Stitch can't: write real React components, add state management, handle responsive behavior, and wire up accessibility.
+
+At Celune, our agents already manage task lifecycle, code review, and overnight builds. The Stitch MCP integration opens a new lane: **design-aware agent workflows.**
+
+Here's what that looks like in practice:
+
+**Design exploration as a task.** A product task like "design the settings page" can trigger an agent that generates multiple Stitch concepts, extracts the design system into DESIGN.md, and presents options for review — all before a developer writes a line of code.
+
+**Design system enforcement.** An agent can pull your existing DESIGN.md, feed it to Stitch as constraints, and ensure generated UIs stay consistent with your established patterns. This directly addresses the "generic output" problem — your brand rules travel with the prompt.
+
+**Gap detection.** A code review agent can compare the implemented UI against the original Stitch concept and flag divergence. Not as a pixel-perfect check, but as a structural review: missing states, skipped responsive breakpoints, accessibility gaps that Stitch didn't generate but production requires.
+
+The theme here isn't "AI replaces designers." It's "AI handles the mechanical parts of design exploration so humans can focus on the judgment calls." Which empty state matters most. Which error message reduces support tickets. Which onboarding flow converts. Those questions require understanding your users, and no amount of prompt engineering will substitute for that.
+
+---
+
+## The Honest Take
+
+Stitch is a genuine step function for the first phase of design. The March 2026 update makes it a legitimate ideation tool, not just a demo generator. Free pricing means the adoption barrier is zero. The MCP integration means it slots into agent workflows that already handle code and task management.
+
+But the gap between "looks great in a screenshot" and "works for real users" is exactly where product quality lives. Stitch lowers the floor. It doesn't raise the ceiling.
+
+For solo founders and small teams, the play is clear: use Stitch to explore faster, use your taste to filter, and use agent-assisted development to build the real thing. The tools that generate the first draft are commodity. The judgment that turns a draft into a product is not.
+
+The bar for design has been lowered. The bar for shipping hasn't.
