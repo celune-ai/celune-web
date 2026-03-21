@@ -1,0 +1,92 @@
+# Projects & Tasks
+
+Projects and tasks are how you organize work in Celune. A project groups related tasks under a shared goal, while tasks represent individual units of work that your team and agents can pick up, track, and complete.
+
+Whether you are building a feature, running a research spike, or planning a quarter, projects give you structure without overhead. Your Agent Lead can create and manage both projects and tasks through skills like `/project`, `/create-task`, and `/build`.
+
+---
+
+## Project Types
+
+Every project in Celune has a type that determines its workflow and closing sequence.
+
+### Feature
+
+The most common project type. Feature projects are for building something new or enhancing an existing capability. They follow a standard lifecycle: planning, implementation, review, and delivery. Feature projects typically include a PRD (product requirements document) and a set of sequenced tasks.
+
+### System
+
+System projects cover internal infrastructure, refactoring, DevOps, and technical debt. They follow the same lifecycle as feature projects but are oriented toward stability and maintainability rather than user-facing output.
+
+### Research
+
+Research projects are for exploring a question or gathering information. They start with a set of research questions and produce a final deliverable -- a report, recommendation, or decision document. Use `/project-research` to create one with a guided Q&A intake.
+
+### Plan
+
+Plan projects are high-level coordination containers. They include a PRD, a full task breakdown, a review phase, and a retrospective. Use `/project-plan` to create one with the complete lifecycle scaffolded automatically.
+
+---
+
+## Task Lifecycle
+
+Every task in Celune moves through a defined set of statuses. You can update statuses manually, through the Kanban board, or by using skills like `/update-task` and `/complete-task`.
+
+| Status      | Meaning                                                    |
+| ----------- | ---------------------------------------------------------- |
+| Inbox       | Newly created. Not yet triaged or prioritized.             |
+| Backlog     | Triaged and accepted, but not actively being worked on.    |
+| In Progress | Someone (human or agent) is actively working on this task. |
+| In Review   | Work is complete and awaiting review or verification.      |
+| Done        | Task is finished. Outcome has been recorded.               |
+| Blocked     | Task cannot proceed due to a dependency or issue.          |
+| Archived    | Task has been retired without completion.                  |
+
+Tasks move forward through the lifecycle as work progresses. The typical flow is inbox, backlog, in progress, in review, then done. Tasks can also be moved to blocked at any point or archived if they are no longer relevant.
+
+---
+
+## Kanban Board
+
+The project detail view includes a Kanban board that visualizes all tasks across their statuses. You can drag and drop tasks between columns to update their status instantly.
+
+The board groups columns by status and shows task priority, assignee, and a short description. It is the fastest way to get a visual overview of where a project stands.
+
+---
+
+## Project Groups
+
+Project groups (sometimes called epics) let you organize related projects under a shared umbrella. If you are running a larger initiative that spans multiple projects -- for example, a product launch with separate feature, documentation, and infrastructure projects -- a project group keeps them connected.
+
+Groups appear in the project list view and provide rollup visibility across all child projects.
+
+---
+
+## Creating Projects and Tasks
+
+There are two ways to create projects and tasks:
+
+**Through skills (recommended):** Use `/project`, `/project-research`, or `/project-plan` to create a project with full scaffolding -- PRD, sequenced tasks, and lifecycle configuration. Use `/create-task` or `/task` to create individual tasks.
+
+**Through the UI:** Click the "New Project" or "New Task" button in the platform. Fill in the title, description, type, and priority. Assign it to a team member or agent.
+
+Both methods produce the same result. Skills are faster for complex setups because your Agent Lead handles the scaffolding automatically.
+
+---
+
+## Task Assignments and Agent Delegation
+
+Tasks can be assigned to human team members or to AI agents in your workspace. When a task is assigned to an agent, that agent can pick it up during autonomous work sessions (like `/afk-building` or `/build`).
+
+Agent delegation works best when tasks have clear descriptions and acceptance criteria. Your Agent Lead reads the task details, gathers context from memory and the codebase, and executes the work end-to-end.
+
+You can reassign tasks at any time by updating the assignee through the UI or with `/update-task`.
+
+---
+
+## Related Pages
+
+- [Skills](/concepts/skills) -- Slash commands for creating and managing projects and tasks.
+- [Agents](/concepts/agents) -- How agents pick up and execute assigned tasks.
+- [Memory](/concepts/memory) -- How agents retain context across task sessions.
+- [Workspaces](/concepts/workspaces) -- Workspace structure and team organization.

@@ -1,132 +1,213 @@
 # Getting Started with Celune
 
-Welcome to Celune  -  your AI-powered development workspace. This guide walks you through everything from creating your account to running your first project.
+Welcome to Celune -- your AI-powered development workspace. This guide walks you through everything from creating your account to launching your first project with a team of AI agents.
 
 ---
 
 ## Sign Up
 
-Celune is currently in beta. To create an account:
+Celune is currently in early access. To create an account:
 
 1. Go to [app.celune.ai/signup](https://app.celune.ai/signup).
-2. Enter your email and create a password.
-3. You will be asked for an **access code**. During the beta period, every new account requires one. If you do not have a code, you can join the waitlist from the signup page.
-4. Once your code is accepted, your account is created and you are taken straight into onboarding.
+2. Enter your **email** and create a **password**.
+3. Enter an **access code**. Every new account requires one during the early access period.
+4. If you do not have a code, click **Join the Waitlist** on the signup page. You will be notified by email when a spot opens up.
+5. Once your code is accepted, your account is created and you move straight into onboarding.
+
+> **Tip:** Access codes are sometimes shared at events, in communities, or by existing Celune users. Check your network if you are looking for one.
 
 ---
 
-## Meet Your Agent
+## Onboarding Chat
 
-After signing up, you will meet **RICK**  -  your AI teammate. Onboarding is a short conversation, not a form. RICK will ask you a few questions to understand how you work and what you are building.
+Onboarding is not a form -- it is a conversation. After signing up, you will meet **RICK**, your AI lead agent. RICK chats with you in a natural, streaming conversation to understand how you work and what you are building.
 
-### How it works
+### What RICK will ask
 
-- RICK chats with you in a streaming conversation  -  just type naturally.
-- Based on your answers, RICK builds a profile for your workspace.
-- You will be asked to pick an **agent archetype**  -  this sets your agent's general style (e.g., focused executor, creative thinker, methodical planner).
+- **What you do** -- your role, your domain, and the kind of work you focus on.
+- **What you are building** -- the projects or products you are working on right now.
+- **Workspace name** -- a name for your workspace (you can change this later).
+
+### What happens next
+
+Based on your answers, RICK creates a **personalized agent team** tailored to your needs. Each agent has its own specialty -- more on that in the "Meet Your Agents" section below.
 
 ### Personality customization
 
-You can adjust how your agent communicates using a simple **humor slider**. This is the only personality control during onboarding  -  think of it as setting the tone between "all business" and "smart colleague at a coffee shop." You can fine-tune other personality settings later from the agent's settings page.
+During onboarding, you can adjust RICK's **humor slider** -- this sets the tone between "all business" and "smart colleague at a coffee shop." It is the only personality control during onboarding, but you can fine-tune additional sliders (warmth, directness, formality, verbosity) later from each agent's settings page.
 
 ### Voice greeting
 
-During onboarding, your agent may play a short voice greeting so you can hear what they sound like. Voice features (text-to-speech, voice cloning) are available after onboarding on supported plans.
-
----
-
-## Connect Your Tools
-
-After your conversation with RICK, you will reach the **Connections** step. This is where you link Celune to the tools you already use. All connections are optional  -  you can skip any of them and set them up later from Settings.
-
-### IDE Setup (MCP)
-
-Celune connects to your code editor through the **Model Context Protocol (MCP)**. Supported editors:
-
-- **Cursor**
-- **VS Code** (with Copilot or compatible extension)
-- **Windsurf**
-
-During setup, Celune provides a configuration snippet you can paste into your editor's MCP settings. This lets your agent read and understand your codebase context.
-
-### GitHub (optional)
-
-Connect your GitHub account to let Celune:
-
-- Access your repositories for context
-- Create and review pull requests
-- Track code changes
-
-You will be guided through installing the Celune GitHub App on your account or organization. You choose which repositories to grant access to.
-
-### AI Provider API Key
-
-Celune uses a **Bring Your Own Key (BYOK)** model for AI. You provide an API key from your preferred provider, and Celune uses it for all AI operations in your workspace.
-
-Supported providers:
-
-| Provider          | Key prefix |
-| ----------------- | ---------- |
-| **Anthropic**     | `sk-ant-`  |
-| **OpenAI**        | `sk-`      |
-| **Groq**          | `gsk_`     |
-| **xAI**           | `xai-`     |
-| **Google Gemini** | `AI`       |
-
-Just paste your key  -  Celune **auto-detects the provider** from the key prefix. Your key is encrypted before storage and never exposed in the UI after saving.
+Your agent may play a short voice greeting so you can hear what they sound like. Voice features like text-to-speech and voice cloning are available after onboarding on supported plans.
 
 ---
 
 ## Your Workspace
 
-Once onboarding is complete, you land in your workspace. Here is what you will find:
+Once onboarding is complete, you land on your **Dashboard**. This is your home base.
 
-### Tasks
+### Summary cards
 
-Your task board is the center of your workflow. Tasks have statuses like **inbox**, **in progress**, **in review**, and **done**. You can view them as a list or a board. Tasks support sub-tasks, dependencies, comments, and attachments.
+The top of the dashboard shows at-a-glance metrics for your workspace:
 
-### Projects
+- **Agents** -- how many AI agents are on your team.
+- **Tasks** -- total active tasks across all projects.
+- **Projects** -- the number of projects in your workspace.
+- **Memory** -- entries stored in your agents' shared knowledge base.
+- **Activity** -- recent actions and events.
 
-Projects group related tasks together. Celune supports several project types  -  features, system work, research, and plans. Each project tracks its own progress and has its own task list.
+### Getting-started checklist
 
-### Agents
+Below the summary cards, you will see a **getting-started checklist** with suggested next steps. These guide you through connecting tools, creating tasks, and exploring key features. Items check off automatically as you complete them.
 
-Your agent roster shows all your AI teammates. You start with RICK, and you can configure additional agents as your team grows. Each agent has its own personality settings, chat interface, and optional voice.
+### Activity feed
 
-### Memory
-
-The memory system is your agents' long-term knowledge base. Agents remember context from your conversations and work. You can browse, search, and manage memory entries directly. Memory supports both keyword and semantic search.
-
-### Analytics
-
-The analytics dashboard shows how your workspace is performing  -  task velocity, agent activity, and cost tracking. Analytics is available on the Pro plan and above.
+The bottom of the dashboard shows a live **activity feed** -- a timeline of everything happening in your workspace, including task updates, agent actions, and project changes.
 
 ---
 
-## First Steps
+## Connect Your Tools
 
-After onboarding, Celune generates a **Getting Started project** with starter tasks to help you explore the platform. These tasks walk you through common workflows:
+All integrations are optional. You can set them up during onboarding or later from **Settings**. Here is how to connect each one.
 
-- Creating and completing your first task
-- Chatting with your agent
-- Connecting your IDE
-- Exploring your project board
-- Reviewing your workspace settings
+### GitHub
 
-You do not need to complete them in order  -  just pick whatever looks interesting and jump in. Each task includes instructions and context to guide you.
+Connect GitHub to let your agents access repositories, understand your codebase, and work with pull requests.
 
-### What to try first
+1. Go to **Settings** in the sidebar.
+2. Click **Connections**.
+3. Click **Install GitHub App**.
+4. GitHub will prompt you to select an account or organization.
+5. Choose which **repositories** to grant access to -- you can select all or pick specific ones.
+6. Confirm the installation. Celune will sync your selected repos.
 
-1. **Open the task board** and look at your starter tasks.
-2. **Chat with RICK**  -  go to the Agents page and start a conversation. Ask about your projects, get help with a task, or just explore what your agent can do.
-3. **Connect your IDE** if you skipped it during onboarding  -  go to Settings and find the Integrations tab.
-4. **Create a new task**  -  click the "New Task" button on your task board and describe something you want to work on.
+> **Tip:** You can change which repositories Celune can access at any time from your GitHub App settings.
+
+### AI Provider Keys (BYOK)
+
+Celune uses a **Bring Your Own Key** model for AI operations. You provide an API key, and Celune uses it to power agent conversations and task execution in your workspace.
+
+1. Go to **Settings** in the sidebar.
+2. Click **Developer**.
+3. Click **Add API Key**.
+4. Paste your key -- Celune **auto-detects the provider** from the key prefix.
+
+Supported providers:
+
+| Provider      | Key prefix |
+| ------------- | ---------- |
+| Anthropic     | `sk-ant-`  |
+| OpenAI        | `sk-`      |
+| Google Gemini | `AI`       |
+| xAI           | `xai-`     |
+
+Your key is encrypted before storage and never displayed in the UI after saving.
+
+> **Tip:** You need at least one API key to use agent features. If you are not sure which provider to start with, Anthropic (Claude) is the default recommendation.
+
+### Slack
+
+Connect Slack to receive notifications and interact with your agents from your existing Slack workspace.
+
+1. Go to **Settings** in the sidebar.
+2. Click **Connections**.
+3. Click **Connect Slack**.
+4. Authorize Celune in the Slack OAuth flow.
+5. Choose which channels Celune can post to.
 
 ---
 
-## Getting Help
+## Meet Your Agents
 
-If you get stuck, Celune has a built-in **support chat** available from any page. Click the support icon to open it. You can ask questions, report issues, or submit feedback  -  all without leaving your workspace.
+Your agent team is created during onboarding based on your conversation with RICK. Here is how the team works.
+
+### Lead agent
+
+**RICK** is your lead agent -- the one you talked to during onboarding. RICK coordinates work, manages projects, and is your primary point of contact. Think of RICK as your AI team lead.
+
+### Supporting agents
+
+Behind RICK, you have a team of **supporting agents**, each with a different specialty. Some focus on research, others on code review, analysis, or creative work. The exact team composition depends on what you told RICK during onboarding.
+
+You can view your full agent roster on the **Agents** page. Each agent has its own chat interface, personality, and optional voice.
+
+### Personality sliders
+
+Every agent has five personality sliders you can adjust:
+
+- **Humor** -- from straightforward to playful.
+- **Warmth** -- from neutral to encouraging.
+- **Directness** -- from diplomatic to blunt.
+- **Formality** -- from casual to professional.
+- **Verbosity** -- from concise to detailed.
+
+Find these in each agent's settings by clicking the agent's name on the Agents page.
+
+---
+
+## Your First Task
+
+Tasks are the core unit of work in Celune. Here is how to create one.
+
+1. Go to the **Tasks** page in the sidebar.
+2. Click **New Task**.
+3. **Describe what you need** -- write a clear summary of the work. Be as specific as you like.
+4. **Assign an agent** -- pick which agent should handle the task.
+5. Click **Create**.
+
+### Task lifecycle
+
+Every task moves through a simple lifecycle:
+
+- **Inbox** -- the task has been created but no one has started it yet.
+- **In Progress** -- an agent (or you) is actively working on it.
+- **Done** -- the work is complete.
+
+There are additional statuses for more complex workflows (in review, blocked, archived), but inbox, in progress, and done are the three you will use most often.
+
+> **Tip:** You can also create tasks by chatting with an agent. Just describe what you need in conversation, and the agent can turn it into a tracked task.
+
+---
+
+## Your First Project
+
+Projects group related tasks together and give you a higher-level view of progress.
+
+1. Go to the **Projects** page in the sidebar.
+2. Click **New Project**.
+3. Give it a name and description.
+4. Choose a **project type**.
+
+### Project types
+
+Celune supports four project types, each with its own workflow:
+
+- **Feature** -- building something new. Follows a lifecycle from planning through implementation to launch.
+- **System** -- infrastructure, tooling, or internal improvements. Structured for technical work.
+- **Research** -- exploration, investigation, or learning. Designed for open-ended work that produces findings rather than shipped code.
+- **Plan** -- strategic planning, roadmaps, or coordination. Used when the output is a plan or decision rather than a deliverable.
+
+Each project type has its own lifecycle with stages appropriate to that kind of work. You can add tasks to a project from the project page or by assigning a project when creating a task.
+
+---
+
+## Explore More
+
+Once you are comfortable with the basics, here are more features to explore:
+
+- [**Agents**](/agents) -- learn about agent capabilities, configuration, and how to get the most from your team.
+- [**Memory**](/memory) -- understand how agents store and retrieve long-term knowledge about your work.
+- [**Skills**](/skills) -- browse the skills catalog to see what your agents can do out of the box.
+- [**Analytics**](/analytics) -- track task velocity, agent activity, and workspace performance.
+- [**Billing and Plans**](/billing) -- compare the **Builder** (free), **Pro** ($19/mo), and **Unlimited** ($49/mo + $10/seat) plans.
+
+---
+
+## Need Help?
+
+- **Support chat** -- click the **?** icon in the bottom corner of any page to open the built-in support chat. You can ask questions, report issues, or submit feedback without leaving your workspace.
+- **Docs** -- you are here. Browse the sidebar for detailed guides on every feature.
+- **Community** -- join the Celune community to connect with other users, share workflows, and get tips.
 
 ---
 

@@ -1,0 +1,63 @@
+# Activity Feed
+
+The activity feed is a real-time log of everything happening in your workspace. It captures task updates, agent actions, GitHub events, and system changes in a single chronological stream. The feed gives you a quick way to understand what has changed without digging through individual projects or tasks.
+
+---
+
+## What Gets Tracked
+
+The activity feed captures events across several categories:
+
+### Task Events
+
+Every task status change is logged -- creation, moves between statuses, completions, and archival. Each entry shows who made the change (human or agent), the task title, and the new status. This gives you a running history of work progression across all projects.
+
+### Agent Actions
+
+When an AI agent picks up a task, runs a build, stores a memory, or completes an autonomous session, the activity feed records it. Agent entries include the agent name, the action taken, and any relevant output or result.
+
+### GitHub Events
+
+If you have the GitHub integration enabled, pull request activity flows into the feed automatically. You will see PR opens, merges, review requests, and status checks. This connects your code workflow to your task workflow in one place.
+
+### System Events
+
+Workspace-level changes like member invitations, role updates, integration connections, and plan changes appear in the feed. These entries help workspace owners keep track of configuration changes.
+
+---
+
+## Activity Drawer
+
+The dashboard includes an activity drawer that shows recent events without leaving your current view. Click the activity icon to slide open the drawer and scan the latest updates.
+
+The drawer shows a condensed version of the feed -- the most recent events with timestamps and short descriptions. For full details, click any entry to navigate to the related task, project, or pull request.
+
+---
+
+## Filtering
+
+You can filter the activity feed by event type to focus on what matters:
+
+- **Tasks** -- Show only task-related events (creation, status changes, completions).
+- **Agents** -- Show only agent actions and autonomous session logs.
+- **GitHub** -- Show only pull request and repository events.
+- **System** -- Show only workspace configuration changes.
+
+Filters can be combined. For example, you can view only agent actions related to a specific project, or see all GitHub events from the past week.
+
+---
+
+## How It Works
+
+The activity feed updates in real time. As events occur -- whether from a human team member, an AI agent, or an external integration like GitHub -- they are pushed to the feed immediately. There is no polling delay.
+
+Events are retained for the lifetime of your workspace. You can scroll back through the full history to see when decisions were made, when tasks were completed, and how work evolved over time.
+
+---
+
+## Related Pages
+
+- [Agents](/concepts/agents) -- How agents operate and generate activity in your workspace.
+- [GitHub Integration](/guides/github-integration) -- Connecting GitHub to surface PR events in the feed.
+- [Skills](/concepts/skills) -- Slash commands that generate tracked activity events.
+- [Workspaces](/concepts/workspaces) -- Workspace structure and membership.

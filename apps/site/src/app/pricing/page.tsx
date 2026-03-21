@@ -13,7 +13,7 @@ import { cn } from '@/lib/cn';
 export const metadata: Metadata = {
   title: 'Pricing — Celune',
   description:
-    'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Build, scale up to Pro, Team, or Enterprise.',
+    'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Builder, scale up to Pro or Unlimited.',
   metadataBase: new URL('https://celune.ai'),
   alternates: {
     canonical: 'https://celune.ai/pricing',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Pricing — Celune',
     description:
-      'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Build, scale up to Pro, Team, or Enterprise.',
+      'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Builder, scale up to Pro or Unlimited.',
     url: 'https://celune.ai/pricing',
     siteName: 'Celune',
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Pricing — Celune',
     description:
-      'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Build, scale up to Pro, Team, or Enterprise.',
+      'Simple, transparent pricing for AI agents that ship code 24/7. Start free with Builder, scale up to Pro or Unlimited.',
     images: ['/og-image.jpg'],
     creator: '@celune_ai',
   },
@@ -49,87 +49,65 @@ export const metadata: Metadata = {
 
 const PLANS = [
   {
-    key: 'build',
-    name: 'Build',
-    price: '$19',
-    period: '/month',
-    description: 'For individuals getting started with AI agents.',
+    key: 'builder',
+    name: 'Builder',
+    price: 'Free',
+    period: '',
+    description: 'Everything you need to get started.',
     features: [
+      '5 agents',
       '3 workspaces',
-      '3 agents',
-      '20,000 memories',
-      '1,000 tasks/month',
-      '10 TTS minutes/month',
-      '1,000 API calls/month',
-      'Basic dashboard',
+      '50 projects',
+      '200 tasks/mo',
+      'Seed & CORE memory',
+      'Dashboard',
       'Task management',
+      'Integrations',
+      'BYOK',
+      'API access',
     ],
-    cta: 'Request Access',
+    cta: 'Get Started',
     ctaHref: `${URL_APP}/signup`,
     highlighted: false,
   },
   {
     key: 'pro',
     name: 'Pro',
-    price: '$49',
+    price: '$19',
     period: '/month',
-    description: 'For professionals who need more power and integrations.',
+    description: 'More agents, more capacity, more power.',
     features: [
-      '3 workspaces',
-      '5 agents',
-      '50,000 memories',
-      '1,000 tasks/month',
-      '60 TTS minutes/month',
-      '10,000 API calls/month',
-      'Voice mode',
+      '20 agents',
+      '10 workspaces',
+      '1,000 projects',
+      'Unlimited tasks',
+      'Unlimited memories',
+      'AFK modes',
+      'Voice',
       'Analytics',
-      'API access',
-      'BYOK (bring your own key)',
+      'Agent personalities',
+      'Webhooks',
     ],
     cta: 'Request Access',
     ctaHref: `${URL_APP}/signup?plan=pro`,
     highlighted: true,
   },
   {
-    key: 'team',
-    name: 'Team',
-    price: '$149',
-    period: '/month',
-    description: 'For teams coordinating agents across projects.',
+    key: 'unlimited',
+    name: 'Unlimited',
+    price: '$49',
+    period: '/mo + $10/seat',
+    description: 'Scale your team with no limits.',
     features: [
-      '10 workspaces',
       'Unlimited agents',
-      'Unlimited memories',
-      '10,000 tasks/month',
-      '300 TTS minutes/month',
-      '100,000 API calls/month',
-      'AFK modes',
-      'Webhooks',
+      'Unlimited workspaces',
+      'Unlimited everything',
+      'Teammates (multi-user)',
       'Audit log',
-      'BYOK (bring your own key)',
+      'Priority support',
     ],
     cta: 'Request Access',
-    ctaHref: `${URL_APP}/signup?plan=team`,
-    highlighted: false,
-  },
-  {
-    key: 'enterprise',
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    description: 'For organizations with scale and compliance requirements.',
-    features: [
-      'Unlimited workspaces',
-      'Unlimited agents',
-      'Unlimited everything',
-      'SSO',
-      'Dedicated support',
-      'SLA guarantee',
-      'Custom agent personas',
-      'BYOK (bring your own key)',
-    ],
-    cta: 'Contact Us',
-    ctaHref: 'https://docs.celune.ai/support',
+    ctaHref: `${URL_APP}/signup?plan=unlimited`,
     highlighted: false,
   },
 ] as const;
@@ -140,46 +118,41 @@ type FeatureValue = boolean | string;
 
 interface ComparisonFeature {
   category: string;
-  rows: { label: string; build: FeatureValue; pro: FeatureValue; team: FeatureValue; enterprise: FeatureValue }[];
+  rows: { label: string; builder: FeatureValue; pro: FeatureValue; unlimited: FeatureValue }[];
 }
 
 const COMPARISON_FEATURES: ComparisonFeature[] = [
   {
     category: 'Core',
     rows: [
-      { label: 'Workspaces',       build: '1',          pro: '3',           team: '10',          enterprise: 'Unlimited' },
-      { label: 'Agents',           build: '2',          pro: '5',           team: 'Unlimited',   enterprise: 'Unlimited' },
-      { label: 'Memory storage',   build: '1,000',      pro: '50,000',      team: 'Unlimited',   enterprise: 'Unlimited' },
-      { label: 'Tasks / month',    build: '100',        pro: '1,000',       team: '10,000',      enterprise: 'Unlimited' },
+      { label: 'Agents', builder: '5', pro: '20', unlimited: 'Unlimited' },
+      { label: 'Workspaces', builder: '3', pro: '10', unlimited: 'Unlimited' },
+      { label: 'Projects', builder: '50', pro: '1,000', unlimited: 'Unlimited' },
+      { label: 'Tasks / month', builder: '200', pro: 'Unlimited', unlimited: 'Unlimited' },
+      { label: 'Memories', builder: 'Seed & CORE', pro: 'Unlimited', unlimited: 'Unlimited' },
     ],
   },
   {
-    category: 'Integrations',
+    category: 'Features',
     rows: [
-      { label: 'BYOK',             build: false,        pro: true,          team: true,          enterprise: true },
-      { label: 'Voice (TTS)',      build: false,        pro: '60 min/mo',   team: '300 min/mo',  enterprise: 'Unlimited' },
-      { label: 'API access',       build: false,        pro: true,          team: true,          enterprise: true },
-      { label: 'Webhooks',         build: false,        pro: false,         team: true,          enterprise: true },
-      { label: 'GitHub integration', build: false,      pro: true,          team: true,          enterprise: true },
-      { label: 'Slack integration',  build: false,      pro: false,         team: true,          enterprise: true },
+      { label: 'Dashboard', builder: true, pro: true, unlimited: true },
+      { label: 'Task management', builder: true, pro: true, unlimited: true },
+      { label: 'Integrations', builder: true, pro: true, unlimited: true },
+      { label: 'BYOK', builder: true, pro: true, unlimited: true },
+      { label: 'API access', builder: true, pro: true, unlimited: true },
+      { label: 'Voice', builder: false, pro: true, unlimited: true },
+      { label: 'Analytics', builder: false, pro: true, unlimited: true },
+      { label: 'AFK modes', builder: false, pro: true, unlimited: true },
+      { label: 'Agent personalities', builder: false, pro: true, unlimited: true },
+      { label: 'Webhooks', builder: false, pro: true, unlimited: true },
     ],
   },
   {
-    category: 'Admin & Security',
+    category: 'Team & Admin',
     rows: [
-      { label: 'Analytics',        build: false,        pro: true,          team: true,          enterprise: true },
-      { label: 'Audit log',        build: false,        pro: false,         team: true,          enterprise: true },
-      { label: 'AFK modes',        build: false,        pro: false,         team: true,          enterprise: true },
-      { label: 'SSO',              build: false,        pro: false,         team: false,         enterprise: true },
-    ],
-  },
-  {
-    category: 'Support',
-    rows: [
-      { label: 'Community support', build: true,        pro: true,          team: true,          enterprise: true },
-      { label: 'Priority support',  build: false,       pro: false,         team: true,          enterprise: true },
-      { label: 'Dedicated support', build: false,       pro: false,         team: false,         enterprise: true },
-      { label: 'SLA guarantee',     build: false,       pro: false,         team: false,         enterprise: true },
+      { label: 'Teammates (multi-user)', builder: false, pro: false, unlimited: true },
+      { label: 'Audit log', builder: false, pro: false, unlimited: true },
+      { label: 'Priority support', builder: false, pro: false, unlimited: true },
     ],
   },
 ];
@@ -195,7 +168,7 @@ const FAQS = [
   {
     question: 'What is BYOK and is it secure?',
     answer:
-      "BYOK (Bring Your Own Key) lets you supply your own OpenAI, Anthropic, or other LLM provider API keys. Your keys are encrypted at rest using AES-256 and are never logged or exposed outside your workspace. We recommend BYOK for teams that need cost control or want to use enterprise-tier rate limits from their existing provider agreements.",
+      'BYOK (Bring Your Own Key) lets you supply your own OpenAI, Anthropic, or other LLM provider API keys. Your keys are encrypted at rest using AES-256 and are never logged or exposed outside your workspace. We recommend BYOK for teams that need cost control or want to use enterprise-tier rate limits from their existing provider agreements.',
   },
   {
     question: 'What happens if I go over my plan limits?',
@@ -205,7 +178,7 @@ const FAQS = [
   {
     question: 'How does billing work?',
     answer:
-      'All paid plans are billed monthly via Stripe. Your subscription starts the day you upgrade and renews on the same day each month. Annual billing (with a 20% discount) is available on Pro and Team — contact us to enable it. You can cancel at any time; your plan remains active until the end of the billing period.',
+      'Paid plans (Pro at $19/mo, Unlimited at $49/mo + $10/seat) are billed monthly via Stripe. Your subscription starts the day you upgrade and renews on the same day each month. You can cancel at any time; your plan remains active until the end of the billing period.',
   },
   {
     question: 'Can I switch plans later?',
@@ -215,7 +188,7 @@ const FAQS = [
   {
     question: 'Do you offer a free trial for paid plans?',
     answer:
-      'The Build plan is free forever and a great way to explore Celune. For Pro and Team, we offer a 14-day money-back guarantee — if you are not satisfied, email us within 14 days of your first charge and we will issue a full refund, no questions asked.',
+      'The Builder plan is free forever and a great way to explore Celune. For Pro ($19/mo) and Unlimited ($49/mo), we offer a 14-day money-back guarantee — if you are not satisfied, email us within 14 days of your first charge and we will issue a full refund, no questions asked.',
   },
 ];
 
@@ -240,7 +213,9 @@ function FeatureCell({ value, highlighted }: { value: FeatureValue; highlighted?
     );
   }
   return (
-    <span className={cn('text-xs text-center block', highlighted ? 'text-white' : 'text-neutral-400')}>
+    <span
+      className={cn('block text-center text-xs', highlighted ? 'text-white' : 'text-neutral-400')}
+    >
       {value}
     </span>
   );
@@ -277,7 +252,7 @@ export default function PricingPage() {
           {/* ── Tier cards ── */}
           <section className="relative py-16">
             <div className="container">
-              <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {PLANS.map((plan) => (
                   <div
                     key={plan.key}
@@ -285,11 +260,11 @@ export default function PricingPage() {
                       'relative rounded-xl border p-8',
                       plan.highlighted
                         ? 'border-celune-500/30 bg-celune-500/[0.04]'
-                        : 'border-white/[0.06] bg-white/[0.02]'
+                        : 'border-white/[0.06] bg-white/[0.02]',
                     )}
                   >
                     {plan.highlighted && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-celune-500 px-3 py-0.5 text-xs font-semibold text-black">
+                      <div className="bg-celune-500 absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-semibold text-black">
                         Most Popular
                       </div>
                     )}
@@ -298,13 +273,18 @@ export default function PricingPage() {
                       <p className="mt-1 text-sm text-neutral-500">{plan.description}</p>
                     </div>
                     <div className="mb-8">
-                      <span className="font-heading text-4xl font-medium text-white">{plan.price}</span>
+                      <span className="font-heading text-4xl font-medium text-white">
+                        {plan.price}
+                      </span>
                       {plan.period && <span className="text-neutral-500">{plan.period}</span>}
                     </div>
                     <ul className="mb-8 space-y-3">
                       {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2.5 text-sm text-neutral-300">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-celune-500" />
+                        <li
+                          key={feature}
+                          className="flex items-start gap-2.5 text-sm text-neutral-300"
+                        >
+                          <Check className="text-celune-500 mt-0.5 h-4 w-4 shrink-0" />
                           {feature}
                         </li>
                       ))}
@@ -314,8 +294,8 @@ export default function PricingPage() {
                       className={cn(
                         'block w-full rounded-lg py-3 text-center text-sm font-medium transition-colors',
                         plan.highlighted
-                          ? 'bg-celune-500 text-black hover:bg-celune-400'
-                          : 'border border-white/[0.08] text-neutral-300 hover:border-white/[0.15] hover:text-white'
+                          ? 'bg-celune-500 hover:bg-celune-400 text-black'
+                          : 'border border-white/[0.08] text-neutral-300 hover:border-white/[0.15] hover:text-white',
                       )}
                     >
                       {plan.cta}
@@ -332,7 +312,7 @@ export default function PricingPage() {
           <section className="relative py-16">
             <div className="container">
               <div className="mx-auto mb-12 max-w-2xl text-center">
-                <p className="mb-3 text-sm font-medium text-celune-500">Compare plans</p>
+                <p className="text-celune-500 mb-3 text-sm font-medium">Compare plans</p>
                 <h2 className="font-heading text-3xl font-medium tracking-tight text-white md:text-4xl">
                   Everything in detail
                 </h2>
@@ -352,11 +332,18 @@ export default function PricingPage() {
                           key={plan.key}
                           className={cn(
                             'pb-4 text-center text-xs font-semibold',
-                            plan.highlighted ? 'text-celune-400' : 'text-neutral-400'
+                            plan.highlighted ? 'text-celune-400' : 'text-neutral-400',
                           )}
                         >
-                          <div className="font-heading text-base font-medium text-white">{plan.name}</div>
-                          <div className={cn('mt-0.5', plan.highlighted ? 'text-celune-500' : 'text-neutral-500')}>
+                          <div className="font-heading text-base font-medium text-white">
+                            {plan.name}
+                          </div>
+                          <div
+                            className={cn(
+                              'mt-0.5',
+                              plan.highlighted ? 'text-celune-500' : 'text-neutral-500',
+                            )}
+                          >
                             {plan.price}
                             {plan.period}
                           </div>
@@ -371,8 +358,8 @@ export default function PricingPage() {
                         {/* Category row */}
                         <tr>
                           <td
-                            colSpan={5}
-                            className="border-t border-white/[0.06] pt-6 pb-2 text-[11px] font-semibold uppercase tracking-widest text-neutral-600"
+                            colSpan={4}
+                            className="border-t border-white/[0.06] pt-6 pb-2 text-[11px] font-semibold tracking-widest text-neutral-600 uppercase"
                           >
                             {section.category}
                           </td>
@@ -387,10 +374,9 @@ export default function PricingPage() {
                             <td className="py-3 pr-4 text-sm text-neutral-400">{row.label}</td>
                             {(
                               [
-                                { key: 'build', value: row.build, highlighted: false },
+                                { key: 'builder', value: row.builder, highlighted: false },
                                 { key: 'pro', value: row.pro, highlighted: true },
-                                { key: 'team', value: row.team, highlighted: false },
-                                { key: 'enterprise', value: row.enterprise, highlighted: false },
+                                { key: 'unlimited', value: row.unlimited, highlighted: false },
                               ] as const
                             ).map((col) => (
                               <td key={col.key} className="py-3 text-center">
@@ -413,7 +399,7 @@ export default function PricingPage() {
           <section className="relative py-16">
             <div className="container">
               <div className="mx-auto mb-12 max-w-2xl text-center">
-                <p className="mb-3 text-sm font-medium text-celune-500">FAQ</p>
+                <p className="text-celune-500 mb-3 text-sm font-medium">FAQ</p>
                 <h2 className="font-heading text-3xl font-medium tracking-tight text-white md:text-4xl">
                   Common questions
                 </h2>
@@ -423,8 +409,10 @@ export default function PricingPage() {
                 {FAQS.map((faq) => (
                   <details key={faq.question} className="group py-5">
                     <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
-                      <span className="font-heading text-base font-medium text-white">{faq.question}</span>
-                      <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-neutral-600 transition-colors group-open:text-celune-500" />
+                      <span className="font-heading text-base font-medium text-white">
+                        {faq.question}
+                      </span>
+                      <HelpCircle className="group-open:text-celune-500 mt-0.5 h-4 w-4 shrink-0 text-neutral-600 transition-colors" />
                     </summary>
                     <p className="mt-3 text-sm leading-relaxed text-neutral-400">{faq.answer}</p>
                   </details>
@@ -442,13 +430,13 @@ export default function PricingPage() {
                 Ready to ship faster?
               </h2>
               <p className="mx-auto mt-4 max-w-lg text-neutral-400">
-                Join hundreds of engineers already running autonomous agents on Celune.
-                Request early access — we&apos;re onboarding select teams now.
+                Join hundreds of engineers already running autonomous agents on Celune. Request
+                early access — we&apos;re onboarding select teams now.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a
                   href={`${URL_APP}/signup`}
-                  className="rounded-lg bg-celune-500 px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-celune-400"
+                  className="bg-celune-500 hover:bg-celune-400 rounded-lg px-6 py-3 text-sm font-semibold text-black transition-colors"
                 >
                   Request Access
                 </a>
