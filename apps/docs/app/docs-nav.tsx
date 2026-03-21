@@ -37,7 +37,10 @@ function NavItem({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-foreground px-2 pt-2 pb-3 text-[12px] tracking-[0.08em] uppercase" style={{ fontFamily: 'var(--font-soehne-kraftig)' }}>
+    <p
+      className="text-foreground px-2 pt-2 pb-3 text-[12px] tracking-[0.08em] uppercase"
+      style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+    >
       {children}
     </p>
   );
@@ -168,9 +171,12 @@ const PUBLIC_NAV_SECTIONS = [
     items: [
       { href: '/concepts/agents', label: 'Agents' },
       { href: '/concepts/skills', label: 'Skills' },
+      { href: '/concepts/projects', label: 'Projects & Tasks' },
       { href: '/concepts/workspaces', label: 'Workspaces' },
       { href: '/concepts/permissions', label: 'Permissions' },
       { href: '/concepts/memory', label: 'Memory' },
+      { href: '/concepts/analytics', label: 'Analytics' },
+      { href: '/concepts/activity', label: 'Activity Feed' },
       { href: '/concepts/integrations', label: 'Integrations' },
     ],
   },

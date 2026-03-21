@@ -58,25 +58,25 @@ The threshold for what counts as "relevant" is configurable. The default is 0.5 
 
 Each memory entry contains:
 
-| Field      | Description                                                    |
-| ---------- | -------------------------------------------------------------- |
-| content    | The text of the memory                                         |
-| source     | Who created it: agent, task-cli, or mcp                        |
-| category   | Classification: technical, preference, decision, context       |
-| agent_id   | Which agent created or owns the memory                         |
-| embedding  | The vector representation used for semantic search             |
-| created_at | When the entry was created                                     |
+| Field      | Description                                              |
+| ---------- | -------------------------------------------------------- |
+| content    | The text of the memory                                   |
+| source     | Who created it: agent, task-cli, or mcp                  |
+| category   | Classification: technical, preference, decision, context |
+| agent_id   | Which agent created or owns the memory                   |
+| embedding  | The vector representation used for semantic search       |
+| created_at | When the entry was created                               |
 
 ---
 
 ## Memory Limits by Plan
 
-| Plan           | Memory Entries |
-| -------------- | -------------- |
-| Spark (Free)   | 100            |
-| Pro ($49/mo)   | 10,000         |
-| Team ($149/mo) | 50,000         |
-| Enterprise     | Unlimited      |
+| Plan                          | Memory Entries       |
+| ----------------------------- | -------------------- |
+| Builder (Free)                | 0 (seed & core only) |
+| Pro ($19/mo)                  | Unlimited            |
+| Unlimited ($49/mo + $10/seat) | Unlimited            |
+| Enterprise                    | Unlimited            |
 
 When you reach the limit, new entries are blocked. Existing entries are preserved and remain searchable. To free capacity, delete entries from the **Memory** page in the dashboard, or upgrade your plan.
 
@@ -115,12 +115,12 @@ node packages/db/scripts/task-cli.mjs recall --query "Stripe configuration"
 
 Categorizing entries makes search more precise:
 
-| Category   | What It's For                                                |
-| ---------- | ------------------------------------------------------------ |
-| technical  | Architecture decisions, stack choices, environment config    |
-| preference | Team style preferences, communication patterns               |
-| decision   | Resolved debates, tradeoff choices, direction calls          |
-| context    | Background info, project history, stakeholder relationships  |
+| Category   | What It's For                                               |
+| ---------- | ----------------------------------------------------------- |
+| technical  | Architecture decisions, stack choices, environment config   |
+| preference | Team style preferences, communication patterns              |
+| decision   | Resolved debates, tradeoff choices, direction calls         |
+| context    | Background info, project history, stakeholder relationships |
 
 You can filter by category in the dashboard's Memory view.
 
