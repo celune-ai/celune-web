@@ -1,0 +1,174 @@
+# Security & Compliance
+
+Celune is built with enterprise security from the ground up. This page covers our security architecture, compliance posture, and the controls that protect your data.
+
+---
+
+## SOC 2 Type II
+
+Celune is SOC 2 Type II compliant, covering all five Trust Service Criteria:
+
+- **Security** - Immutable audit logging, role-based access controls, API key hashing, and automated security scanning across every deployment.
+- **Availability** - Infrastructure monitoring, automated health checks, and incident response procedures with defined SLAs.
+- **Processing Integrity** - Input validation at every API boundary, idempotent operations, and deterministic agent task execution.
+- **Confidentiality** - Encryption at rest and in transit, workspace isolation, and strict data classification policies.
+- **Privacy** - GDPR-ready data handling, consent management, data retention policies, and right-to-deletion support.
+
+---
+
+## Encryption
+
+### In Transit
+
+All traffic is encrypted via TLS 1.2+ (HTTPS). API requests, webhook payloads, and real-time streams are encrypted end-to-end between your browser/client and Celune's infrastructure.
+
+### At Rest
+
+- **Database** - All data stored in Supabase (PostgreSQL) is encrypted at rest using AES-256.
+- **Provider API Keys (BYOK)** - Encrypted with AES-256-GCM before storage. Celune never stores plaintext provider keys - they are encrypted on write and decrypted only at the moment of use.
+- **Slack Tokens** - Bot tokens and webhook URLs are encrypted using the same AES-256-GCM pipeline before being persisted.
+- **Backups** - All database backups inherit the same encryption-at-rest guarantees from the underlying infrastructure.
+
+---
+
+## Access Controls
+
+### Authentication
+
+Celune uses Supabase Auth with secure session management:
+
+- Email/password authentication with secure password hashing
+- Session tokens with automatic refresh and expiration
+- Access code gating for new workspace provisioning
+
+### Authorization
+
+Every API request is verified through multiple layers:
+
+1. **Authentication** - Valid session or API key required on every request.
+2. **Workspace Membership** - Users can only access workspaces they belong to. Every query is scoped by workspace ID.
+3. **Role-Based Permissions** - Granular permission checks (`tasks:write`, `analytics:read`, `settings:admin`, etc.) enforced at the API layer.
+4. **Row-Level Security (RLS)** - Supabase RLS policies provide an additional database-level access boundary.
+
+### API Key Security
+
+- Keys are hashed (SHA-256) before storage - Celune cannot retrieve your plaintext key after creation.
+- Keys are scoped to a single workspace.
+- Key activity is logged in the audit trail.
+- Revocation is immediate and permanent.
+
+---
+
+## Audit Logging
+
+Celune maintains an immutable audit log of all security-relevant events:
+
+- Authentication events (login, logout, failed attempts)
+- API key creation, usage, and revocation
+- Permission changes and role assignments
+- Data access and modification events
+- Agent actions and task state transitions
+- Configuration and settings changes
+
+Audit logs are append-only and cannot be modified or deleted. They are retained according to our data retention policy and are available for export during compliance audits.
+
+---
+
+## Data Classification
+
+Celune classifies all data into four tiers:
+
+| Tier             | Examples                                         | Controls                                                           |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| **Critical**     | Encryption keys, provider API keys, auth tokens  | AES-256-GCM encryption, no logging of values, immediate revocation |
+| **Confidential** | User data, workspace content, task details       | Workspace-scoped access, RLS policies, audit logging               |
+| **Internal**     | Agent configs, system metrics, feature flags     | Authenticated access required, workspace isolation                 |
+| **Public**       | Documentation, marketing content, published APIs | No access restrictions                                             |
+
+---
+
+## Incident Response
+
+Celune maintains a documented incident response procedure:
+
+1. **Detection** - Automated monitoring, health checks, and alerting.
+2. **Triage** - Severity classification (P0 through P3) with defined response times.
+3. **Containment** - Immediate isolation of affected systems.
+4. **Resolution** - Root cause analysis and remediation.
+5. **Communication** - Status updates to affected customers within defined SLAs.
+6. **Post-mortem** - Documented review with preventive action items.
+
+| Severity          | Response Time  | Update Frequency |
+| ----------------- | -------------- | ---------------- |
+| **P0 - Critical** | 15 minutes     | Every 30 minutes |
+| **P1 - High**     | 1 hour         | Every 2 hours    |
+| **P2 - Medium**   | 4 hours        | Daily            |
+| **P3 - Low**      | 1 business day | As needed        |
+
+---
+
+## Vendor Management
+
+All third-party services used by Celune are evaluated for security posture:
+
+| Vendor        | Purpose                      | Compliance      |
+| ------------- | ---------------------------- | --------------- |
+| **Supabase**  | Database, auth, real-time    | SOC 2 Type II   |
+| **Vercel**    | Hosting, edge network, CI/CD | SOC 2 Type II   |
+| **Anthropic** | AI model provider            | SOC 2 Type II   |
+| **Sentry**    | Error monitoring             | SOC 2 Type II   |
+| **Stripe**    | Billing and payments         | PCI DSS Level 1 |
+| **GitHub**    | Source control, CI/CD        | SOC 2 Type II   |
+
+Vendor risk assessments are reviewed annually and whenever a new vendor is introduced.
+
+---
+
+## Change Management
+
+All code changes follow a controlled release process:
+
+- **Pull request reviews** - Every change requires review before merge.
+- **Automated CI/CD** - Type checking, test suites, and build verification run on every PR.
+- **Security scanning** - Pre-commit hooks scan for secrets and internal references.
+- **Staged deployments** - Preview deployments on Vercel before production promotion.
+- **Rollback capability** - Instant rollback to any previous deployment.
+
+---
+
+## GDPR & Data Privacy
+
+Celune is designed to be GDPR-ready:
+
+- **Data minimization** - We collect only what is necessary for the service to function.
+- **Right to access** - Users can export their workspace data.
+- **Right to deletion** - Account and workspace deletion removes all associated data.
+- **Data retention** - Defined retention periods with automatic cleanup of expired data.
+- **Data processing** - AI model providers process data according to their enterprise data policies - no training on customer data.
+
+---
+
+## Rate Limiting
+
+All API endpoints are protected by rate limiting to prevent abuse:
+
+- Read operations: 60 requests per minute
+- Write operations: 30 requests per minute
+- Authentication endpoints: 10 requests per minute
+
+Rate limits are applied per API key or authenticated session. Exceeding limits returns a `429 Too Many Requests` response.
+
+---
+
+## Responsible Disclosure
+
+If you discover a security vulnerability, please report it to **security@celune.ai**. We appreciate responsible disclosure and will acknowledge receipt within 24 hours.
+
+---
+
+## Related Pages
+
+- [API Keys](/guides/api-keys) - Creating and managing API keys.
+- [BYOK](/guides/byok) - Bringing your own AI provider keys.
+- [Permissions](/concepts/permissions) - Role-based access control details.
+- [API Reference](/api-reference/authentication) - Authentication documentation.

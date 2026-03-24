@@ -29,24 +29,24 @@ interface HeroTask {
 }
 
 const STATUS_COLOR: Record<TaskStatus, string> = {
-  'Planned': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+  Planned: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
   'In Progress': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-  'Review': 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
-  'Done': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  Review: 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
+  Done: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
 };
 
 const PRIORITY_COLOR: Record<Priority, string> = {
-  'High': 'border-red-500/30 bg-red-500/10 text-red-400',
-  'Normal': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
-  'Low': 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
+  High: 'border-red-500/30 bg-red-500/10 text-red-400',
+  Normal: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+  Low: 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
 };
 
 const AGENT_COLOR: Record<Agent, string> = {
-  'RICK': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-  'SCAN': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-  'SAGE': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-  'NOIR': 'border-pink-500/30 bg-pink-500/10 text-pink-400',
-  'Eric': 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+  RICK: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  SCAN: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  SAGE: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
+  NOIR: 'border-pink-500/30 bg-pink-500/10 text-pink-400',
+  Eric: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
 };
 
 const TASK_GROUPS: { label: TaskStatus; count: number; tasks: HeroTask[] }[] = [
@@ -54,33 +54,78 @@ const TASK_GROUPS: { label: TaskStatus; count: number; tasks: HeroTask[] }[] = [
     label: 'Planned',
     count: 4,
     tasks: [
-      { title: 'Add Stripe subscription billing flow', status: 'Planned', priority: 'High', agent: 'RICK' },
-      { title: 'Write onboarding email drip sequence', status: 'Planned', priority: 'Normal', agent: 'SAGE' },
-      { title: 'Design mobile-responsive dashboard', status: 'Planned', priority: 'Normal', agent: 'NOIR' },
-      { title: 'Build team invite and permissions system', status: 'Planned', priority: 'High', agent: 'RICK' },
+      {
+        title: 'Add Stripe subscription billing flow',
+        status: 'Planned',
+        priority: 'High',
+        agent: 'RICK',
+      },
+      {
+        title: 'Write onboarding email drip sequence',
+        status: 'Planned',
+        priority: 'Normal',
+        agent: 'SAGE',
+      },
+      {
+        title: 'Design mobile-responsive dashboard',
+        status: 'Planned',
+        priority: 'Normal',
+        agent: 'NOIR',
+      },
+      {
+        title: 'Build team invite and permissions system',
+        status: 'Planned',
+        priority: 'High',
+        agent: 'RICK',
+      },
     ],
   },
   {
     label: 'In Progress',
     count: 2,
     tasks: [
-      { title: 'Implement OAuth login with Google and GitHub', status: 'In Progress', priority: 'High', agent: 'RICK' },
-      { title: 'Set up CI/CD pipeline with staging deploys', status: 'In Progress', priority: 'High', agent: 'SCAN' },
+      {
+        title: 'Implement OAuth login with Google and GitHub',
+        status: 'In Progress',
+        priority: 'High',
+        agent: 'RICK',
+      },
+      {
+        title: 'Set up CI/CD pipeline with staging deploys',
+        status: 'In Progress',
+        priority: 'High',
+        agent: 'SCAN',
+      },
     ],
   },
   {
     label: 'Review',
     count: 1,
     tasks: [
-      { title: 'Landing page copy and SEO meta tags', status: 'Review', priority: 'Normal', agent: 'Eric' },
+      {
+        title: 'Landing page copy and SEO meta tags',
+        status: 'Review',
+        priority: 'Normal',
+        agent: 'Eric',
+      },
     ],
   },
   {
     label: 'Done',
     count: 2,
     tasks: [
-      { title: 'Security audit: user auth and API keys', status: 'Done', priority: 'High', agent: 'SCAN' },
-      { title: 'Brand kit — logo, colors, and typography', status: 'Done', priority: 'Normal', agent: 'NOIR' },
+      {
+        title: 'Security audit: user auth and API keys',
+        status: 'Done',
+        priority: 'High',
+        agent: 'SCAN',
+      },
+      {
+        title: 'Brand kit — logo, colors, and typography',
+        status: 'Done',
+        priority: 'Normal',
+        agent: 'NOIR',
+      },
     ],
   },
 ];
@@ -91,13 +136,19 @@ function MiniSparkline({ data, color = '#22c55e' }: { data: number[]; color?: st
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
-  const points = data.map(
-    (v, i) => `${(i / (data.length - 1)) * 120},${36 - ((v - min) / range) * 32}`,
-  ).join(' ');
+  const points = data
+    .map((v, i) => `${(i / (data.length - 1)) * 120},${36 - ((v - min) / range) * 32}`)
+    .join(' ');
   const gradId = `heroSparkGrad-${color.replace('#', '')}`;
   return (
     <svg viewBox="0 0 120 40" className="h-8 w-full" preserveAspectRatio="none">
-      <polyline points={points} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+      />
       <polyline points={`0,40 ${points} 120,40`} fill={`url(#${gradId})`} stroke="none" />
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -113,7 +164,9 @@ function MiniSparkline({ data, color = '#22c55e' }: { data: number[]; color?: st
 
 function Badge({ label, colorClass }: { label: string; colorClass: string }) {
   return (
-    <span className={cn('shrink-0 rounded px-1.5 py-0.5 text-[9px] font-medium border', colorClass)}>
+    <span
+      className={cn('shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-medium', colorClass)}
+    >
       {label}
     </span>
   );
@@ -134,12 +187,16 @@ function HeroDashboard() {
             </div>
             <div className="flex items-end justify-between">
               <div className="font-heading text-3xl font-medium text-white">380h</div>
-              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
-                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 2 L10 7 H2Z" fill="currentColor" /></svg>
+              <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
+                <svg viewBox="0 0 12 12" className="h-3 w-3">
+                  <path d="M6 2 L10 7 H2Z" fill="currentColor" />
+                </svg>
                 +18%
               </div>
             </div>
-            <div className="mt-2"><MiniSparkline data={HOURS_SAVED_POINTS} /></div>
+            <div className="mt-2">
+              <MiniSparkline data={HOURS_SAVED_POINTS} />
+            </div>
           </div>
 
           {/* Cost per Task */}
@@ -149,8 +206,10 @@ function HeroDashboard() {
             </div>
             <div className="flex items-end justify-between">
               <div className="font-heading text-3xl font-medium text-white">$0.42</div>
-              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
-                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 10 L10 5 H2Z" fill="currentColor" /></svg>
+              <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
+                <svg viewBox="0 0 12 12" className="h-3 w-3">
+                  <path d="M6 10 L10 5 H2Z" fill="currentColor" />
+                </svg>
                 -18%
               </div>
             </div>
@@ -164,8 +223,10 @@ function HeroDashboard() {
             </div>
             <div className="flex items-end justify-between">
               <div className="font-heading text-3xl font-medium text-white">45m</div>
-              <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
-                <svg viewBox="0 0 12 12" className="h-3 w-3"><path d="M6 10 L10 5 H2Z" fill="currentColor" /></svg>
+              <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
+                <svg viewBox="0 0 12 12" className="h-3 w-3">
+                  <path d="M6 10 L10 5 H2Z" fill="currentColor" />
+                </svg>
                 -82%
               </div>
             </div>
@@ -182,7 +243,7 @@ function HeroDashboard() {
               <div className="text-[11px] text-neutral-500">/ 10</div>
             </div>
             <div className="mt-2 h-1.5 w-full rounded-full bg-white/[0.06]">
-              <div className="h-full rounded-full bg-celune-500" style={{ width: '94%' }} />
+              <div className="bg-celune-500 h-full rounded-full" style={{ width: '94%' }} />
             </div>
             <div className="mt-1 text-[11px] text-neutral-500">First-pass approval: 94%</div>
           </div>
@@ -194,9 +255,19 @@ function HeroDashboard() {
             <div key={group.label}>
               {/* Group header */}
               <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-2">
-                <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 text-neutral-600"><path d="M2 3 L5 6 L8 3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
+                <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 text-neutral-600">
+                  <path
+                    d="M2 3 L5 6 L8 3"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                </svg>
                 <span className="text-[11px] font-semibold text-neutral-300">{group.label}</span>
-                <span className="rounded bg-celune-500/15 px-1.5 py-0.5 text-[9px] font-bold text-celune-400">{group.count}</span>
+                <span className="bg-celune-500/15 text-celune-400 rounded px-1.5 py-0.5 text-[9px] font-bold">
+                  {group.count}
+                </span>
               </div>
               {/* Task rows */}
               {group.tasks.length > 0 && (
@@ -208,7 +279,7 @@ function HeroDashboard() {
                     >
                       {/* Pulsing green background for in-progress rows */}
                       {task.status === 'In Progress' && (
-                        <div className="pointer-events-none absolute inset-0 animate-pulse bg-celune-500/[0.04]" />
+                        <div className="bg-celune-500/[0.04] pointer-events-none absolute inset-0 animate-pulse" />
                       )}
                       {/* Checkbox circle */}
                       <span className="relative h-4 w-4 shrink-0 rounded-full border border-white/[0.12]" />
@@ -271,11 +342,7 @@ function HeroEmailInput() {
   }
 
   if (submitted) {
-    return (
-      <p className="mt-8 text-sm text-celune-400">
-        Thanks! We&apos;ll be in touch soon.
-      </p>
-    );
+    return <p className="text-celune-400 mt-8 text-sm">Thanks! We&apos;ll be in touch soon.</p>;
   }
 
   return (
@@ -288,12 +355,12 @@ function HeroEmailInput() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors focus:border-celune-500/50"
+            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-neutral-600"
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-celune-500 hover:bg-celune-400 cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold text-black transition-colors whitespace-nowrap disabled:opacity-50"
+            className="bg-celune-500 hover:bg-celune-400 cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold whitespace-nowrap text-black transition-colors disabled:opacity-50"
           >
             {loading ? 'Sending...' : 'Get Early Access'}
           </button>
@@ -305,7 +372,6 @@ function HeroEmailInput() {
 }
 
 export function CeluneHero() {
-
   return (
     <section id="hero" className="relative overflow-hidden pt-16">
       <div className="relative z-10 container py-[160px]">
@@ -313,32 +379,49 @@ export function CeluneHero() {
           {/* Left — text content */}
           <div>
             {/* Badge */}
-            <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5"
-            >
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5">
               <span className="bg-celune-500 animate-pulse-dot h-1.5 w-1.5 rounded-full" />
               <span className="text-xs font-medium text-neutral-400">Now in Private Beta</span>
             </div>
 
             {/* Heading */}
-            <h1
-              className="font-heading text-4xl font-medium tracking-tight text-white sm:text-5xl lg:text-6xl"
-            >
+            <h1 className="font-heading text-4xl font-medium tracking-tight text-white sm:text-5xl lg:text-6xl">
               Ship faster with
               <br />
               <span className="text-celune-500 glow-green-text">autonomous agent teams</span>
             </h1>
 
             {/* Subtitle */}
-            <p
-              className="mt-6 max-w-lg font-sans text-lg font-light leading-relaxed text-neutral-500"
-            >
+            <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-neutral-500">
               Agent teams that research, plan, build, review, and ship production code. A full R&D
               process — not a copilot.
             </p>
 
             {/* Email signup */}
             <HeroEmailInput />
+
+            {/* Trust badges */}
+            <div className="mt-6 flex items-center gap-3 text-neutral-600">
+              <div className="flex items-center gap-1.5">
+                <svg
+                  viewBox="0 0 16 16"
+                  className="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M8 1.5L2.5 4v4c0 3.5 2.3 6 5.5 7 3.2-1 5.5-3.5 5.5-7V4L8 1.5z" />
+                  <path d="M5.5 8.5L7 10l3.5-3.5" />
+                </svg>
+                <span className="text-xs">SOC 2 Type II</span>
+              </div>
+              <span className="text-neutral-700">|</span>
+              <span className="text-xs">AES-256 encryption</span>
+              <span className="text-neutral-700">|</span>
+              <span className="text-xs">GDPR ready</span>
+            </div>
           </div>
 
           {/* Right — dashboard preview */}
