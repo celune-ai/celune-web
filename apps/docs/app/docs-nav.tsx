@@ -195,6 +195,10 @@ const PUBLIC_NAV_SECTIONS = [
     ],
   },
   {
+    label: 'Security',
+    items: [{ href: '/security', label: 'Security & Compliance' }],
+  },
+  {
     label: 'API Reference',
     items: [
       { href: '/api-reference/overview', label: 'Quick Start' },
