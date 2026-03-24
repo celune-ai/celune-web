@@ -1,0 +1,112 @@
+## The Copilot Ceiling
+
+Most teams using AI in 2026 are still running solo agents. One model, one prompt, one task at a time. It works — until it doesn't.
+
+The ceiling shows up fast: a single agent can't hold enough context to reason across a full project. It can't review its own code. It can't research a problem while simultaneously building the solution. You end up babysitting — feeding context, catching mistakes, manually coordinating between sessions.
+
+AI agent orchestration — running multiple specialized agents as a coordinated team — breaks through that ceiling. And the data backs it up: Gartner reported a 1,445% surge in enterprise inquiries about multi-agent systems in the last year. This isn't hype. It's teams hitting the same wall and looking for the same answer.
+
+---
+
+## What Orchestration Actually Means
+
+Agent orchestration isn't "run five chatbots in parallel." It's the infrastructure that decides which agent works on what, when, and with what context.
+
+A useful mental model: think of it like a dev team standup. You don't hand the same ticket to every engineer and hope someone gets it right. You assign work based on expertise, sequence tasks based on dependencies, and review output before it ships.
+
+Orchestrated agents work the same way:
+
+- **Specialization** — Each agent has a defined role (engineer, reviewer, researcher, designer). Different roles can run on different models at different price points.
+- **Task routing** — Work gets assigned based on what each agent does well, not round-robin.
+- **Shared state** — Agents read from a common task board and memory layer, so nobody works from stale context.
+- **Sequential gates** — Code gets reviewed before it merges. Research finishes before implementation starts. The dependency graph is explicit.
+
+The alternative — one large model doing everything — scales like a single-threaded CPU. You can make the core faster, but you can't parallelize the work.
+
+---
+
+## Why Solo Agents Hit a Wall
+
+### Context window as a single point of failure
+
+A solo agent accumulates context until the window fills up. At that point, you either lose early context (the model forgets your architectural decisions) or you start a new session (and manually re-prime everything).
+
+With a team, each agent manages its own context. A researcher fills its window with documentation and competitive analysis. An engineer fills its window with code and type signatures. Neither pollutes the other's working memory.
+
+### No self-review
+
+The most common failure mode in AI-generated code isn't wrong logic — it's drift. The code works but doesn't match the patterns, conventions, or security requirements of the project. A solo agent can't catch this because it wrote the code and evaluated it in the same context.
+
+A separate review agent sees the diff cold. It flags inconsistencies that the authoring agent would never notice because it was too deep in the implementation.
+
+### Model cost misallocation
+
+Running Claude Opus on a research task that Haiku handles perfectly is like paying a senior architect to google library docs. Solo-agent setups force you into a single model tier for all work. Orchestration lets you match model capability to task complexity:
+
+| Task type                  | Model tier | Why                                      |
+| -------------------------- | ---------- | ---------------------------------------- |
+| Architecture, complex code | Opus       | Requires deep reasoning and judgment     |
+| Code review, design, PM    | Sonnet     | Good balance of quality and cost         |
+| Research, data gathering   | Haiku      | Fast, cheap, excellent for bounded tasks |
+
+The cost difference is significant. A mixed-model team can be 3-5x cheaper per sprint than running everything on the largest model.
+
+---
+
+## The Orchestration Stack
+
+If you're moving from solo agents to a team, here's what the stack looks like in practice:
+
+### 1. A real task board
+
+Agents need a shared source of truth for what's been done, what's in progress, and what's blocked. Not a text file — a database-backed board with statuses, assignees, and dependencies. This is the coordination layer that prevents two agents from doing the same work or building on assumptions the other agent already invalidated.
+
+### 2. Memory that persists across sessions
+
+The biggest gap in most agent setups is memory. An agent that forgets yesterday's architectural decisions will re-litigate them today. Persistent memory — decisions, conventions, project context — means agents start each session already oriented.
+
+### 3. Explicit dependency chains
+
+"Build the API, then build the UI, then review both" is a dependency chain. Without explicit sequencing, agents will start work before prerequisites are met. The result is rework, merge conflicts, and inconsistent output.
+
+Sprint-based execution (group tasks into sequential batches, gate between sprints) is the simplest model that works. It's not glamorous, but it prevents the chaos of fully autonomous parallel execution.
+
+### 4. A review gate before merge
+
+Every piece of agent-generated code should pass through a review agent before it lands. Not because the code is bad — it's usually quite good — but because consistency across a project requires a second perspective. Security patterns, naming conventions, error handling consistency — these are the things a review catches.
+
+---
+
+## What Changes When It Works
+
+The shift from solo to orchestrated agents isn't incremental. It's qualitative.
+
+**Throughput jumps.** A researcher and an engineer working in parallel produce more in one sprint than either could alone. The researcher finishes the competitive analysis while the engineer scaffolds the feature. By sprint two, the engineer has real data to build against.
+
+**Quality improves.** Dedicated review catches things that self-review misses. Security invariants get tested. Design consistency gets checked. The output feels like it came from a team, not a single session.
+
+**Cost drops.** Haiku handles 40% of the work at 1/10th the cost. The expensive model only runs when the task demands it.
+
+**Context stays fresh.** Each agent manages its own window. No more "the model forgot my database schema" at message 47. Compaction and handoff happen at natural boundaries between sprints.
+
+The teams seeing this aren't using experimental frameworks. They're using the same models everyone has access to — Claude, GPT-4, Gemini — with better coordination infrastructure on top.
+
+---
+
+## Getting Started
+
+You don't need to go from one agent to nine overnight. The minimum viable orchestration is:
+
+1. **Two agents** — a builder and a reviewer. Different system prompts, same task board.
+2. **A shared task list** — database-backed, not a chat thread. Each task has a description, status, and assignee.
+3. **A sequential gate** — the reviewer doesn't start until the builder marks the task complete.
+
+That's it. If you're running a solo agent today, adding a review step alone will catch a meaningful class of errors.
+
+From there, the path is incremental: add a researcher when you need external context, a designer when you're building UI, a PM when the backlog gets complex enough to need prioritization.
+
+The key insight is that orchestration isn't about the agents — it's about the system around them. Task hygiene, memory persistence, dependency management, and review gates. The same operational discipline that makes human teams effective makes agent teams effective.
+
+---
+
+_At [Celune](https://celune.ai), we're building exactly this: a platform where AI agent teams coordinate through shared task boards, persistent memory, and sprint-based execution. If you're hitting the solo-agent ceiling, [check out what we're working on](https://celune.ai)._
