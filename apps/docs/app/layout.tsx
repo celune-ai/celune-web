@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import { DocsLayout } from './docs-layout';
+import { CommandSearch } from '../components/command-search';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${inter.variable} ${sourceCodePro.variable} ${soehneLeicht.variable} ${soehneKraftig.variable} bg-background font-sans antialiased`}
       >
         <DocsLayout>{children}</DocsLayout>
+        <CommandSearch />
         <Analytics />
         <SpeedInsights />
       </body>

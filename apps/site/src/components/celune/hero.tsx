@@ -181,7 +181,7 @@ function HeroDashboard() {
         {/* Left — ROI metric cards */}
         <div className="flex flex-col gap-3">
           {/* Hours Saved */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Hours Saved / Week
             </div>
@@ -200,7 +200,7 @@ function HeroDashboard() {
           </div>
 
           {/* Cost per Task */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Cost per Task
             </div>
@@ -217,7 +217,7 @@ function HeroDashboard() {
           </div>
 
           {/* Avg Time to Ship */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Avg Time to Ship
             </div>
@@ -234,7 +234,7 @@ function HeroDashboard() {
           </div>
 
           {/* Code Quality */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Code Quality Score
             </div>
@@ -250,7 +250,7 @@ function HeroDashboard() {
         </div>
 
         {/* Right — task table */}
-        <div className="relative min-w-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+        <div className="relative min-w-0 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0d0d0f]">
           {TASK_GROUPS.map((group) => (
             <div key={group.label}>
               {/* Group header */}
@@ -355,7 +355,7 @@ function HeroEmailInput() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-neutral-600"
+            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/60"
           />
           <button
             type="submit"
@@ -381,7 +381,7 @@ export function CeluneHero() {
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5">
               <span className="bg-celune-500 animate-pulse-dot h-1.5 w-1.5 rounded-full" />
-              <span className="text-xs font-medium text-neutral-400">Now in Private Beta</span>
+              <span className="text-xs font-medium text-white/80">Now in Private Beta</span>
             </div>
 
             {/* Heading */}
@@ -392,16 +392,16 @@ export function CeluneHero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-neutral-500">
-              Agent teams that research, plan, build, review, and ship production code. A full R&D
-              process — not a copilot.
+            <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-white/80">
+              Agent teams that research, plan, build, review, and ship your ideas, all while
+              following a fully visible end-to-end process.
             </p>
 
             {/* Email signup */}
             <HeroEmailInput />
 
             {/* Trust badges */}
-            <div className="mt-6 flex items-center gap-3 text-neutral-600">
+            <div className="mt-6 flex items-center gap-3 text-white/80">
               <div className="flex items-center gap-1.5">
                 <svg
                   viewBox="0 0 16 16"
@@ -417,15 +417,15 @@ export function CeluneHero() {
                 </svg>
                 <span className="text-xs">SOC 2 Type II</span>
               </div>
-              <span className="text-neutral-700">|</span>
+              <span className="text-white/40">|</span>
               <span className="text-xs">AES-256 encryption</span>
-              <span className="text-neutral-700">|</span>
+              <span className="text-white/40">|</span>
               <span className="text-xs">GDPR ready</span>
             </div>
           </div>
 
-          {/* Right — dashboard preview */}
-          <div className="hidden lg:block">
+          {/* Right — dashboard preview (z-20 so stars render behind it) */}
+          <div className="relative z-20 hidden lg:block">
             <HeroDashboard />
           </div>
         </div>

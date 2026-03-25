@@ -32,7 +32,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen">
       {/* Sidebar: logo header + nav */}
-      {(
+      {
         <aside className="bg-surface-75 border-border flex w-[269px] shrink-0 flex-col border-r">
           {/* Logo container - matches platform app */}
           <div className="border-border flex h-14 shrink-0 items-center border-b px-4">
@@ -51,7 +51,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
           {/* Nav scrollable area */}
           <DocsNav />
         </aside>
-      )}
+      }
 
       {/* Content column */}
       <div className="flex min-w-0 flex-1 flex-col">
@@ -76,9 +76,34 @@ export function DocsLayout({ children }: { children: ReactNode }) {
 
           {/* Right: action buttons */}
           <div className="flex items-center gap-2 pr-[18px]">
+            <button
+              type="button"
+              onClick={() => {
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
+              }}
+              className="flex items-center gap-2 rounded-md border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[13px] text-white/40 transition-colors hover:border-white/[0.12] hover:bg-white/[0.05] hover:text-white/60"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <span className="hidden sm:inline">Search</span>
+              <kbd className="hidden rounded border border-white/[0.1] bg-white/[0.04] px-1 py-0.5 text-[11px] sm:inline">
+                {'\u2318'}K
+              </kbd>
+            </button>
             <a
               href="/support"
-              className="rounded-md px-4 py-1.5 text-[13px] text-foreground-light transition-colors hover:text-foreground"
+              className="text-foreground-light hover:text-foreground rounded-md px-4 py-1.5 text-[13px] transition-colors"
               style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
             >
               Support
@@ -92,7 +117,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
             </a>
             <a
               href={`${URL_APP}/signup`}
-              className="ml-2 rounded-md bg-celune-500 px-4 py-1.5 text-[13px] text-black transition-colors hover:bg-celune-400"
+              className="bg-celune-500 hover:bg-celune-400 ml-2 rounded-md px-4 py-1.5 text-[13px] text-black transition-colors"
               style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
             >
               Get Started

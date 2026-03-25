@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types';
 import { CodeBlock } from '@/components/code-block';
+import { CodePlayground } from '@/components/code-playground';
 
 // Override the <pre><code> output from MDX fenced code blocks so they use
 // the same Shiki-highlighted CodeBlock as the tsx design-system pages.
@@ -32,5 +33,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
     pre: MdxPre,
+    CodePlayground,
   };
 }
