@@ -43,13 +43,13 @@ const STATS: StatDef[] = [
   },
   {
     value: '9',
-    label: 'Specialized AI Agents',
+    label: 'Unique Agents',
     count: { raw: 9, suffix: '' },
   },
   {
-    value: '<3min',
-    label: 'Avg. Task Claim Time',
-    count: { raw: 3, prefix: '<', suffix: 'min' },
+    value: '175x',
+    label: 'ROI vs Manual Dev Cost',
+    count: { raw: 175, suffix: 'x' },
   },
 ];
 
