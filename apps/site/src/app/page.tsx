@@ -1,6 +1,5 @@
 import { CeluneNav } from '@/components/celune/nav';
 import { CeluneHero } from '@/components/celune/hero';
-import { SocialProof } from '@/components/celune/social-proof';
 import { CeluneStats } from '@/components/celune/stats';
 import { CeluneFeatures } from '@/components/celune/features';
 import { CeluneFeatureCards } from '@/components/celune/feature-cards';
@@ -22,8 +21,6 @@ export default function Home() {
       <CeluneNav />
       <GridFrame>
         <CeluneHero />
-        <SectionDivider />
-        <SocialProof />
         <SectionDivider />
         <ProductShowcase />
         <SectionDivider />
