@@ -379,9 +379,9 @@ export function CeluneHero() {
           {/* Left — text content */}
           <div>
             {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5">
+            <div className="border-celune-500/20 bg-celune-500/5 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5">
               <span className="bg-celune-500 animate-pulse-dot h-1.5 w-1.5 rounded-full" />
-              <span className="text-xs font-medium text-white/80">Now in Private Beta</span>
+              <span className="text-celune-400 text-xs font-medium">Launching March 28</span>
             </div>
 
             {/* Heading */}
