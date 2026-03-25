@@ -181,7 +181,7 @@ function HeroDashboard() {
         {/* Left — ROI metric cards */}
         <div className="flex flex-col gap-3">
           {/* Hours Saved */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Hours Saved / Week
             </div>
@@ -200,7 +200,7 @@ function HeroDashboard() {
           </div>
 
           {/* Cost per Task */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Cost per Task
             </div>
@@ -217,7 +217,7 @@ function HeroDashboard() {
           </div>
 
           {/* Avg Time to Ship */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Avg Time to Ship
             </div>
@@ -234,7 +234,7 @@ function HeroDashboard() {
           </div>
 
           {/* Code Quality */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
               Code Quality Score
             </div>
@@ -250,7 +250,7 @@ function HeroDashboard() {
         </div>
 
         {/* Right — task table */}
-        <div className="relative min-w-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+        <div className="relative min-w-0 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0d0d0f]">
           {TASK_GROUPS.map((group) => (
             <div key={group.label}>
               {/* Group header */}
