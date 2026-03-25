@@ -106,6 +106,9 @@ const COMPONENT_ITEMS = [
   { href: '/design/components/skeleton', label: 'Skeleton' },
   { href: '/design/components/progress', label: 'Progress' },
   { href: '/design/components/avatar', label: 'Avatar' },
+  { href: '/design/components/pixel-grid', label: 'Pixel Grid' },
+  { href: '/design/components/dither-image', label: 'Dither Image' },
+  { href: '/design/components/code-playground', label: 'Code Playground' },
 ];
 
 function DesignSidebarContent({ onClose }: { onClose?: () => void }) {
