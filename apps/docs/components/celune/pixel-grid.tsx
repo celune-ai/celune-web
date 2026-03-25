@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { cn } from '@/lib/cn';
+function cn(...classes: (string | undefined | false)[]) {
+  return classes.filter(Boolean).join(' ');
+}
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
