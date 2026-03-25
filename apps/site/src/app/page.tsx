@@ -22,11 +22,11 @@ export default function Home() {
       <GridFrame>
         <CeluneHero />
         <SectionDivider />
+        <CeluneStats />
+        <SectionDivider />
         <ProductShowcase />
         <SectionDivider />
         <CeluneDemoShowcase />
-        <SectionDivider />
-        <CeluneStats />
         <SectionDivider />
         <CeluneFeatures />
         <SectionDivider />
