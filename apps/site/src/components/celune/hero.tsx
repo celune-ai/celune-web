@@ -393,8 +393,8 @@ export function CeluneHero() {
 
             {/* Subtitle */}
             <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-white/80">
-              Agent teams that research, plan, build, review, and ship your ideas. Best practices
-              &amp; process.
+              Agent teams that research, plan, build, review, and ship your ideas, all while
+              following a fully visible end-to-end process.
             </p>
 
             {/* Email signup */}
