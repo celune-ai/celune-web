@@ -1,0 +1,121 @@
+## The Memory Problem Nobody Talks About
+
+Every AI tool demo looks impressive. The agent writes code, drafts a plan, synthesizes research. Then you close the tab and come back tomorrow.
+
+It has no idea who you are.
+
+Not just the small stuff — your name, your preferences. The _important_ stuff. The architectural decision you made last Tuesday and the three reasons behind it. The constraint your CTO flagged in Q4 that rules out an entire class of solutions. The pattern you discovered that makes your codebase behave differently from the docs.
+
+This is the memory problem. Most AI tools treat every session as a fresh start. Some bolt on a "memory" feature that stores a flat list of facts — a glorified notepad. Neither approach gives agents the thing they actually need: **compounding intelligence**.
+
+---
+
+## Flat Memory Is a Dead End
+
+Let's be precise about what "flat memory" means, because it's the current state of the art for most AI platforms.
+
+Flat memory stores information as isolated key-value pairs or unstructured text chunks. The system can retrieve facts, but it has no understanding of how those facts relate to each other.
+
+Example: an agent with flat memory might store:
+
+- "User prefers TypeScript"
+- "User uses Next.js App Router"
+- "User decided against server actions in March"
+
+Three independent facts. Useful for retrieval. But the agent can't reason that the third fact is _related_ to the second, or that it _contradicts_ a later note about embracing progressive enhancement. The facts sit in a bucket. Nothing connects them.
+
+Now consider what a senior engineer actually holds in their head. Not a list of facts — a web of decisions, dependencies, constraints, and rationale. They know that decision A led to decision B, that constraint C ruled out approach D, that the team tried E and abandoned it for reasons that are still relevant.
+
+That's a knowledge graph. And it changes everything about how an agent can reason.
+
+---
+
+## How a Knowledge Graph Works
+
+A knowledge graph stores information as _nodes_ (memories) and _edges_ (typed relationships between them). The relationship types are what make it powerful.
+
+In Celune's memory system, every memory node can be connected to others via relationships like:
+
+- **supports** — this memory reinforces another
+- **contradicts** — this memory conflicts with another
+- **supersedes** — this memory replaces an older one
+- **depends_on** — this decision was conditional on another
+- **related_to** — general semantic proximity
+
+This changes retrieval from "find facts matching this query" to "find the relevant subgraph and reason across it." When an agent is about to recommend a solution, it doesn't just pull similar memories — it traverses the graph to surface what those memories _imply_.
+
+An agent working on your API design doesn't just recall "we use REST." It recalls that REST was chosen _because_ of a specific third-party integration constraint, which _supersedes_ an earlier preference for GraphQL, which was _related to_ a performance discussion that ultimately didn't apply. The agent reasons from the full chain, not a snapshot.
+
+---
+
+## Auto-Detection: The Graph Builds Itself
+
+The hardest part of any knowledge management system is getting people (or agents) to actually maintain it. Manual tagging is abandoned within days. Forced categorization creates garbage data.
+
+Celune's approach: **embedding similarity auto-detection**.
+
+When a new memory is added — after a task completes, after a decision is logged, after a user explicitly captures something — the system generates an embedding and runs a similarity search against the existing graph. Memories above a configurable similarity threshold are surfaced as potential relationships.
+
+The agent (or user) confirms which relationships are valid and what type they are. Over time, this confirmation pattern trains the system's confidence model. High-confidence relationships are auto-linked without prompting. Edge cases surface for review.
+
+The result: a knowledge graph that grows naturally as work happens. No separate "memory maintenance" workflow. No taxonomy to learn. The graph is a byproduct of doing work.
+
+---
+
+## Contradiction Detection: The Feature Nobody Expected to Need
+
+Here's something that surprised us during development: the contradiction detection feature turned out to be more valuable than the retrieval features.
+
+Every long-running project accumulates contradictions. Not because anyone is being careless — because context changes, people change their minds, and not every decision gets a formal retro. You end up with a codebase (or a team, or an agent) operating on assumptions that no longer hold.
+
+With flat memory, contradictions are invisible. The agent confidently retrieves "we use Postgres for all data storage" while another memory (never surfaced) says "we moved analytics to ClickHouse in November."
+
+With a knowledge graph, contradictions are modeled explicitly. When two memories are marked as `contradicts`, the system surfaces them together — as a pair — so they can be resolved. The resolution might be:
+
+- One supersedes the other (the newer context wins)
+- Both are true in different scopes (project A vs. project B)
+- The contradiction itself is the important finding ("we never resolved this")
+
+Agents that have access to contradiction detection don't just retrieve better — they _reason_ better. They know when to hedge, when to ask for clarification, and when a confidence score on a decision should be low.
+
+---
+
+## The Compounding Moat
+
+Here's the strategic picture, and why knowledge graph memory creates a durable competitive advantage for both Celune as a platform and for the teams using it.
+
+Flat memory scales linearly. Add 100 sessions, get 100 more facts. Each new session doesn't make the old sessions more valuable. The 1,000th session is isolated from the 1st.
+
+A knowledge graph scales _super-linearly_. Each new node potentially creates edges to many existing nodes. The graph becomes denser and more useful over time. The 1,000th session makes every prior session more valuable, because new connections reveal patterns that weren't visible before.
+
+This is compounding intelligence. It's the difference between a notebook and an expert.
+
+More importantly: it's hard to replicate. If you switch from a flat-memory AI tool to a knowledge graph tool tomorrow, you lose nothing on the flat-memory side (there was nothing to lose) but you also start from zero on the graph side. A team that has been building their knowledge graph for 12 months has 12 months of compound interest. New entrants can't buy that. They have to earn it.
+
+This is the moat. Not the AI models — those are commoditized. Not the UI — that's copiable. The moat is the graph that your team has been growing, pruning, and refining over time.
+
+---
+
+## Seeing Your Knowledge Network
+
+One of the most surprising things about building this feature: users wanted to _see_ the graph.
+
+Not because visualization is required for the system to work — it isn't. But because seeing the graph made people understand what was happening in a way that a list of memories never could.
+
+Celune includes a force-directed graph visualization for the knowledge network. Nodes are sized by connection density. Relationship types are color-coded. Contradiction clusters appear as tight, high-tension subgraphs. Isolated nodes — memories with no connections — surface as candidates for enrichment or deletion.
+
+The visualization isn't a gimmick. It's a diagnostic tool. Teams use it to find blind spots (areas of the graph that are suspiciously sparse), audit decisions (tracing the chain that led to a current constraint), and identify outdated clusters (a dense subgraph built around an assumption that has since changed).
+
+The graph makes the invisible visible. Most teams, once they see it, can't go back to working without it.
+
+---
+
+## Where This Is Going
+
+The memory problem is fundamental. Every AI agent capability — reasoning, planning, code generation, research — is bounded by the quality of context the agent is working with. A smarter model with bad context loses to a less capable model with rich, structured, relational context.
+
+Knowledge graphs are how you give agents that context. Not as a bolt-on feature. Not as a settings checkbox. As the core substrate that every agent operation runs on top of.
+
+The teams building with this approach today aren't just building faster. They're building something that gets _better over time_ — and that's a fundamentally different kind of advantage.
+
+The second brain isn't a metaphor. It's the product.

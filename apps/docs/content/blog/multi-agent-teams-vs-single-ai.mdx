@@ -1,0 +1,111 @@
+## The Tool That Does Everything Does Nothing Well
+
+Cursor autocompletes your code. Copilot suggests the next line. ChatGPT answers your question. Each of these tools is genuinely good at what it does — and genuinely bad at what it doesn't.
+
+Ask Cursor to run a design review on your new settings page. Ask Copilot to write a project retrospective with lessons learned. Ask ChatGPT to catch the regression you introduced three PRs ago. You'll get answers — plausible, fluent, confident — but not the right ones. Because code completion, UX critique, and QA archaeology are different disciplines. They require different context, different mental models, different expertise.
+
+Single AI assistants are generalists by design. Multi-agent AI development is built around the opposite premise: specialization wins.
+
+---
+
+## Why Single Agents Hit a Ceiling
+
+### Context is a finite resource
+
+Every modern LLM has a context window. Even large ones fill up fast on a real codebase. When a single agent handles architecture decisions, writes implementation, reviews its own code, tracks open questions, and manages the task board — it's competing with itself for attention.
+
+The architectural reasoning crowds out the implementation details. The task tracking displaces the code review. Something important always falls below the fold.
+
+A specialized agent only carries what it needs. SCAN — Celune's QA agent — doesn't need to hold the entire product roadmap in memory. It needs the diff, the test results, and the regression surface. That's a fundamentally tighter, more accurate context than asking your code-completion tool to "also check for bugs."
+
+### You can't review your own work
+
+This is the most underappreciated failure mode. When you ask the same agent that wrote the code to review it, you get rationalization, not review. The model's priors are baked in. It wrote the implementation because it thought the approach was correct — and that belief carries into the review.
+
+Human engineering teams solve this with code review culture. You don't review your own PRs. Multi-agent teams solve it the same way: the agent that writes the code is not the agent that reviews it.
+
+### One model, one personality, one set of tradeoffs
+
+Every AI model has embedded biases — toward brevity or verbosity, toward implementation or abstraction, toward building fast or building defensively. A single assistant brings one perspective to every problem.
+
+A product manager and a security engineer looking at the same feature proposal will catch different issues. That tension is a feature, not a bug. Single-agent tools collapse that tension into one averaged opinion.
+
+---
+
+## Specialization: What It Actually Looks Like
+
+Celune runs nine agents organized around distinct disciplines. Not nine copies of the same model — nine agents with different system prompts, different tool access, and different areas of ownership.
+
+**RICK** (Opus) handles architecture and high-stakes decisions. System prompt tuned for long-horizon reasoning, tradeoff analysis, and inter-system consistency. RICK doesn't write boilerplate — RICK decides whether the boilerplate should exist at all.
+
+**SAGE** (Sonnet) owns product. PRDs, user stories, acceptance criteria, roadmap prioritization. SAGE thinks in user flows and business outcomes, not diffs.
+
+**NOIR** (Sonnet) handles UX and design feedback. Spacing, hierarchy, accessibility, interaction patterns. NOIR reads component trees the way a designer reads a mockup.
+
+**SCAN** (Sonnet) is QA. Regression hunting, edge case analysis, test coverage audits. SCAN is the agent that's trying to break what the other agents built.
+
+**DELV, TREK, ECHO, BOND, VITA** (Haiku) handle research, documentation, communication, integrations, and infrastructure respectively — higher-volume work that doesn't require the reasoning ceiling of a frontier model.
+
+Each agent has a defined lane. Work doesn't get routed to whoever answers first — it gets routed to the agent with the right context for that type of problem.
+
+---
+
+## A Feature Request, End-to-End
+
+Here's what multi-agent AI development looks like in practice versus a single-agent approach.
+
+**Single agent (ChatGPT / Cursor / Copilot):**
+
+You describe the feature. The agent writes code. You review it, catch the edge cases it missed, realize the API contract doesn't match the existing pattern, ask it to revise. It revises. You catch something else. You ship it, and a week later someone reports a regression it would have caught if it had read the right files.
+
+This isn't a critique of the tools — it's the inherent limitation of one agent doing all the roles.
+
+**Multi-agent team (Celune):**
+
+The feature request hits SAGE first. SAGE writes a structured PRD: user story, acceptance criteria, edge cases, non-goals. That document goes into the shared task board.
+
+RICK reviews the PRD against the existing architecture. Are there API surface concerns? Data model implications? RICK flags them before a line of code is written.
+
+An implementation agent picks up the task with the PRD and RICK's notes already in context. It builds against a spec, not a vague description.
+
+NOIR runs a UX pass on the component output. Flagging contrast issues, interaction gaps, anything that would create friction for the user.
+
+SCAN runs the regression surface. Did the implementation introduce any breaks in adjacent flows? Are there untested edge cases from the acceptance criteria?
+
+Each agent sees the work through a different lens. The compounding effect is that problems get caught at the layer where they're cheapest to fix — UX issues in design review, logic bugs in QA, architectural problems in PRD review — not in production.
+
+---
+
+## The Compound Knowledge Graph
+
+Single-agent tools start fresh every session. Context is ephemeral. The tool that helped you debug the auth flow last Tuesday doesn't remember it on Thursday.
+
+Multi-agent teams built on a shared knowledge graph don't have this problem. Every decision, every review finding, every architectural note, every retrospective insight — indexed, searchable, and available to every agent that needs it.
+
+This is the difference between a tool and a team. Tools are stateless. Teams accumulate knowledge. The longer a team works together, the better the shared mental model — what tradeoffs the codebase has made, where the fragile edges are, what patterns to follow.
+
+Celune's agents share a knowledge graph that compounds across every session. SCAN's QA findings feed back into RICK's architectural awareness. SAGE's retrospective notes inform the next PRD. The team gets smarter over time in a way a single stateless assistant never can.
+
+---
+
+## Transparency vs. Black Box
+
+There's another dimension that doesn't get enough attention: visibility.
+
+When a single AI assistant writes code, the reasoning is invisible. You see the output. You don't see why it made the choices it made, what it considered and rejected, what tradeoffs it accepted.
+
+Multi-agent systems make the process legible. You can see which agent flagged which issue. You can read the PRD that SAGE wrote and the architectural review that RICK added. You can trace the QA findings back to specific acceptance criteria. The entire reasoning chain is auditable.
+
+This matters more than it sounds. When something ships with a bug, you want to know where the process broke down — not just fix the symptom. When something ships well, you want to understand why, so you can repeat it. A visible process is a learnable process.
+
+---
+
+## What This Means for Your Team
+
+Multi-agent AI development isn't about replacing more people with AI. It's about building AI capacity that mirrors how good human teams actually work — with specialization, review gates, shared context, and accumulated knowledge.
+
+Single AI assistants are a force multiplier for individual contributors. Multi-agent teams are infrastructure for sustained, high-quality output at scale.
+
+The ceiling on solo agents is real. Every engineer who's spent an afternoon fighting a context window or reviewing AI code that reviewed itself already knows it.
+
+The question isn't whether specialization matters in AI teams. It's whether your AI setup is built to take advantage of it.
