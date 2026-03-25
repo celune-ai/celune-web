@@ -381,7 +381,7 @@ export function CeluneHero() {
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5">
               <span className="bg-celune-500 animate-pulse-dot h-1.5 w-1.5 rounded-full" />
-              <span className="text-xs font-medium text-neutral-400">Now in Private Beta</span>
+              <span className="text-xs font-medium text-white/80">Now in Private Beta</span>
             </div>
 
             {/* Heading */}
@@ -392,16 +392,16 @@ export function CeluneHero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-neutral-500">
-              Agent teams that research, plan, build, review, and ship production code. A full R&D
-              process — not a copilot.
+            <p className="mt-6 max-w-lg font-sans text-lg leading-relaxed font-light text-white/80">
+              Agent teams that research, plan, build, review, and ship your ideas. Best practices
+              &amp; process.
             </p>
 
             {/* Email signup */}
             <HeroEmailInput />
 
             {/* Trust badges */}
-            <div className="mt-6 flex items-center gap-3 text-neutral-600">
+            <div className="mt-6 flex items-center gap-3 text-white/80">
               <div className="flex items-center gap-1.5">
                 <svg
                   viewBox="0 0 16 16"
@@ -417,9 +417,9 @@ export function CeluneHero() {
                 </svg>
                 <span className="text-xs">SOC 2 Type II</span>
               </div>
-              <span className="text-neutral-700">|</span>
+              <span className="text-white/40">|</span>
               <span className="text-xs">AES-256 encryption</span>
-              <span className="text-neutral-700">|</span>
+              <span className="text-white/40">|</span>
               <span className="text-xs">GDPR ready</span>
             </div>
           </div>
