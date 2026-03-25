@@ -32,9 +32,9 @@ interface StatDef {
 
 const STATS: StatDef[] = [
   {
-    value: '1,348',
-    label: 'Tasks Completed',
-    count: { raw: 1348, suffix: '' },
+    value: '1,300+',
+    label: 'Tasks / Week',
+    count: { raw: 1300, suffix: '+' },
   },
   {
     // Non-numeric — no counter, just reveal
@@ -135,7 +135,10 @@ function StatCard({ stat }: StatCardProps) {
   const reduced = useReducedMotion();
 
   return (
-    <div ref={ref} className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]">
+    <div
+      ref={ref}
+      className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]"
+    >
       <div className="font-heading text-3xl font-medium text-white md:text-4xl">
         {stat.count ? (
           <AnimatedNumber
@@ -162,9 +165,7 @@ export function CeluneStats() {
   return (
     <section id="stats" className="relative overflow-hidden">
       <div className="container">
-        <div
-          className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4"
-        >
+        <div className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4">
           {STATS.map((stat) => (
             <StatCard key={stat.label} stat={stat} />
           ))}
