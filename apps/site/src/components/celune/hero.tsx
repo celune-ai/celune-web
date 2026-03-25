@@ -355,7 +355,7 @@ function HeroEmailInput() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-neutral-600"
+            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/60"
           />
           <button
             type="submit"
