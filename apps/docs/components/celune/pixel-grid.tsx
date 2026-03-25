@@ -210,7 +210,7 @@ export function PixelGrid({
     const ro = new ResizeObserver(() => {
       resize();
     });
-    ro.observe(canvas.parentElement!);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
 
     // Also listen for breakpoint changes (cell size swap)
     function handleWindowResize() {

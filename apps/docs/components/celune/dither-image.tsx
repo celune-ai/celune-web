@@ -154,11 +154,39 @@ export function DitherImage({
 
   // Process on mount and when src/palette changes
   useEffect(() => {
+    let aborted = false;
     setReady(false);
     ditheredDataRef.current = null;
     originalDataRef.current = null;
-    processDither();
-  }, [processDither]);
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      if (aborted) return;
+      ctx.drawImage(img, 0, 0, width, height);
+      originalDataRef.current = ctx.getImageData(0, 0, width, height);
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const paletteRgb = palette.map(hexToRgb);
+      const dithered = floydSteinbergDither(imageData, paletteRgb);
+      ditheredDataRef.current = dithered;
+      ctx.putImageData(dithered, 0, 0);
+      setReady(true);
+    };
+    img.onerror = () => {
+      if (!aborted) console.error('[DitherImage] Failed to load image:', src);
+    };
+    img.src = src;
+
+    return () => {
+      aborted = true;
+      img.src = '';
+    };
+  }, [src, width, height, paletteKey]);
 
   // Swap between dithered and original on hover
   useEffect(() => {
@@ -182,6 +210,8 @@ export function DitherImage({
       {/* Dithered canvas — fades out on hover to reveal original underneath */}
       <canvas
         ref={canvasRef}
+        role="img"
+        aria-label="Dithered image"
         width={width}
         height={height}
         className={cn('block transition-opacity duration-500 ease-in-out', !ready && 'opacity-0')}

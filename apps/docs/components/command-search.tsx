@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { Search, FileText, ArrowRight } from 'lucide-react';
@@ -11,19 +11,24 @@ export function CommandSearch() {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
-  const results = searchDocs(query);
+  const results = useMemo(() => searchDocs(query), [query]);
 
-  // Cmd+K / Ctrl+K to toggle
+  // Cmd+K / Ctrl+K to toggle, Escape to close
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setOpen((prev) => !prev);
       }
+      if (e.key === 'Escape' && open) {
+        e.preventDefault();
+        setOpen(false);
+        setQuery('');
+      }
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [open]);
 
   const handleSelect = useCallback(
     (href: string) => {
@@ -44,7 +49,12 @@ export function CommandSearch() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div
+      className="fixed inset-0 z-[100]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search documentation"
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
