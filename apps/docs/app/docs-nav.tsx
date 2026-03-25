@@ -53,6 +53,7 @@ const DESIGN_SECTIONS = [
   {
     label: 'Foundations',
     items: [
+      { href: '/design/tokens', label: 'Design Tokens' },
       { href: '/design/colors', label: 'Color Usage' },
       { href: '/design/typography', label: 'Typography' },
       { href: '/design/spacing', label: 'Spacing' },
