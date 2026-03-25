@@ -424,8 +424,8 @@ export function CeluneHero() {
             </div>
           </div>
 
-          {/* Right — dashboard preview */}
-          <div className="hidden lg:block">
+          {/* Right — dashboard preview (z-20 so stars render behind it) */}
+          <div className="relative z-20 hidden lg:block">
             <HeroDashboard />
           </div>
         </div>
