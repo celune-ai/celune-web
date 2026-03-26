@@ -25,7 +25,7 @@ function AgentAvatar({ name, className = 'h-8 w-8' }: { name: string; className?
     <div
       className={cn(
         'flex shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] text-[10px] font-bold tracking-wide text-neutral-400',
-        className
+        className,
       )}
     >
       {name.slice(0, 2)}
@@ -46,11 +46,23 @@ interface Task {
 const ALL_TASKS: Task[] = [
   { id: 'CEL-301', title: 'Create PRD', agent: 'SAGE', tags: [{ label: 'Planning' }] },
   { id: 'CEL-302', title: 'Design system tokens', agent: 'NOIR', tags: [{ label: 'Design' }] },
-  { id: 'CEL-303', title: 'Database schema', agent: 'RICK', tags: [{ label: 'Backend' }], priority: '!!' },
+  {
+    id: 'CEL-303',
+    title: 'Database schema',
+    agent: 'RICK',
+    tags: [{ label: 'Backend' }],
+    priority: '!!',
+  },
   { id: 'CEL-304', title: 'API endpoints', agent: 'RICK', tags: [{ label: 'Backend' }] },
   { id: 'CEL-305', title: 'Chart components', agent: 'NOIR', tags: [{ label: 'Frontend' }] },
   { id: 'CEL-306', title: 'Dashboard layout', agent: 'NOIR', tags: [{ label: 'Design' }] },
-  { id: 'CEL-307', title: 'Auth middleware', agent: 'RICK', tags: [{ label: 'Backend' }], priority: '!!' },
+  {
+    id: 'CEL-307',
+    title: 'Auth middleware',
+    agent: 'RICK',
+    tags: [{ label: 'Backend' }],
+    priority: '!!',
+  },
   { id: 'CEL-308', title: 'E2E test suite', agent: 'SCAN', tags: [{ label: 'Testing' }] },
   { id: 'CEL-309', title: 'Security audit', agent: 'SCAN', tags: [{ label: 'Security' }] },
 ];
@@ -81,17 +93,17 @@ const THREAD_MESSAGES = [
   {
     agent: 'RICK',
     time: '2:14 PM',
-    text: 'Already on it. Schema migrations are running. I\'ll have the time-series endpoints ready in ~20 min.',
+    text: "Already on it. Schema migrations are running. I'll have the time-series endpoints ready in ~20 min.",
   },
   {
     agent: 'NOIR',
     time: '2:15 PM',
-    text: 'I\'ll start on the chart components while Rick builds the API. Using recharts with our design tokens.',
+    text: "I'll start on the chart components while Rick builds the API. Using recharts with our design tokens.",
   },
   {
     agent: 'SCAN',
     time: '2:15 PM',
-    text: 'I\'ll queue up the security review once Sprint 1 lands. Rate limiting on the new endpoints is on my list.',
+    text: "I'll queue up the security review once Sprint 1 lands. Rate limiting on the new endpoints is on my list.",
   },
 ];
 
@@ -105,11 +117,11 @@ function TaskCard({ task, isActive, isDone }: { task: Task; isActive: boolean; i
         isActive
           ? 'border-celune-500/30 bg-celune-500/[0.03] shadow-[0_0_12px_-4px_rgba(34,197,94,0.15)]'
           : 'border-white/[0.06] bg-white/[0.02]',
-        isDone && 'opacity-50'
+        isDone && 'opacity-50',
       )}
     >
       {isActive && (
-        <div className="pointer-events-none absolute inset-0 rounded-lg border border-celune-500/20 animate-pulse" />
+        <div className="border-celune-500/20 pointer-events-none absolute inset-0 animate-pulse rounded-lg border" />
       )}
       <div className="mb-2 flex items-start justify-between gap-2">
         <span className="font-mono text-[10px] text-neutral-600">{task.id}</span>
@@ -117,8 +129,14 @@ function TaskCard({ task, isActive, isDone }: { task: Task; isActive: boolean; i
       </div>
       <p className="mb-2.5 flex items-center gap-1.5 text-[13px] leading-snug text-neutral-300">
         {isDone && (
-          <svg className="h-3.5 w-3.5 shrink-0 text-celune-500" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg className="text-celune-500 h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M3 8.5L6.5 12L13 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         )}
         {task.title}
@@ -205,9 +223,12 @@ export function ProductShowcase() {
   const current = CYCLE_WORDS[wordIndex];
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative -mt-6 overflow-hidden">
       {/* Light rays — inside page rails (mx-12), flush to top divider */}
-      <div className="pointer-events-none absolute left-12 right-12 z-0 overflow-hidden" style={{ top: -1, bottom: '40%' }}>
+      <div
+        className="pointer-events-none absolute right-12 left-12 z-0 overflow-hidden"
+        style={{ top: -1, bottom: '40%' }}
+      >
         <LightRays
           raysOrigin="bottom-center"
           raysColor="#00ff87"
@@ -224,12 +245,16 @@ export function ProductShowcase() {
         />
       </div>
 
-      <div className="container relative z-[1]" style={{ paddingTop: 'calc(6rem + 80px)', paddingBottom: '8rem' }}>
+      <div
+        className="relative z-[1] container"
+        style={{ paddingTop: 'calc(6rem + 80px)', paddingBottom: '8rem' }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mx-auto mb-16 text-center" style={{ maxWidth: '46.25rem' }}
+          className="mx-auto mb-16 text-center"
+          style={{ maxWidth: '46.25rem' }}
         >
           <SectionLabel>The experience</SectionLabel>
           <h2 className="font-heading text-3xl font-medium tracking-tight whitespace-nowrap text-white md:text-4xl lg:text-5xl">
@@ -251,7 +276,10 @@ export function ProductShowcase() {
             </span>
           </h2>
           <p className="mt-4 text-lg text-neutral-400">
-            You and your Lead agent will plan your projects, deploying a coordinated effort with your agent team to research, develop, review code, design, and debate the process in retros. This cycle ensures quality, consistency, and an ever growing and learning team of Agents.
+            You and your Lead agent will plan your projects, deploying a coordinated effort with
+            your agent team to research, develop, review code, design, and debate the process in
+            retros. This cycle ensures quality, consistency, and an ever growing and learning team
+            of Agents.
           </p>
         </motion.div>
 
@@ -286,7 +314,9 @@ export function ProductShowcase() {
                     <AgentAvatar name={msg.agent} />
                     <div className="min-w-0">
                       <div className="mb-1 flex items-baseline gap-2">
-                        <span className="text-[13px] font-semibold text-neutral-300">{msg.agent}</span>
+                        <span className="text-[13px] font-semibold text-neutral-300">
+                          {msg.agent}
+                        </span>
                         <span className="text-[11px] text-neutral-700">{msg.time}</span>
                       </div>
                       <p className="text-[13px] leading-relaxed text-neutral-500">{msg.text}</p>
@@ -299,8 +329,8 @@ export function ProductShowcase() {
               <div className="border-t border-white/[0.06] p-3">
                 <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
                   <p className="text-[13px] text-neutral-600">
-                    <span className="rounded bg-white/[0.06] px-1 text-neutral-400">@RICK</span>
-                    {' '}assign the caching layer to Sprint 2
+                    <span className="rounded bg-white/[0.06] px-1 text-neutral-400">@RICK</span>{' '}
+                    assign the caching layer to Sprint 2
                   </p>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
@@ -309,7 +339,7 @@ export function ProductShowcase() {
                     <span className="text-xs font-bold">Aa</span>
                     <span className="text-sm">@</span>
                   </div>
-                  <div className="flex h-7 items-center gap-0.5 rounded-md bg-neutral-700 pl-2.5 pr-1.5">
+                  <div className="flex h-7 items-center gap-0.5 rounded-md bg-neutral-700 pr-1.5 pl-2.5">
                     <span className="text-xs font-medium text-neutral-300">Send</span>
                   </div>
                 </div>
@@ -317,10 +347,24 @@ export function ProductShowcase() {
             </div>
 
             {/* Right: Animated Kanban board */}
-            <div className="flex min-w-0 flex-1 gap-3 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0a0d] p-4" style={{ height: 600 }}>
+            <div
+              className="flex min-w-0 flex-1 gap-3 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0a0d] p-4"
+              style={{ height: 600 }}
+            >
               <KanbanColumn title="Todo" icon="○" taskIndices={board.todo} isActiveColumn={false} />
-              <KanbanColumn title="In Progress" icon="◑" taskIndices={board.inProgress} isActiveColumn={board.inProgress.length > 0} />
-              <KanbanColumn title="Done" icon="●" taskIndices={board.done} isActiveColumn={false} isDoneColumn />
+              <KanbanColumn
+                title="In Progress"
+                icon="◑"
+                taskIndices={board.inProgress}
+                isActiveColumn={board.inProgress.length > 0}
+              />
+              <KanbanColumn
+                title="Done"
+                icon="●"
+                taskIndices={board.done}
+                isActiveColumn={false}
+                isDoneColumn
+              />
             </div>
           </div>
         </motion.div>

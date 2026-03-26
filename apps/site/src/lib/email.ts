@@ -22,12 +22,15 @@ export async function sendWaitlistWelcome(email: string): Promise<boolean> {
         <img src="https://celune.ai/celune_light.svg" alt="Celune" width="100" style="margin-bottom: 32px;" />
         <h1 style="font-size: 24px; font-weight: 600; color: #ffffff; margin: 0 0 16px;">You're on the list!</h1>
         <p style="font-size: 16px; line-height: 1.6; color: #a3a3a3; margin: 0 0 24px;">
-          Thanks for signing up for early access to Celune. We're building autonomous engineering agents that ship code while you sleep.
+          Thanks for signing up for early access to Celune. We're onboarding users in small batches to ensure a great experience.
         </p>
         <p style="font-size: 16px; line-height: 1.6; color: #a3a3a3; margin: 0 0 24px;">
-          We'll reach out when your spot is ready. In the meantime, follow us on
+          We'll reach out with your personal access code once we open the next round. In the meantime, share your referral link to skip the line — 2 friends gets you priority access.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #a3a3a3; margin: 0 0 24px;">
+          Follow along on
           <a href="https://x.com/celune_ai" style="color: #22c55e; text-decoration: none;">X</a>
-          for updates.
+          for build-in-public updates.
         </p>
         <p style="font-size: 14px; color: #737373; margin: 32px 0 0;">
           — The Celune Team
