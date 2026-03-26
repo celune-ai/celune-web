@@ -165,9 +165,6 @@ export function CeluneWaitlist() {
                   </button>
                 </div>
                 {error && <p className="text-center text-xs text-red-400">{error}</p>}
-                <p className="text-center text-[11px] text-white/30">
-                  Share with 2 friends after signing up to skip the line.
-                </p>
               </form>
             )}
           </div>

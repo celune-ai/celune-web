@@ -457,9 +457,6 @@ function HeroEmailInput() {
           </button>
         </div>
         {error && <p className="text-xs text-red-400">{error}</p>}
-        <p className="text-[11px] text-white/30">
-          Share with 2 friends after signing up to skip the line.
-        </p>
       </form>
     </div>
   );
