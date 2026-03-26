@@ -1,144 +1,85 @@
 ---
 title: Memory & Search
-description: How the second brain stores, indexes, and retrieves knowledge across sessions.
+description: How Celune stores, indexes, and retrieves knowledge across workspaces.
 ---
 
 # Memory & Search
 
-The memory system gives Claude persistent context across sessions. It's built on three storage layers, a search index, and a two-tier knowledge flow that moves information from raw captures to curated knowledge.
+The memory system gives agents persistent context across sessions. It is built on Supabase with both full-text search and semantic (vector) search, managed through a set of API routes.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Always Loaded                      │
-│                                                     │
-│   CLAUDE.md                                         │
-│   ├── Identity (who Eric is, how we work)           │
-│   ├── Business context (Celune, goals)               │
-│   ├── Active projects table                         │
-│   ├── MCP tool reference                            │
-│   ├── Memory protocol (this system)                 │
-│   └── Security & maintenance rules                  │
-│                                                     │
-│   Loaded every session. ~370 lines. The "soul" file.│
-└─────────────────────────────────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────────────────────┐
-│                   Session Logs                       │
-│                                                     │
-│   memory/sessions/YYYY-MM-DD.md                     │
-│   ├── Decisions made                                │
-│   ├── Files created/modified                        │
-│   ├── Open threads for next session                 │
-│   └── Key learnings                                 │
-│                                                     │
-│   Written at session end via /flush protocol.       │
-│   Last 1-2 logs checked at session start.           │
-└─────────────────────────────────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────────────────────┐
-│                 Searchable Archive                    │
-│                                                     │
-│   Obsidian Vault (PARA structure)                   │
-│   ├── 00-inbox/     Raw captures, braindumps        │
-│   ├── 03-professional/  Work context                │
-│   ├── 04-projects/  Active project tracking         │
-│   ├── 05-knowledge/ Curated patterns & learnings    │
-│   └── 06-influences/ People, publications, tools    │
-│                                                     │
-│   Indexed by SQLite FTS5 for full-text search.      │
-└─────────────────────────────────────────────────────┘
+                  Memory Ingest
+                       |
+          +------------+------------+
+          |                         |
+    Full-Text Index          Vector Embeddings
+    (Supabase FTS)          (Semantic Search)
+          |                         |
+          +------------+------------+
+                       |
+                  Search API
+              /api/memory/search
+              /api/memory/semantic-search
+                       |
+                 Agent Context
 ```
 
-## Search Engine
+## Memory Types
 
-The search pipeline makes all vault content queryable:
+Workspace memories are managed entries that agents can create, read, and search:
 
-```
-  Vault Markdown Files
-        │
-        ▼
-  ┌─────────────┐
-  │  Chunking    │  Split files into searchable segments
-  └──────┬──────┘
-         │
-         ▼
-  ┌─────────────┐
-  │  SQLite DB   │  brain.sqlite
-  │  FTS5 Index  │  Full-text search with ranking
-  └──────┬──────┘
-         │
-         ▼
-  ┌─────────────┐
-  │  Hybrid      │  FTS5 scoring + recency weighting
-  │  Scoring     │
-  └──────┬──────┘
-         │
-         ▼
-  Ranked Results → Claude Context
-```
+- **Seed memories** — starter knowledge provided during workspace setup
+- **Core memories** — system-level knowledge essential for agent operation
+- **User memories** — knowledge ingested by users or agents during normal operation
+- **Team memories** — shared knowledge across workspace team members
 
-### Commands
+## API Routes
 
-```bash
-# Full rebuild (from repo root)
-python3 MyBrain/scripts/init-memory-db.py
+| Route                             | Description                              |
+| --------------------------------- | ---------------------------------------- |
+| `GET /api/memory/entries`         | List memory entries for the workspace    |
+| `POST /api/memory/ingest`         | Ingest new knowledge into memory         |
+| `GET /api/memory/search`          | Full-text search across memories         |
+| `GET /api/memory/semantic-search` | Semantic (vector) search across memories |
+| `GET /api/memory/stats`           | Memory usage statistics                  |
+| `GET /api/memory/limit`           | Check memory limits for current plan     |
+| `GET /api/memory/heartbeat`       | Memory system health check               |
 
-# Search the index
-python3 MyBrain/scripts/search-memory.py "topic keywords"
-python3 MyBrain/scripts/search-memory.py "exact phrase" --limit 5
-```
+## Search
 
-## Knowledge Flow
+Two search modes are available:
 
-Information moves through two tiers:
+### Full-Text Search
 
-### Tier 1: Raw Capture
+Standard keyword-based search across all memory entries. Fast and precise for exact term matching.
 
-Everything starts as a raw capture: braindumps into `00-inbox/`, session logs into `memory/sessions/`, Slack messages cataloged to vault files. No curation at this stage, just getting it down.
+### Semantic Search
 
-### Tier 2: Curated Knowledge
+Vector embedding-based search that finds conceptually related content even when exact terms do not match. Useful for natural language queries.
 
-During weekly review (or when a pattern appears across 2+ sessions), raw captures get promoted:
+## Memory Limits by Plan
 
-- **Proven patterns** move to `05-knowledge/` using the [note templates](/docs/note-templates)
-- **Stable decisions** get written directly into `CLAUDE.md`
-- **Stale captures** in `00-inbox/` get triaged or archived
+| Plan           | Memory Limit                                   |
+| -------------- | ---------------------------------------------- |
+| Builder (Free) | Seed & Core only (BYO for additional via BYOK) |
+| Pro            | Unlimited                                      |
+| Unlimited      | Unlimited                                      |
 
-This two-tier flow means nothing blocks the capture process, but knowledge doesn't stay raw forever.
+## Ingestion
 
-## Flush Protocol
+New knowledge can be ingested through:
 
-The flush protocol ensures context survives between sessions. It triggers on:
+- The memory ingest API (`POST /api/memory/ingest`)
+- Agent activity during task execution
+- Manual entry through the Memory page in the workspace UI
 
-| Trigger               | Threshold                                      |
-| --------------------- | ---------------------------------------------- |
-| File changes          | 5+ files created or modified                   |
-| Key decisions         | New tool, workflow change, architecture choice |
-| Topic switch          | Moving between projects                        |
-| Winding-down language | "wrapping up", "let's stop", "signing off"     |
-| Long session          | 20+ turns or 30+ minutes                       |
+## Memory Stats
 
-### Context-Aware Urgency
+The stats endpoint provides visibility into:
 
-| Context Usage    | Behavior                                        |
-| ---------------- | ----------------------------------------------- |
-| < 50%            | Normal: flush on triggers                       |
-| 50-70%           | Write key decisions after each exchange         |
-| 70-85%           | Active flushing: write everything important now |
-| > 85%            | Emergency: stop and flush full context summary  |
-| After compaction | Note what context may have been lost            |
-
-## Three Memory Layers
-
-| Layer                 | Location              | Purpose                                    |
-| --------------------- | --------------------- | ------------------------------------------ |
-| **Identity**          | `CLAUDE.md`           | Who Eric is, how we work, stable decisions |
-| **Session Logs**      | `memory/sessions/`    | What happened each session                 |
-| **Curated Knowledge** | `05-knowledge/`       | Proven patterns, learnings, reference docs |
-| **Search Index**      | `memory/brain.sqlite` | FTS5 index of all vault content            |
-
-The system is designed so Claude can pick up any conversation with full context, even across sessions. CLAUDE.md provides the stable foundation, session logs provide recency, and the search index provides depth.
+- Total memory entries
+- Storage usage
+- Usage against plan limits
+- Entry counts by type
