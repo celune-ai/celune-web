@@ -313,6 +313,16 @@ function HeroEmailInput() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
+  const [referralCount, setReferralCount] = useState(0);
+  const [isPriority, setIsPriority] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const REFERRAL_THRESHOLD = 2;
+
+  // Read ?ref= from URL for tracking who referred this visitor
+  const refCode =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -324,15 +334,26 @@ function HeroEmailInput() {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'hero' }),
+        body: JSON.stringify({ email, source: 'hero', ref: refCode }),
       });
       const data = await res.json();
       if (!res.ok) {
+        // Already on list — still show their referral info
+        if (res.status === 409 && data.referral_code) {
+          setReferralCode(data.referral_code);
+          setReferralCount(data.referral_count ?? 0);
+          setIsPriority(data.priority ?? false);
+          setSubmitted(true);
+          return;
+        }
         setError(data.error || 'Something went wrong.');
         setLoading(false);
         return;
       }
-      posthog.capture('waitlist_signup', { location: 'hero', email });
+      posthog.capture('waitlist_signup', { location: 'hero', email, ref: refCode });
+      setReferralCode(data.referral_code);
+      setReferralCount(data.referral_count ?? 0);
+      setIsPriority(data.priority ?? false);
       setSubmitted(true);
     } catch {
       setError('Something went wrong. Please try again.');
@@ -341,8 +362,78 @@ function HeroEmailInput() {
     }
   }
 
+  function handleCopy() {
+    const shareUrl = `https://celune.ai?ref=${referralCode}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      posthog.capture('referral_link_copied', { referral_code: referralCode });
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   if (submitted) {
-    return <p className="text-celune-400 mt-8 text-sm">Thanks! We&apos;ll be in touch soon.</p>;
+    const remaining = Math.max(0, REFERRAL_THRESHOLD - referralCount);
+
+    return (
+      <div className="mt-8 max-w-md space-y-4">
+        <p className="text-celune-400 text-sm font-medium">You&apos;re on the list!</p>
+
+        {/* Referral share card */}
+        <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
+          {isPriority ? (
+            <div className="flex items-center gap-2">
+              <span className="bg-celune-500 h-2 w-2 rounded-full" />
+              <p className="text-celune-400 text-sm font-medium">
+                Priority access unlocked — you&apos;ll be first in line.
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="mb-1 text-sm font-medium text-white">
+                Share with 2 friends to skip the line
+              </p>
+              <p className="mb-3 text-xs text-white/50">
+                {remaining === 0
+                  ? 'You did it! Priority access unlocked.'
+                  : `${referralCount}/${REFERRAL_THRESHOLD} referrals — ${remaining} more to go`}
+              </p>
+            </>
+          )}
+
+          {/* Progress dots */}
+          {!isPriority && (
+            <div className="mb-3 flex gap-1.5">
+              {Array.from({ length: REFERRAL_THRESHOLD }).map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    'h-1.5 flex-1 rounded-full transition-colors',
+                    i < referralCount ? 'bg-celune-500' : 'bg-white/10',
+                  )}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Share link */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              readOnly
+              value={`celune.ai?ref=${referralCode}`}
+              className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 py-2 text-xs text-white/70 outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="bg-celune-500 hover:bg-celune-400 rounded-lg px-4 py-2 text-xs font-semibold text-black transition-colors"
+            >
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -366,6 +457,9 @@ function HeroEmailInput() {
           </button>
         </div>
         {error && <p className="text-xs text-red-400">{error}</p>}
+        <p className="text-[11px] text-white/30">
+          Share with 2 friends after signing up to skip the line.
+        </p>
       </form>
     </div>
   );
