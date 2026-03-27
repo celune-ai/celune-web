@@ -257,8 +257,9 @@ export function ProductShowcase() {
           style={{ maxWidth: '46.25rem' }}
         >
           <SectionLabel>The experience</SectionLabel>
-          <h2 className="font-heading text-3xl font-medium tracking-tight whitespace-nowrap text-white md:text-4xl lg:text-5xl">
-            A team that never stops{' '}
+          <h2 className="font-heading text-3xl font-medium tracking-tight text-white md:text-4xl md:whitespace-nowrap lg:text-5xl">
+            A team that never stops
+            <br className="md:hidden" />{' '}
             <span className="relative inline-block">
               <AnimatePresence mode="wait">
                 <motion.span
