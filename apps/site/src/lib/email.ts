@@ -49,7 +49,7 @@ export async function sendWaitlistWelcome(email: string, referralCode?: string):
     ? `
       <div style="margin: 24px 0 0; padding: 20px; border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px; background: rgba(34, 197, 94, 0.05); text-align: center;">
         <p style="font-size: 13px; color: #a3a3a3; margin: 0 0 12px;">Know someone who'd love Celune?</p>
-        <a href="https://celune.ai/refer?code=${referralCode}" style="display: inline-block; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid rgba(34, 197, 94, 0.3);">
+        <a href="https://celune.ai/?refer=${referralCode}#signup" style="display: inline-block; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid rgba(34, 197, 94, 0.3);">
           Refer a Friend
         </a>
         <p style="font-size: 11px; color: #525252; margin: 8px 0 0;">You can invite up to 5 friends for priority access.</p>
