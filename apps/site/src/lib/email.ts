@@ -93,76 +93,34 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
 
   const signupUrl = `https://celune.ai?ref=${encodeURIComponent(referrerEmail)}#signup`;
 
-  const html = `
-    <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px; background: #08080a; color: #e5e5e5;">
-      <img src="https://celune.ai/celune_light.png" alt="Celune" width="110" style="margin-bottom: 32px;" />
-
-      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin: 0 0 16px;">${referrerEmail} invited you to Celune</h1>
-
-      <p style="font-size: 16px; line-height: 1.65; color: #a3a3a3; margin: 0 0 28px;">
-        Your friend thinks you'd be a great fit for Celune &mdash; an AI-powered platform where autonomous agent teams research, plan, build, review code, and ship your projects on autopilot.
-      </p>
-
-      <!-- What Celune does -->
-      <div style="background: #111118; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; margin: 0 0 28px;">
-        <p style="font-size: 14px; font-weight: 600; color: #ffffff; margin: 0 0 16px;">What you get with Celune:</p>
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
-              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
-            </td>
-            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
-              <strong style="color: #e5e5e5;">A team of 9 AI agents</strong> &mdash; each specialized in engineering, design, security, research, and more
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
-              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
-            </td>
-            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
-              <strong style="color: #e5e5e5;">Full project lifecycle</strong> &mdash; from PRDs and task planning to code review, design feedback, and retros
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
-              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
-            </td>
-            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
-              <strong style="color: #e5e5e5;">Ships while you sleep</strong> &mdash; agents work overnight, hand off progress, and keep building 24/7
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
-              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
-            </td>
-            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
-              <strong style="color: #e5e5e5;">Your second brain</strong> &mdash; a knowledge graph that remembers decisions, preferences, and context across every project
-            </td>
-          </tr>
+  const html = `<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');*{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}code,.code{font-family:'SF Mono','Fira Code',Menlo,Consolas,monospace!important;}</style></head><body style="margin:0;padding:0;background-color:#08080a;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#08080a"><tr><td align="center" style="padding:40px 16px">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+  <tr><td style="padding:0 0 40px"><img src="https://celune.ai/celune_light.png" alt="Celune" width="110" style="display:block"/></td></tr>
+  <tr><td style="padding:0 0 8px"><h1 style="margin:0;font-size:28px;font-weight:600;color:#ffffff;line-height:1.3">${referrerEmail} invited you to Celune</h1></td></tr>
+  <tr><td style="padding:0 0 32px"><p style="margin:0;font-size:16px;line-height:1.65;color:#a3a3a3">Your friend thinks you'd be a great fit for Celune &mdash; an AI-powered platform where autonomous agent teams research, plan, build, review, and ship your projects on autopilot.</p></td></tr>
+  <tr><td style="padding:0 0 32px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f1419;border:1px solid #1f2937;border-radius:16px">
+      <tr><td style="padding:28px">
+        <p style="margin:0 0 16px;font-size:14px;font-weight:600;color:#d4d4d4">What you get with Celune:</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr><td style="padding:6px 0;font-size:14px;color:#a3a3a3;line-height:1.5"><span style="color:#22c55e;margin-right:8px">✦</span><strong style="color:#e5e5e5">A team of 9 AI agents</strong> &mdash; each specialized in engineering, design, security, research, and more</td></tr>
+          <tr><td style="padding:6px 0;font-size:14px;color:#a3a3a3;line-height:1.5"><span style="color:#22c55e;margin-right:8px">✦</span><strong style="color:#e5e5e5">Full project lifecycle</strong> &mdash; from PRDs and task planning to code review, design feedback, and retros</td></tr>
+          <tr><td style="padding:6px 0;font-size:14px;color:#a3a3a3;line-height:1.5"><span style="color:#22c55e;margin-right:8px">✦</span><strong style="color:#e5e5e5">Ships while you sleep</strong> &mdash; agents work overnight, hand off progress, and keep building 24/7</td></tr>
+          <tr><td style="padding:6px 0;font-size:14px;color:#a3a3a3;line-height:1.5"><span style="color:#22c55e;margin-right:8px">✦</span><strong style="color:#e5e5e5">Your second brain</strong> &mdash; a knowledge graph that remembers decisions, preferences, and context across every project</td></tr>
         </table>
-      </div>
-
-      <!-- CTA -->
-      <div style="text-align: center; margin: 0 0 32px;">
-        <a href="${signupUrl}" style="display: inline-block; background: #22c55e; color: #000; padding: 16px 40px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 0.01em;">
-          Learn More &amp; Join the Waitlist
-        </a>
-        <p style="font-size: 12px; color: #525252; margin: 12px 0 0;">Early access is free for a limited time.</p>
-      </div>
-
-      <!-- Divider -->
-      <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 0 0 24px;"></div>
-
-      <p style="font-size: 13px; color: #525252; margin: 0 0 8px;">
-        Follow along on <a href="https://x.com/celune_ai" style="color: #22c55e; text-decoration: none;">X / Twitter</a> for build-in-public updates and sneak peeks.
-      </p>
-      <p style="font-size: 13px; color: #525252; margin: 0 0 24px;">&mdash; Eric &amp; the Celune Team</p>
-
-      <p style="font-size: 11px; color: #3a3a3a; margin: 0;">
-        You're receiving this because ${referrerEmail} referred you. If this wasn't meant for you, you can safely ignore this email.
-      </p>
-    </div>
-  `;
+      </td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:0 0 16px" align="center"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:#22c55e;border-radius:10px"><a href="${signupUrl}" style="display:inline-block;padding:16px 48px;font-size:16px;font-weight:700;color:#000000;text-decoration:none;letter-spacing:0.2px">Learn More &amp; Join the Waitlist</a></td></tr></table></td></tr>
+  <tr><td style="padding:0 0 40px" align="center"><p style="margin:0;font-size:13px;color:#525252">Early access is free for a limited time.</p></td></tr>
+  <tr><td style="padding:0 0 32px"><div style="height:1px;background:linear-gradient(to right,transparent,#1f2937,transparent)"></div></td></tr>
+  <tr><td style="padding:0 0 32px"><p style="margin:0;font-size:14px;color:#a3a3a3;line-height:1.5">Follow along on <a href="https://x.com/celuneapp" style="color:#22c55e;text-decoration:none">X / Twitter</a> for build-in-public updates and sneak peeks.</p></td></tr>
+  <tr><td style="padding:0 0 8px"><p style="margin:0;font-size:13px;color:#525252">&mdash; Eric &amp; the Celune Team</p></td></tr>
+  <tr><td><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="padding:16px 0"><a href="https://celune.ai" style="font-size:12px;color:#404040;text-decoration:none;margin-right:16px">celune.ai</a><a href="https://x.com/celuneapp" style="font-size:12px;color:#404040;text-decoration:none;margin-right:16px">X / Twitter</a><a href="https://docs.celune.ai" style="font-size:12px;color:#404040;text-decoration:none">Docs</a></td></tr></table></td></tr>
+  <tr><td><p style="margin:0;font-size:11px;color:#333333;line-height:1.5">You're receiving this because ${referrerEmail} referred you to <a href="https://celune.ai" style="color:#404040;text-decoration:underline">celune.ai</a>. If this wasn't meant for you, you can safely ignore this email.</p></td></tr>
+</table>
+</td></tr></table></body></html>`;
 
   try {
     await resend.emails.send({
