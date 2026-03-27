@@ -383,12 +383,9 @@ function ReferDialog({
   const existed = results?.filter((r) => r.status === 'exists') ?? [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div
-        className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0d0d12] p-8"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => onClose()} />
+      <div className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0d0d12] p-8">
         {/* Close button */}
         <button
           onClick={onClose}
