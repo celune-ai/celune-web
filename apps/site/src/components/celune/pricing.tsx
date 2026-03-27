@@ -150,12 +150,12 @@ export function CelunePricing() {
             ))}
           </div>
 
-          {/* Comparison table */}
-          <div className="overflow-hidden rounded-xl border border-white/[0.06]">
-            <table className="w-full text-sm">
+          {/* Comparison table — horizontally scrollable on mobile, sticky first col */}
+          <div className="scrollbar-none overflow-x-auto rounded-xl border border-white/[0.06]">
+            <table className="w-full min-w-[480px] text-sm">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="py-3 pr-2 pl-5 text-left font-medium text-neutral-400">
+                  <th className="sticky left-0 z-10 bg-[#0f0f13] py-3 pr-2 pl-5 text-left font-medium text-neutral-400">
                     {tab === 'usage' ? 'Limit' : 'Feature'}
                   </th>
                   {PLANS.map((plan) => (
@@ -169,7 +169,9 @@ export function CelunePricing() {
                 {tab === 'usage'
                   ? USAGE_ROWS.map((row) => (
                       <tr key={row.label} className="hover:bg-white/[0.02]">
-                        <td className="py-2.5 pr-2 pl-5 text-neutral-400">{row.label}</td>
+                        <td className="sticky left-0 z-10 bg-[#0a0a0f] py-2.5 pr-2 pl-5 text-neutral-400">
+                          {row.label}
+                        </td>
                         {row.values.map((val, i) => (
                           <td
                             key={PLANS[i].key}
@@ -182,7 +184,9 @@ export function CelunePricing() {
                     ))
                   : FEATURE_ROWS.map((row) => (
                       <tr key={row.label} className="hover:bg-white/[0.02]">
-                        <td className="py-2.5 pr-2 pl-5 text-neutral-400">{row.label}</td>
+                        <td className="sticky left-0 z-10 bg-[#0a0a0f] py-2.5 pr-2 pl-5 text-neutral-400">
+                          {row.label}
+                        </td>
                         {row.values.map((val, i) => (
                           <td key={PLANS[i].key} className="px-3 py-2.5 text-center">
                             {val ? (
