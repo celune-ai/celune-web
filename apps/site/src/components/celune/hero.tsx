@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { posthog } from '@/lib/posthog';
-import { DarkVeil } from '@/components/celune/dark-veil';
 
 // Quick-start install commands — hidden for now, will re-enable post-launch
 // const QUICK_START_STEPS = [
@@ -309,12 +308,265 @@ function HeroDashboard() {
 
 // ─── Main hero ──────────────────────────────────────────────────────────────
 
+// ─── Refer-a-friend dialog ──────────────────────────────────────────────────
+
+function ReferDialog({
+  code,
+  open,
+  onClose,
+}: {
+  code: string;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [emails, setEmails] = useState<string[]>(['']);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [results, setResults] = useState<
+    { email: string; status: 'sent' | 'exists' | 'error' }[] | null
+  >(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
+
+  function addEmail() {
+    if (emails.length < 5) setEmails([...emails, '']);
+  }
+
+  function removeEmail(index: number) {
+    setEmails(emails.filter((_, i) => i !== index));
+  }
+
+  function updateEmail(index: number, value: string) {
+    const updated = [...emails];
+    updated[index] = value;
+    setEmails(updated);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const validEmails = emails
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+
+    if (validEmails.length === 0) {
+      setError('Please enter at least one valid email address.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResults(null);
+
+    try {
+      const res = await fetch('/api/refer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ referral_code: code, emails: validEmails }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong.');
+        setLoading(false);
+        return;
+      }
+      setResults(data.results);
+      setRemaining(data.remaining);
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (!open) return null;
+
+  const sent = results?.filter((r) => r.status === 'sent') ?? [];
+  const existed = results?.filter((r) => r.status === 'exists') ?? [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-6" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0d0d12] p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/30 transition-colors hover:text-white/60"
+        >
+          <svg className="h-5 w-5" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M4 4l8 8M12 4l-8 8"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+
+        {results ? (
+          <div className="text-center">
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10">
+              <svg className="h-7 w-7 text-green-400" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 13l4 4L19 7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <h2 className="font-heading text-2xl font-medium text-white">
+              {sent.length > 0 ? 'Invites Sent!' : 'No New Invites'}
+            </h2>
+            {sent.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {sent.map((r) => (
+                  <div
+                    key={r.email}
+                    className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/5 px-4 py-2 text-sm text-green-400"
+                  >
+                    <svg className="h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                      <path
+                        d="M3 8.5L6.5 12L13 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {r.email}
+                  </div>
+                ))}
+              </div>
+            )}
+            {existed.length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                {existed.map((r) => (
+                  <p key={r.email} className="text-xs text-white/40">
+                    {r.email} is already on the waitlist
+                  </p>
+                ))}
+              </div>
+            )}
+            {remaining !== null && remaining > 0 && (
+              <p className="mt-4 text-sm text-white/50">
+                You have {remaining} invite{remaining !== 1 ? 's' : ''} remaining.
+              </p>
+            )}
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => {
+                  setResults(null);
+                  setEmails(['']);
+                }}
+                className="flex-1 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              >
+                Send More
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 rounded-lg bg-[#22c55e] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#16a34a]"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6 text-center">
+              <h2 className="font-heading text-2xl font-medium text-white">Invite Your Friends</h2>
+              <p className="mt-2 text-sm text-white/60">
+                Share early access to Celune with up to 5 friends. They&apos;ll get priority
+                placement on the waitlist.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {emails.map((email, i) => (
+                <div key={i} className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => updateEmail(i, e.target.value)}
+                    placeholder="friend@company.com"
+                    className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/40 focus:border-green-500/50"
+                  />
+                  {emails.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeEmail(i)}
+                      className="rounded-lg px-3 text-white/30 transition-colors hover:text-white/60"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                        <path
+                          d="M4 4l8 8M12 4l-8 8"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {emails.length < 5 && (
+                <button
+                  type="button"
+                  onClick={addEmail}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/[0.1] py-2.5 text-sm text-white/40 transition-colors hover:border-white/20 hover:text-white/60"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                    <path
+                      d="M8 3v10M3 8h10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Add another email
+                </button>
+              )}
+
+              {error && <p className="text-center text-xs text-red-400">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-[#16a34a] disabled:opacity-50"
+              >
+                {loading ? 'Sending Invites...' : 'Send Invites'}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Hero email input ───────────────────────────────────────────────────────
+
 function HeroEmailInput() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [referralCode, setReferralCode] = useState('');
+  const [referOpen, setReferOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Auto-open refer dialog if ?refer=CODE is in URL (from email link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const referParam = params.get('refer');
+    if (referParam) {
+      setReferralCode(referParam);
+      setSubmitted(true);
+      setReferOpen(true);
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -366,12 +618,15 @@ function HeroEmailInput() {
           </span>
         </div>
         {referralCode && (
-          <a
-            href={`/refer?code=${referralCode}`}
-            className="bg-celune-500 hover:bg-celune-400 inline-flex shrink-0 items-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-black transition-colors"
+          <button
+            onClick={() => setReferOpen(true)}
+            className="bg-celune-500 hover:bg-celune-400 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-black transition-colors"
           >
             Refer a Friend
-          </a>
+          </button>
+        )}
+        {referralCode && (
+          <ReferDialog code={referralCode} open={referOpen} onClose={() => setReferOpen(false)} />
         )}
       </div>
     );
@@ -406,16 +661,6 @@ function HeroEmailInput() {
 export function CeluneHero() {
   return (
     <section id="hero" className="relative overflow-hidden pt-16">
-      {/* DarkVeil WebGL background — behind stars (z-0), fades out at bottom */}
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <DarkVeil hueShift={150} speed={0.3} resolutionScale={0.75} />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 40%, rgb(10 10 15) 100%)',
-          }}
-        />
-      </div>
       <div className="relative z-10 container py-[160px]">
         <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left — text content */}
