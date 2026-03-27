@@ -7,6 +7,7 @@ const AGENTMAIL_INBOX = process.env.AGENTMAIL_INBOX;
 // Resend template IDs — edit templates at resend.com/templates
 const WAITLIST_TEMPLATE_ID =
   process.env.RESEND_WAITLIST_TEMPLATE_ID ?? 'f6e7e9e8-02aa-4ddc-bef2-c7ecc864bed2';
+const REFERRAL_TEMPLATE_ID = process.env.RESEND_REFERRAL_TEMPLATE_ID ?? '';
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
@@ -93,6 +94,30 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
 
   const signupUrl = `https://celune.ai?ref=${encodeURIComponent(referrerEmail)}#signup`;
 
+  // Try Resend dashboard template first (alias: friend-referral-invitation)
+  if (REFERRAL_TEMPLATE_ID) {
+    try {
+      const tmpl = await resend.templates.get(REFERRAL_TEMPLATE_ID);
+      if (tmpl.data?.html) {
+        // Replace template variables in the fetched HTML
+        let templateHtml = tmpl.data.html;
+        templateHtml = templateHtml.replace(/\{\{referrer_email\}\}/g, referrerEmail);
+        templateHtml = templateHtml.replace(/\{\{signup_url\}\}/g, signupUrl);
+
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: toEmail,
+          subject: `${referrerEmail} invited you to try Celune`,
+          html: templateHtml,
+        });
+        return true;
+      }
+    } catch {
+      // Template fetch failed — fall through to inline HTML
+    }
+  }
+
+  // Fallback: inline HTML
   const html = `<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');*{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}code,.code{font-family:'SF Mono','Fira Code',Menlo,Consolas,monospace!important;}</style></head><body style="margin:0;padding:0;background-color:#08080a;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#08080a"><tr><td align="center" style="padding:40px 16px">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
