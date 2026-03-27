@@ -1,134 +1,140 @@
 ---
 title: Architecture
-description: Complete system architecture, setup phases, and component mapping.
+description: System architecture, tech stack, and deployment overview for the Celune platform.
 ---
 
 # Architecture
 
-The second brain is built with Claude Code as the AI engine, Obsidian as the knowledge base, and markdown as the database. The result is local-first, fully customizable, and something you actually understand and control.
+Celune is a Turborepo monorepo deployed on Vercel with Supabase as the database backend. The platform consists of two Next.js applications and four shared packages.
 
-> "Clone the OpenClaw repo locally. Point your coding agent at it. Say 'explain how the memory system works, now build that into my own system.' Repeat for every part of the platform." - Cole Medin
+## Tech Stack
+
+| Layer          | Technology                           |
+| -------------- | ------------------------------------ |
+| **Framework**  | Next.js 16 (App Router), React 19    |
+| **Styling**    | Tailwind CSS v4, Radix UI, shadcn/ui |
+| **Database**   | Supabase (hosted PostgreSQL)         |
+| **Auth**       | Supabase Auth                        |
+| **AI**         | Anthropic SDK, MCP protocol          |
+| **Voice**      | ElevenLabs (TTS, cloning)            |
+| **Billing**    | Stripe                               |
+| **Monitoring** | Sentry, Vercel Analytics             |
+| **Testing**    | Vitest, Testing Library              |
+| **Monorepo**   | Turborepo + pnpm                     |
+| **Deployment** | Vercel                               |
+| **Icons**      | Lucide                               |
+| **Charts**     | Recharts                             |
 
 ## System Overview
 
 ```
-┌─────────────┐     ┌──────────────────────────────┐     ┌────────────────┐
-│   You        │     │  Your Mac / VPS              │     │  External      │
-│  (Phone/     │◄───►│                              │◄───►│  Services      │
-│   Desktop)   │     │  Claude Code (AI Engine)     │     │  Gmail, Gcal,  │
-│              │     │       ▼                      │     │  Slack, Asana  │
-│  Obsidian    │     │  Obsidian Vault (.md files)  │     │  via MCP/Zapier│
-│  (mobile)    │     │       ▼                      │     └────────────────┘
-│              │     │  .claude/skills/ (capabilities)│
-│  Slack or    │     │  CLAUDE.md (memory/identity) │
-│  Telegram    │     │  Python heartbeat (cron)     │
-│  (chat)      │     │  SQLite (local search/RAG)   │
-└─────────────┘     └──────────────────────────────┘
+                    Vercel (Hosting)
+                         |
+          +--------------+--------------+
+          |                             |
+   app.celune.ai               admin.celune.ai
+   (Platform App)              (Admin App)
+   Port 3002                   Port 3003
+          |                             |
+          +-------------+---------------+
+                        |
+              Shared Packages
+              (db, types, ui, config)
+                        |
+                   Supabase
+              (PostgreSQL + Auth)
+                        |
+          +------+------+------+
+          |      |      |      |
+       Stripe  Sentry  GitHub  Slack
 ```
 
-## Component Mapping
+## Project Structure
 
-| OpenClaw Component | Our Version               | How                                        |
-| ------------------ | ------------------------- | ------------------------------------------ |
-| soul.md + user.md  | CLAUDE.md                 | Single identity file, loaded every session |
-| memory.md          | CLAUDE.md + 05-knowledge/ | Vault markdown files                       |
-| agents.md          | CLAUDE.md (rules section) | Global agent rules                         |
-| Session logs       | memory/sessions/          | Daily session notes                        |
-| SQLite + RAG       | SQLite FTS5 (local)       | Full-text search index                     |
-| heartbeat.md       | Heartbeat Python script   | Claude Agent SDK + launchd                 |
-| Channel adapters   | Slack bot (Bolt SDK)      | Socket Mode, real-time chat                |
-| Skills registry    | .claude/skills/           | Progressive disclosure                     |
+```
+apps/
+  platform/    # Customer product app (app.celune.ai)
+  admin/       # Internal ops app (admin.celune.ai)
+packages/
+  db/          # Supabase client, queries, middleware, schema, migrations
+  types/       # Shared TypeScript types
+  ui/          # Shared UI components, nav, page layout
+  config/      # Shared ESLint, TypeScript, and Vitest config
+```
 
-## Setup Phases
+### Platform App (`apps/platform`)
 
-### Phase 1: Foundation
+The customer-facing product with 28+ pages and 60+ API routes:
 
-- Homebrew, Node.js, Git, Claude Code installed
-- API key configured (Claude Max subscription)
-- Obsidian installed, vault created
-- Second brain skills cloned from Cole's repo
-- GitHub private repo for version control
-- Vault structure: `00-inbox`, `01-daily`, `02-personal`, `03-professional`, `04-projects`, `05-knowledge`, `06-influences`
-- CLAUDE.md profile created (identity, context, rules)
+**Workspace Pages:**
 
-### Phase 2: Brand & Skills
+- Dashboard (overview widgets, activity feed, getting started guide)
+- Tasks (board view, list view, AI generation, voice input)
+- Projects (CRUD, progress tracking, PRD drawer)
+- Agents (roster, detail, marketplace)
+- Skills (catalog, filtering, detail drawer)
+- Memory (entries, search)
+- Analytics (overview, agents, cost)
+- Feed and Notifications
+- Health dashboard
+- Settings (billing, organization, workspace, integrations, notifications, roles, provider keys, API keys, webhooks, users)
+- Support (tickets, triage, contact, feedback, help)
 
-- Brand and voice generator for consistent output
-- MCP client setup (Zapier integration)
-- MCP tools tested and documented in CLAUDE.md
+**Key API Route Groups:**
 
-### Phase 3: Thinking Partner & Workflow
+- `/api/tasks` — CRUD, reorder, generate, per-task operations
+- `/api/agents` — config, voice, chat, permissions, delegations, health, marketplace, team templates
+- `/api/memory` — entries, ingest, search, semantic-search, heartbeat, stats, limits
+- `/api/projects` — CRUD, progress tracking
+- `/api/skills` — load, validate
+- `/api/skill-packs` — list, detail, install
+- `/api/billing` — plans, portal, usage, subscription, Stripe webhooks
+- `/api/integrations` — status, Sentry install
+- `/api/github` — PRs, branches, webhooks, installations, file conflicts
+- `/api/slack` — commands, events, interactions
+- `/api/webhooks` — endpoints, retry, agentmail
+- `/api/org` — settings, agents, transfer ownership
 
-- Thinking partner agent for collaborative ideation
-- Daily brief skill (reads inbox, projects, generates summary)
-- iPhone sync via iCloud
-- Braindump habit: raw thoughts into `00-inbox/`
+### Admin App (`apps/admin`)
 
-### Phase 4: Memory System
+Internal operations (platform owner only):
 
-- Studied OpenClaw's memory architecture
-- Built adapted version: session logs + SQLite FTS5 search
-- Memory flush protocol for session end context preservation
-- Re-indexing scripts for vault changes
+- User management and provisioning
+- Waitlist and access code management
+- Brain manifest administration
+- System alerts and support
+- Feedback review
 
-### Phase 5: Heartbeat
+## Database
 
-- Python heartbeat script runs every 30 minutes via launchd
-- Checks: Gmail, Google Calendar, vault state
-- Decision framework: SKIP / ROUTINE / URGENT
-- Anti-repetition log, Slack summary posting
-- Google OAuth for Gmail/Calendar access
+Supabase (hosted PostgreSQL) with:
 
-### Phase 6: Chat Adapter
+- Schema defined in `packages/db/schema/supabase-schema.sql`
+- Migrations in `packages/db/schema/migrations/`
+- Client libraries: browser client, server client, service role client
+- Queries module for common database operations
+- Middleware for auth and workspace resolution
 
-- Slack bot using Bolt Python SDK
-- Socket Mode for real-time communication
-- Multi-turn conversations per thread
-- Slash commands: `/brief`, `/flush`, `/status`
-- Session logging with graceful shutdown
+## Deployment
 
-### Phase 7: Agentic Coding
+Both apps deploy to Vercel:
 
-Reusable commands in `.claude/commands/`:
+- Empty root directory configuration
+- Next.js framework preset
+- Build command: `cd apps/<app> && next build`
+- Output directory: `apps/<app>/.next`
+- Install override: `pnpm install`
 
-| Command          | Purpose                                                                        |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `/prime`         | Start of session: reads CLAUDE.md, checks recent changes, recommends next task |
-| `/plan-feature`  | Creates structured plan for next feature                                       |
-| `/execute`       | Implements a plan document                                                     |
-| `/commit`        | Standardized git commit                                                        |
-| `/braindump`     | Quick capture to `00-inbox/`                                                   |
-| `/morning-brief` | Daily briefing from inbox + projects                                           |
-| `/flush`         | Save session context to vault files                                            |
+## Environment Variables
 
-## Daily Workflow
+Key groups:
 
-| Time           | Action                        | Command                         |
-| -------------- | ----------------------------- | ------------------------------- |
-| Morning        | Open Claude Code, get briefed | `/prime` then `/morning-brief`  |
-| Throughout day | Drop thoughts into inbox      | Obsidian mobile or `/braindump` |
-| Afternoon      | Process inbox                 | "Process my inbox"              |
-| Before closing | Save session context          | `/flush`                        |
-| End of day     | Commit changes                | `/commit`                       |
-
-## Cost Summary
-
-| Item                         | Monthly Cost |
-| ---------------------------- | ------------ |
-| Claude Max subscription      | $100-200     |
-| Zapier (MCP integrations)    | Free tier    |
-| ElevenLabs (voice, optional) | $5-11        |
-| VPS (24/7, optional)         | $5-20        |
-| **Total (basic)**            | **$100-200** |
-| **Total (full stack)**       | **$130-250** |
-
-## Resources
-
-| Resource            | Description                              |
-| ------------------- | ---------------------------------------- |
-| Second Brain Skills | Cole Medin's skill templates             |
-| OpenClaw            | Reference architecture (MIT licensed)    |
-| Claude Code Docs    | Official documentation                   |
-| Obsidian            | Local-first knowledge base               |
-| Zapier MCP          | Integration bridge for external services |
-| Slack Bolt          | Python SDK for the Slack bot             |
+- **Supabase** — URL, anon key, service role key
+- **Auth/Security** — origins, encryption key
+- **GitHub App** — client ID, secret, app ID, private key
+- **Stripe** — secret key, webhook secret, price IDs
+- **Slack** — bot token, signing secret, app token
+- **AI Providers** — Anthropic API key
+- **ElevenLabs** — API key for voice features
+- **Sentry** — DSN, auth token
+- **Vercel** — analytics, speed insights
