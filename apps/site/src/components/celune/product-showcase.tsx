@@ -231,13 +231,13 @@ export function ProductShowcase() {
       >
         <LightRays
           raysOrigin="bottom-center"
-          raysColor="#00ff87"
+          raysColor="#15803d"
           raysSpeed={0.3}
           lightSpread={1.8}
           rayLength={2}
           pulsating={false}
           fadeDistance={1.4}
-          saturation={2}
+          saturation={1.2}
           followMouse={false}
           mouseInfluence={0}
           noiseAmount={0.5}
