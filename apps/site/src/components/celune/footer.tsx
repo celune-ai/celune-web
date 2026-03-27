@@ -19,10 +19,7 @@ function XIcon({ className }: { className?: string }) {
 export function CeluneFooter() {
   return (
     <footer className="relative bg-[#08080A]">
-      {/* Top divider */}
-      <div className="border-t border-dashed border-white/[0.08]" />
-
-      <div className="px-6 py-12 md:px-12">
+      <div className="container py-12">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           {/* Brand */}
           <div className="flex items-center gap-6">
@@ -69,9 +66,11 @@ export function CeluneFooter() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-dashed border-white/[0.08]" />
-      <div className="flex items-center justify-between px-6 py-5 md:px-12">
+      {/* Bottom bar divider — uses SectionDivider style */}
+      <div className="relative mx-12">
+        <div className="border-t border-dashed border-white/[0.08]" />
+      </div>
+      <div className="container flex items-center justify-between py-5">
         <p className="text-[11px] text-white/50">
           &copy; {new Date().getFullYear()} Celune. All rights reserved.
         </p>
