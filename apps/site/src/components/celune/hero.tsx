@@ -617,7 +617,7 @@ function HeroEmailInput() {
         {waitlist.referralCode && (
           <button
             onClick={() => setReferOpen(true)}
-            className="bg-celune-500 hover:bg-celune-400 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-black transition-colors"
+            className="bg-celune-500 hover:bg-celune-400 inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg px-5 py-3 text-center text-sm font-semibold text-black transition-colors sm:w-auto"
           >
             Refer a Friend
           </button>
