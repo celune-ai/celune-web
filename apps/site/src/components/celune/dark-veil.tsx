@@ -65,20 +65,14 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord){
     fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
 }
 
-// 8x8 Bayer ordered dither matrix (normalized to 0-1)
+// Bayer 8x8 ordered dither via recursive bit-interleave (no arrays, WebGL 1 safe)
+float bayer2(vec2 a){return mod(2.0*a.y+a.x+1.0,4.0);}
 float bayer8(vec2 p){
-    ivec2 i=ivec2(mod(p,8.0));
-    int b[64]=int[64](
-         0,32, 8,40, 2,34,10,42,
-        48,16,56,24,50,18,58,26,
-        12,44, 4,36,14,46, 6,38,
-        60,28,52,20,62,30,54,22,
-         3,35,11,43, 1,33, 9,41,
-        51,19,59,27,49,17,57,25,
-        15,47, 7,39,13,45, 5,37,
-        63,31,55,23,61,29,53,21
-    );
-    return float(b[i.y*8+i.x])/64.0;
+    float b=0.0;
+    b+=bayer2(mod(floor(p/4.0),2.0))*16.0;
+    b+=bayer2(mod(floor(p/2.0),2.0))*4.0;
+    b+=bayer2(mod(floor(p),2.0));
+    return b/64.0;
 }
 
 void main(){
