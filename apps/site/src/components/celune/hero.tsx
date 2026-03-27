@@ -199,21 +199,23 @@ function HeroDashboard() {
             </div>
           </div>
 
-          {/* Cost per Task */}
+          {/* API Cost Savings */}
           <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
-              Cost per Task
+              API Cost Savings
             </div>
             <div className="flex items-end justify-between">
-              <div className="font-heading text-3xl font-medium text-white">$0.42</div>
+              <div className="font-heading text-3xl font-medium text-white">94%</div>
               <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
                 <svg viewBox="0 0 12 12" className="h-3 w-3">
-                  <path d="M6 10 L10 5 H2Z" fill="currentColor" />
+                  <path d="M6 2 L10 7 H2Z" fill="currentColor" />
                 </svg>
-                -18%
+                17x
               </div>
             </div>
-            <div className="mt-1 text-[11px] text-neutral-500">vs $3.80 manual avg</div>
+            <div className="mt-1 text-[11px] text-neutral-500">
+              $200/mo vs ~$3,400 API equivalent
+            </div>
           </div>
 
           {/* Avg Time to Ship */}
