@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { posthog } from '@/lib/posthog';
+import { useWaitlist } from '@/lib/waitlist-context';
 
 // Quick-start install commands — hidden for now, will re-enable post-launch
 // const QUICK_START_STEPS = [
@@ -548,8 +549,7 @@ function ReferDialog({
 
 function HeroEmailInput() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [referralCode, setReferralCode] = useState('');
+  const waitlist = useWaitlist();
   const [referOpen, setReferOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -559,11 +559,11 @@ function HeroEmailInput() {
     const params = new URLSearchParams(window.location.search);
     const referParam = params.get('refer');
     if (referParam) {
-      setReferralCode(referParam);
-      setSubmitted(true);
+      waitlist.setReferralCode(referParam);
+      waitlist.setSubmitted(true);
       setReferOpen(true);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -588,8 +588,8 @@ function HeroEmailInput() {
         return;
       }
       posthog.capture('waitlist_signup', { location: 'hero', email });
-      if (data.referral_code) setReferralCode(data.referral_code);
-      setSubmitted(true);
+      if (data.referral_code) waitlist.setReferralCode(data.referral_code);
+      waitlist.setSubmitted(true);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -597,7 +597,7 @@ function HeroEmailInput() {
     }
   }
 
-  if (submitted) {
+  if (waitlist.submitted) {
     return (
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="border-celune-500/20 bg-celune-500/10 inline-flex items-center gap-2.5 rounded-lg border px-4 py-3">
@@ -614,7 +614,7 @@ function HeroEmailInput() {
             Welcome! Access code incoming. Refer a friend for priority access.
           </span>
         </div>
-        {referralCode && (
+        {waitlist.referralCode && (
           <button
             onClick={() => setReferOpen(true)}
             className="bg-celune-500 hover:bg-celune-400 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-black transition-colors"
@@ -622,8 +622,12 @@ function HeroEmailInput() {
             Refer a Friend
           </button>
         )}
-        {referralCode && (
-          <ReferDialog code={referralCode} open={referOpen} onClose={() => setReferOpen(false)} />
+        {waitlist.referralCode && (
+          <ReferDialog
+            code={waitlist.referralCode}
+            open={referOpen}
+            onClose={() => setReferOpen(false)}
+          />
         )}
       </div>
     );
