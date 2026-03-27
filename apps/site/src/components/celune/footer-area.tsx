@@ -10,11 +10,11 @@ export function FooterArea({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative bg-[#08080A]">
       {/* Black side masks with inner border — cover the area outside the grid-frame borders */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-[2] hidden w-12 lg:block">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-12 lg:block">
         <div className="h-full bg-[#08080A]" />
         <div className="absolute inset-y-0 right-0 w-px border-r border-dashed border-white/[0.06]" />
       </div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-[2] hidden w-12 lg:block">
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-20 hidden w-12 lg:block">
         <div className="h-full bg-[#08080A]" />
         <div className="absolute inset-y-0 left-0 w-px border-l border-dashed border-white/[0.06]" />
       </div>

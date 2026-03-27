@@ -18,7 +18,7 @@ function XIcon({ className }: { className?: string }) {
 
 export function CeluneFooter() {
   return (
-    <footer className="relative bg-[#08080A]">
+    <footer className="relative">
       <div className="container py-12">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           {/* Brand */}
