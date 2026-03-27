@@ -13,7 +13,7 @@ export function HeroVeil() {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, transparent 50%, rgb(10 10 15 / 0.7) 75%, rgb(10 10 15) 95%)',
+            'linear-gradient(to bottom, transparent 30%, rgb(10 10 15 / 0.6) 55%, rgb(10 10 15) 75%)',
         }}
       />
     </div>
