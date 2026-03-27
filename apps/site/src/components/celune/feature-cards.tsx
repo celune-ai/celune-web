@@ -758,7 +758,7 @@ export function CeluneFeatureCards() {
       <div className="container">
         {/* Header row */}
         <div className="mb-10 flex items-end justify-between">
-          <div>
+          <div className="max-w-[200px] md:max-w-none">
             <h2 className="font-heading text-3xl font-medium tracking-tight md:text-4xl lg:text-[2.75rem]">
               <span className="text-white">AI-First Infrastructure.</span>
               <br />
