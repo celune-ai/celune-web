@@ -342,7 +342,22 @@ function HeroEmailInput() {
   }
 
   if (submitted) {
-    return <p className="text-celune-400 mt-8 text-sm">Thanks! We&apos;ll be in touch soon.</p>;
+    return (
+      <div className="border-celune-500/20 bg-celune-500/10 mt-8 inline-flex w-full items-center gap-2.5 rounded-lg border px-4 py-3 sm:w-auto">
+        <svg className="text-celune-400 h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M3 8.5L6.5 12L13 4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span className="text-celune-400 text-sm font-medium">
+          Welcome! We will reach out with your access code soon.
+        </span>
+      </div>
+    );
   }
 
   return (
