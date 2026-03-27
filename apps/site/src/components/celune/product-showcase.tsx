@@ -223,7 +223,7 @@ export function ProductShowcase() {
   const current = CYCLE_WORDS[wordIndex];
 
   return (
-    <section className="relative -mt-6 overflow-hidden">
+    <section className="relative overflow-hidden">
       {/* Light rays — inside page rails (mx-12), flush to top divider */}
       <div
         className="pointer-events-none absolute right-12 left-12 z-0 overflow-hidden"
