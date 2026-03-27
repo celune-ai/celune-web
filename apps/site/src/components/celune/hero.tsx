@@ -199,23 +199,21 @@ function HeroDashboard() {
             </div>
           </div>
 
-          {/* Token Utilization */}
+          {/* Agent Dialogs */}
           <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
-              Token Utilization
+              Agent Dialogs / Mo
             </div>
             <div className="flex items-end justify-between">
-              <div className="font-heading text-3xl font-medium text-white">8,500%</div>
+              <div className="font-heading text-3xl font-medium text-white">4,200</div>
               <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
                 <svg viewBox="0 0 12 12" className="h-3 w-3">
                   <path d="M6 2 L10 7 H2Z" fill="currentColor" />
                 </svg>
-                85x
+                +32%
               </div>
             </div>
-            <div className="mt-1 text-[11px] text-neutral-500">
-              $17K token value on $200/mo plan
-            </div>
+            <div className="mt-1 text-[11px] text-neutral-500">Avg per user this month</div>
           </div>
 
           {/* Avg Time to Ship */}
