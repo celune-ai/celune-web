@@ -126,5 +126,5 @@ export async function POST(request: NextRequest) {
   sendWaitlistWelcome(email, referralCode).catch(() => {});
   forwardToAgentmail(email, body.source || 'landing').catch(() => {});
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, referral_code: referralCode });
 }

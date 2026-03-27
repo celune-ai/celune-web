@@ -147,12 +147,14 @@ function MiniSparkline() {
   ).join(' ');
   return (
     <svg viewBox="0 0 120 40" className="h-10 w-full" preserveAspectRatio="none">
-      <polyline points={points} fill="none" stroke="#22c55e" strokeWidth={1.5} strokeLinejoin="round" />
       <polyline
-        points={`0,40 ${points} 120,40`}
-        fill="url(#sparkGrad)"
-        stroke="none"
+        points={points}
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
       />
+      <polyline points={`0,40 ${points} 120,40`} fill="url(#sparkGrad)" stroke="none" />
       <defs>
         <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#22c55e" stopOpacity={0.15} />
@@ -185,7 +187,7 @@ function AnalyticsStack() {
           <div className="font-heading text-4xl font-medium text-white">
             <AnimatedCount value={920} inView={inView} />
           </div>
-          <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
+          <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
             <svg viewBox="0 0 12 12" className="h-3 w-3">
               <path d="M6 2 L10 7 H2Z" fill="currentColor" />
             </svg>
@@ -228,7 +230,7 @@ function AnalyticsStack() {
           <div className="font-heading text-4xl font-medium text-white">
             <AnimatedCount value={91} suffix="%" inView={inView} />
           </div>
-          <div className="flex items-center gap-1 text-[11px] font-medium text-celune-400">
+          <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
             <svg viewBox="0 0 12 12" className="h-3 w-3">
               <path d="M6 2 L10 7 H2Z" fill="currentColor" />
             </svg>
@@ -268,7 +270,9 @@ function AnalyticsStack() {
                   style={{ width: `${m.pct}%`, backgroundColor: m.color }}
                 />
               </div>
-              <span className="w-8 text-right font-mono text-[10px] text-neutral-500">{m.tokens}</span>
+              <span className="w-8 text-right font-mono text-[10px] text-neutral-500">
+                {m.tokens}
+              </span>
             </div>
           ))}
         </div>
@@ -370,9 +374,12 @@ function ActivityFeed() {
       });
 
       // Mark done after 1.5–3.5s
-      doneTimerRef.current = setTimeout(() => {
-        setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, loading: false } : e)));
-      }, 1500 + Math.random() * 2000);
+      doneTimerRef.current = setTimeout(
+        () => {
+          setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, loading: false } : e)));
+        },
+        1500 + Math.random() * 2000,
+      );
 
       scheduleNext();
     }, delay);
@@ -504,7 +511,7 @@ export function CeluneDemoShowcase() {
   const headingVariant = shouldReduceMotion ? reducedVariants.fadeUp : fadeUp;
 
   return (
-    <section id="demo" className="relative overflow-hidden py-24 md:py-32">
+    <section id="demo" className="relative overflow-hidden py-12 md:py-32">
       <div className="container">
         {/* Section heading — fades up once */}
         <motion.div
@@ -550,10 +557,10 @@ export function CeluneDemoShowcase() {
               <ActivityFeed />
             </motion.div>
 
-            {/* Overnight log */}
+            {/* Overnight log — hidden on mobile */}
             <motion.div
               variants={panelVariant}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6"
+              className="hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 md:block"
             >
               <div className="mb-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
                 Overnight Build Log

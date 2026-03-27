@@ -137,7 +137,7 @@ function StatCard({ stat }: StatCardProps) {
   return (
     <div
       ref={ref}
-      className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]"
+      className="px-6 py-12 text-center transition-colors duration-300 hover:bg-white/[0.015]"
     >
       <div className="font-heading text-3xl font-medium text-white md:text-4xl">
         {stat.count ? (
@@ -164,8 +164,8 @@ function StatCard({ stat }: StatCardProps) {
 export function CeluneStats() {
   return (
     <section id="stats" className="relative overflow-hidden">
-      <div className="container">
-        <div className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4">
+      <div className="mx-4 sm:mx-8 lg:mx-12">
+        <div className="grid grid-cols-2 divide-x divide-y divide-dashed divide-white/[0.08] border border-dashed border-white/[0.08] md:grid-cols-4 md:divide-y-0 md:border-0">
           {STATS.map((stat) => (
             <StatCard key={stat.label} stat={stat} />
           ))}

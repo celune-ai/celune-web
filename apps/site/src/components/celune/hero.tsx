@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { posthog } from '@/lib/posthog';
+import { useWaitlist } from '@/lib/waitlist-context';
 
 // Quick-start install commands — hidden for now, will re-enable post-launch
 // const QUICK_START_STEPS = [
@@ -199,21 +200,21 @@ function HeroDashboard() {
             </div>
           </div>
 
-          {/* Cost per Task */}
+          {/* Agent Dialogs */}
           <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-4">
             <div className="mb-1 font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
-              Cost per Task
+              Agent Dialogs / Mo
             </div>
             <div className="flex items-end justify-between">
-              <div className="font-heading text-3xl font-medium text-white">$0.42</div>
+              <div className="font-heading text-3xl font-medium text-white">4,200</div>
               <div className="text-celune-400 flex items-center gap-1 text-[11px] font-medium">
                 <svg viewBox="0 0 12 12" className="h-3 w-3">
-                  <path d="M6 10 L10 5 H2Z" fill="currentColor" />
+                  <path d="M6 2 L10 7 H2Z" fill="currentColor" />
                 </svg>
-                -18%
+                +32%
               </div>
             </div>
-            <div className="mt-1 text-[11px] text-neutral-500">vs $3.80 manual avg</div>
+            <div className="mt-1 text-[11px] text-neutral-500">Avg per user this month</div>
           </div>
 
           {/* Avg Time to Ship */}
@@ -308,11 +309,261 @@ function HeroDashboard() {
 
 // ─── Main hero ──────────────────────────────────────────────────────────────
 
+// ─── Refer-a-friend dialog ──────────────────────────────────────────────────
+
+function ReferDialog({
+  code,
+  open,
+  onClose,
+}: {
+  code: string;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [emails, setEmails] = useState<string[]>(['']);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [results, setResults] = useState<
+    { email: string; status: 'sent' | 'exists' | 'error' }[] | null
+  >(null);
+  const [totalReferrals, setTotalReferrals] = useState(0);
+
+  function addEmail() {
+    setEmails([...emails, '']);
+  }
+
+  function removeEmail(index: number) {
+    setEmails(emails.filter((_, i) => i !== index));
+  }
+
+  function updateEmail(index: number, value: string) {
+    const updated = [...emails];
+    updated[index] = value;
+    setEmails(updated);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const validEmails = emails
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+
+    if (validEmails.length === 0) {
+      setError('Please enter at least one valid email address.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResults(null);
+
+    try {
+      const res = await fetch('/api/refer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ referral_code: code, emails: validEmails }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong.');
+        setLoading(false);
+        return;
+      }
+      setResults(data.results);
+      setTotalReferrals(data.total_referrals ?? 0);
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (!open) return null;
+
+  const sent = results?.filter((r) => r.status === 'sent') ?? [];
+  const existed = results?.filter((r) => r.status === 'exists') ?? [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => onClose()} />
+      <div className="relative w-full max-w-md rounded-2xl bg-[#0d0d12] p-8">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/30 transition-colors hover:text-white/60"
+        >
+          <svg className="h-5 w-5" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M4 4l8 8M12 4l-8 8"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+
+        {results ? (
+          <div className="text-center">
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10">
+              <svg className="h-7 w-7 text-green-400" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 13l4 4L19 7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <h2 className="font-heading text-2xl font-medium text-white">
+              {sent.length > 0 ? 'Invites Sent!' : 'No New Invites'}
+            </h2>
+            {sent.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {sent.map((r) => (
+                  <div
+                    key={r.email}
+                    className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/5 px-4 py-2 text-sm text-green-400"
+                  >
+                    <svg className="h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                      <path
+                        d="M3 8.5L6.5 12L13 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {r.email}
+                  </div>
+                ))}
+              </div>
+            )}
+            {existed.length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                {existed.map((r) => (
+                  <p key={r.email} className="text-xs text-white/40">
+                    {r.email} is already on the waitlist
+                  </p>
+                ))}
+              </div>
+            )}
+            <p className="mt-4 text-sm text-white/50">
+              {totalReferrals >= 2
+                ? 'You unlocked early access! Check your email soon.'
+                : `Refer ${2 - totalReferrals} more to unlock early access.`}
+            </p>
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => {
+                  setResults(null);
+                  setEmails(['']);
+                }}
+                className="flex-1 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              >
+                Send More
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 rounded-lg bg-[#22c55e] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#16a34a]"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6 text-center">
+              <h2 className="font-heading text-2xl font-medium text-white">Invite Your Friends</h2>
+              <p className="mt-2 text-sm text-white/60">
+                Refer 2 friends to unlock early access. They&apos;ll get priority placement on the
+                waitlist too.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {emails.map((email, i) => (
+                <div key={i} className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => updateEmail(i, e.target.value)}
+                    placeholder="friend@company.com"
+                    className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/40 focus:border-green-500/50"
+                  />
+                  {emails.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeEmail(i)}
+                      className="rounded-lg px-3 text-white/30 transition-colors hover:text-white/60"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                        <path
+                          d="M4 4l8 8M12 4l-8 8"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {emails.length < 20 && (
+                <button
+                  type="button"
+                  onClick={addEmail}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/[0.1] py-2.5 text-sm text-white/40 transition-colors hover:border-white/20 hover:text-white/60"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                    <path
+                      d="M8 3v10M3 8h10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Add another email
+                </button>
+              )}
+
+              {error && <p className="text-center text-xs text-red-400">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-[#16a34a] disabled:opacity-50"
+              >
+                {loading ? 'Sending Invites...' : 'Send Invites'}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Hero email input ───────────────────────────────────────────────────────
+
 function HeroEmailInput() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const waitlist = useWaitlist();
+  const [referOpen, setReferOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Auto-open refer dialog if ?refer=CODE is in URL (from email link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const referParam = params.get('refer');
+    if (referParam) {
+      waitlist.setReferralCode(referParam);
+      waitlist.setSubmitted(true);
+      setReferOpen(true);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -337,7 +588,8 @@ function HeroEmailInput() {
         return;
       }
       posthog.capture('waitlist_signup', { location: 'hero', email });
-      setSubmitted(true);
+      if (data.referral_code) waitlist.setReferralCode(data.referral_code);
+      waitlist.setSubmitted(true);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -345,21 +597,38 @@ function HeroEmailInput() {
     }
   }
 
-  if (submitted) {
+  if (waitlist.submitted) {
     return (
-      <div className="border-celune-500/20 bg-celune-500/10 mt-8 inline-flex w-full items-center gap-2.5 rounded-lg border px-4 py-3 sm:w-auto">
-        <svg className="text-celune-400 h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M3 8.5L6.5 12L13 4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="border-celune-500/20 bg-celune-500/10 inline-flex items-center gap-2.5 rounded-lg border px-4 py-3">
+          <svg className="text-celune-400 h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M3 8.5L6.5 12L13 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="text-celune-400 text-sm font-medium">
+            Welcome! Access code incoming. Refer a friend for priority access.
+          </span>
+        </div>
+        {waitlist.referralCode && (
+          <button
+            onClick={() => setReferOpen(true)}
+            className="bg-celune-500 hover:bg-celune-400 inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg px-5 py-3 text-center text-sm font-semibold text-black transition-colors sm:w-auto"
+          >
+            Refer a Friend
+          </button>
+        )}
+        {waitlist.referralCode && (
+          <ReferDialog
+            code={waitlist.referralCode}
+            open={referOpen}
+            onClose={() => setReferOpen(false)}
           />
-        </svg>
-        <span className="text-celune-400 text-sm font-medium">
-          Welcome! We will reach out with your access code soon.
-        </span>
+        )}
       </div>
     );
   }

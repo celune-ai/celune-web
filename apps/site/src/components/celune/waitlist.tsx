@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { posthog } from '@/lib/posthog';
+import { useWaitlist } from '@/lib/waitlist-context';
 import { SectionLabel } from './grid-frame';
 
 export function CeluneWaitlist() {
+  const waitlist = useWaitlist();
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,11 +17,14 @@ export function CeluneWaitlist() {
     setError('');
     setLoading(true);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref') || undefined;
+
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'bottom_cta' }),
+        body: JSON.stringify({ email, source: ref ? 'referral' : 'bottom_cta', ref }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -29,7 +33,8 @@ export function CeluneWaitlist() {
         return;
       }
       posthog.capture('waitlist_signup', { location: 'bottom_cta', email });
-      setSubmitted(true);
+      if (data.referral_code) waitlist.setReferralCode(data.referral_code);
+      waitlist.setSubmitted(true);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -38,7 +43,7 @@ export function CeluneWaitlist() {
   }
 
   return (
-    <section id="signup" className="relative py-24 md:py-32 overflow-hidden">
+    <section id="signup" className="relative overflow-hidden py-12 md:py-32">
       {/* Top fade into page bg */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-32 bg-gradient-to-b from-[#08080A] to-transparent" />
 
@@ -55,12 +60,29 @@ export function CeluneWaitlist() {
             </p>
           </div>
 
-          {/* Email input */}
+          {/* Email input — matches hero exactly */}
           <div className="mx-auto mt-10 max-w-md">
-            {submitted ? (
-              <p className="text-center text-sm text-celune-400">
-                Thanks! We&apos;ll be in touch soon.
-              </p>
+            {waitlist.submitted ? (
+              <div className="flex flex-col items-center gap-3">
+                <div className="border-celune-500/20 bg-celune-500/10 inline-flex items-center gap-2.5 rounded-lg border px-4 py-3">
+                  <svg
+                    className="text-celune-400 h-4 w-4 flex-shrink-0"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M3 8.5L6.5 12L13 4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="text-celune-400 text-sm font-medium md:whitespace-nowrap">
+                    Welcome! Access code incoming. Refer a friend for priority access.
+                  </span>
+                </div>
+              </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                 <div className="flex gap-2">
@@ -70,12 +92,12 @@ export function CeluneWaitlist() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@company.com"
-                    className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors focus:border-celune-500/50"
+                    className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/60"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-celune-500 hover:bg-celune-400 cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold text-black transition-colors whitespace-nowrap disabled:opacity-50"
+                    className="bg-celune-500 hover:bg-celune-400 cursor-pointer rounded-lg px-6 py-3 text-sm font-semibold whitespace-nowrap text-black transition-colors disabled:opacity-50"
                   >
                     {loading ? 'Sending...' : 'Get Early Access'}
                   </button>

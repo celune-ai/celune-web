@@ -1,3 +1,5 @@
+'use client';
+
 import { CeluneNav } from '@/components/celune/nav';
 import { CeluneHero } from '@/components/celune/hero';
 import { CeluneStats } from '@/components/celune/stats';
@@ -12,10 +14,13 @@ import { FooterArea } from '@/components/celune/footer-area';
 import { SectionTracker } from '@/components/celune/section-tracker';
 import { GridFrame, SectionDivider } from '@/components/celune/grid-frame';
 import { StarField } from '@/components/celune/star-field';
+import { HeroVeil } from '@/components/celune/hero-veil';
+import { WaitlistProvider } from '@/lib/waitlist-context';
 
 export default function Home() {
   return (
-    <>
+    <WaitlistProvider>
+      <HeroVeil />
       <StarField />
       <SectionTracker />
       <CeluneNav />
@@ -40,6 +45,6 @@ export default function Home() {
           <CeluneFooter />
         </FooterArea>
       </GridFrame>
-    </>
+    </WaitlistProvider>
   );
 }

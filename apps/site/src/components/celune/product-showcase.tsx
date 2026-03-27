@@ -223,7 +223,7 @@ export function ProductShowcase() {
   const current = CYCLE_WORDS[wordIndex];
 
   return (
-    <section className="relative -mt-6 overflow-hidden">
+    <section className="relative overflow-hidden" style={{ marginTop: '-6px' }}>
       {/* Light rays — inside page rails (mx-12), flush to top divider */}
       <div
         className="pointer-events-none absolute right-12 left-12 z-0 overflow-hidden"
@@ -231,13 +231,13 @@ export function ProductShowcase() {
       >
         <LightRays
           raysOrigin="bottom-center"
-          raysColor="#00ff87"
+          raysColor="#15803d"
           raysSpeed={0.3}
           lightSpread={1.8}
           rayLength={2}
           pulsating={false}
           fadeDistance={1.4}
-          saturation={2}
+          saturation={1.2}
           followMouse={false}
           mouseInfluence={0}
           noiseAmount={0.5}
@@ -257,8 +257,9 @@ export function ProductShowcase() {
           style={{ maxWidth: '46.25rem' }}
         >
           <SectionLabel>The experience</SectionLabel>
-          <h2 className="font-heading text-3xl font-medium tracking-tight whitespace-nowrap text-white md:text-4xl lg:text-5xl">
-            A team that never stops{' '}
+          <h2 className="font-heading text-3xl font-medium tracking-tight text-white md:text-4xl md:whitespace-nowrap lg:text-5xl">
+            A team that never stops
+            <br className="md:hidden" />{' '}
             <span className="relative inline-block">
               <AnimatePresence mode="wait">
                 <motion.span
@@ -296,9 +297,9 @@ export function ProductShowcase() {
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#08080A] to-transparent" />
 
           {/* Product mock container — full width */}
-          <div className="relative z-[1] flex gap-4 bg-[#0C0C0F] p-4 shadow-[0_48px_100px_-16px_rgba(0,0,0,0.6)]">
+          <div className="relative z-[1] flex flex-col gap-4 bg-[#0C0C0F] p-2 shadow-[0_48px_100px_-16px_rgba(0,0,0,0.6)] sm:p-4 md:flex-row">
             {/* Left: Agent thread */}
-            <div className="w-[380px] shrink-0 rounded-xl border border-white/[0.06] bg-[#0a0a0d]">
+            <div className="w-full shrink-0 rounded-xl border border-white/[0.06] bg-[#0a0a0d] md:w-[380px]">
               {/* Thread header */}
               <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
                 <span className="text-[13px] font-medium text-neutral-400">
@@ -346,9 +347,9 @@ export function ProductShowcase() {
               </div>
             </div>
 
-            {/* Right: Animated Kanban board */}
+            {/* Right: Animated Kanban board — hidden on mobile */}
             <div
-              className="flex min-w-0 flex-1 gap-3 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0a0d] p-4"
+              className="hidden min-w-0 flex-1 gap-3 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0a0d] p-4 md:flex"
               style={{ height: 600 }}
             >
               <KanbanColumn title="Todo" icon="○" taskIndices={board.todo} isActiveColumn={false} />
