@@ -78,7 +78,7 @@ export function CeluneWaitlist() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="text-celune-400 text-sm font-medium">
+                  <span className="text-celune-400 text-sm font-medium md:whitespace-nowrap">
                     Welcome! Access code incoming. Refer a friend for priority access.
                   </span>
                 </div>
