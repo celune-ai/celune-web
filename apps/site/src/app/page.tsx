@@ -26,7 +26,13 @@ export default function Home() {
       <CeluneNav />
       <GridFrame>
         <CeluneHero />
+        <div className="hidden md:block">
+          <SectionDivider />
+        </div>
         <CeluneStats />
+        <div className="hidden md:block">
+          <SectionDivider />
+        </div>
         <ProductShowcase />
         <SectionDivider />
         <CeluneDemoShowcase />
