@@ -43,24 +43,65 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
   }
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_SERVICE_KEY,
-      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify({
-      email,
-      source: body.source || 'landing',
-      utm_source: body.utm_source || null,
-      utm_medium: body.utm_medium || null,
-      utm_campaign: body.utm_campaign || null,
-      utm_content: body.utm_content || null,
-      referrer: body.referrer || null,
-    }),
-  });
+  const supabaseHeaders = {
+    apikey: SUPABASE_SERVICE_KEY,
+    Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+    'Content-Type': 'application/json',
+    Prefer: 'return=representation',
+  };
+
+  // Check if this email was pre-registered as a referral (status='referred')
+  const refParam = typeof body.ref === 'string' ? body.ref.trim() : '';
+  const existingRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/waitlist?email=eq.${encodeURIComponent(email)}&status=eq.referred&select=id`,
+    { headers: supabaseHeaders },
+  );
+  const existingReferred = await existingRes.json();
+
+  let res: Response;
+
+  if (Array.isArray(existingReferred) && existingReferred.length > 0) {
+    // Upgrade referred entry to pending (they actually signed up)
+    res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist?id=eq.${existingReferred[0].id}`, {
+      method: 'PATCH',
+      headers: { ...supabaseHeaders, Prefer: 'return=representation' },
+      body: JSON.stringify({
+        status: 'pending',
+        source: body.source || 'referral',
+        priority: true,
+      }),
+    });
+  } else {
+    // Fresh signup — check if they were referred via URL param
+    let referred_by: string | null = null;
+    if (refParam) {
+      const referrerLookup = await fetch(
+        `${SUPABASE_URL}/rest/v1/waitlist?email=eq.${encodeURIComponent(refParam)}&select=id`,
+        { headers: supabaseHeaders },
+      );
+      const referrers = await referrerLookup.json();
+      if (Array.isArray(referrers) && referrers.length > 0) {
+        referred_by = referrers[0].id;
+      }
+    }
+
+    res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+      method: 'POST',
+      headers: supabaseHeaders,
+      body: JSON.stringify({
+        email,
+        source: referred_by ? 'referral' : body.source || 'landing',
+        utm_source: body.utm_source || null,
+        utm_medium: body.utm_medium || null,
+        utm_campaign: body.utm_campaign || null,
+        utm_content: body.utm_content || null,
+        referrer: body.referrer || null,
+        referred_by,
+        priority: !!referred_by,
+        referral_code: crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase(),
+      }),
+    });
+  }
 
   if (!res.ok) {
     const text = await res.text();
@@ -70,8 +111,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 
+  // Extract referral code from response for the welcome email
+  let referralCode: string | undefined;
+  try {
+    const data = await res.json();
+    if (Array.isArray(data) && data[0]?.referral_code) {
+      referralCode = data[0].referral_code;
+    }
+  } catch {
+    // Response body already consumed or missing
+  }
+
   // Send welcome email + forward to agentmail inbox (fire-and-forget)
-  sendWaitlistWelcome(email).catch(() => {});
+  sendWaitlistWelcome(email, referralCode).catch(() => {});
   forwardToAgentmail(email, body.source || 'landing').catch(() => {});
 
   return NextResponse.json({ success: true });

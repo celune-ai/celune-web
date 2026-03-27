@@ -320,11 +320,15 @@ function HeroEmailInput() {
     setError('');
     setLoading(true);
 
+    // Check for referral param in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref') || undefined;
+
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'hero' }),
+        body: JSON.stringify({ email, source: ref ? 'referral' : 'hero', ref }),
       });
       const data = await res.json();
       if (!res.ok) {
