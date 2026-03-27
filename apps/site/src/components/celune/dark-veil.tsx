@@ -65,12 +65,34 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord){
     fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
 }
 
+// 8x8 Bayer ordered dither matrix (normalized to 0-1)
+float bayer8(vec2 p){
+    ivec2 i=ivec2(mod(p,8.0));
+    int b[64]=int[64](
+         0,32, 8,40, 2,34,10,42,
+        48,16,56,24,50,18,58,26,
+        12,44, 4,36,14,46, 6,38,
+        60,28,52,20,62,30,54,22,
+         3,35,11,43, 1,33, 9,41,
+        51,19,59,27,49,17,57,25,
+        15,47, 7,39,13,45, 5,37,
+        63,31,55,23,61,29,53,21
+    );
+    return float(b[i.y*8+i.x])/64.0;
+}
+
 void main(){
     vec4 col;mainImage(col,gl_FragCoord.xy);
     col.rgb=hueShiftRGB(col.rgb,uHueShift);
     float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
     col.rgb*=1.-(scanline_val*scanline_val)*uScan;
     col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
+
+    // Ordered Bayer dither — quantize to fewer tonal steps
+    float levels=12.0;
+    float dith=bayer8(gl_FragCoord.xy)/levels;
+    col.rgb=floor(col.rgb*levels+dith)/levels;
+
     gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);
 }
 `;
@@ -160,7 +182,15 @@ export function DarkVeil({
       cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
     };
-  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale]);
+  }, [
+    hueShift,
+    noiseIntensity,
+    scanlineIntensity,
+    speed,
+    scanlineFrequency,
+    warpAmount,
+    resolutionScale,
+  ]);
 
   return (
     <canvas
