@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/cn';
 import { posthog } from '@/lib/posthog';
+import { DarkVeil } from '@/components/celune/dark-veil';
 
 // Quick-start install commands — hidden for now, will re-enable post-launch
 // const QUICK_START_STEPS = [
@@ -311,6 +312,7 @@ function HeroDashboard() {
 function HeroEmailInput() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -337,6 +339,7 @@ function HeroEmailInput() {
         return;
       }
       posthog.capture('waitlist_signup', { location: 'hero', email });
+      if (data.referral_code) setReferralCode(data.referral_code);
       setSubmitted(true);
     } catch {
       setError('Something went wrong. Please try again.');
@@ -347,19 +350,29 @@ function HeroEmailInput() {
 
   if (submitted) {
     return (
-      <div className="border-celune-500/20 bg-celune-500/10 mt-8 inline-flex w-full items-center gap-2.5 rounded-lg border px-4 py-3 sm:w-auto">
-        <svg className="text-celune-400 h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M3 8.5L6.5 12L13 4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className="text-celune-400 text-sm font-medium">
-          Welcome! We will reach out with your access code soon.
-        </span>
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="border-celune-500/20 bg-celune-500/10 inline-flex items-center gap-2.5 rounded-lg border px-4 py-3">
+          <svg className="text-celune-400 h-4 w-4 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M3 8.5L6.5 12L13 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="text-celune-400 text-sm font-medium">
+            Welcome! Access code incoming. Refer a friend for priority access.
+          </span>
+        </div>
+        {referralCode && (
+          <a
+            href={`/refer?code=${referralCode}`}
+            className="bg-celune-500 hover:bg-celune-400 inline-flex shrink-0 items-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-black transition-colors"
+          >
+            Refer a Friend
+          </a>
+        )}
       </div>
     );
   }
@@ -393,6 +406,16 @@ function HeroEmailInput() {
 export function CeluneHero() {
   return (
     <section id="hero" className="relative overflow-hidden pt-16">
+      {/* DarkVeil WebGL background — behind stars (z-0), fades out at bottom */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <DarkVeil hueShift={150} speed={0.3} resolutionScale={0.75} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 40%, rgb(10 10 15) 100%)',
+          }}
+        />
+      </div>
       <div className="relative z-10 container py-[160px]">
         <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left — text content */}
