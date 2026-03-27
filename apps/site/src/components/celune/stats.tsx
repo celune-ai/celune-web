@@ -137,7 +137,7 @@ function StatCard({ stat }: StatCardProps) {
   return (
     <div
       ref={ref}
-      className="px-6 py-16 text-center transition-colors duration-300 hover:bg-white/[0.015]"
+      className="px-6 py-12 text-center transition-colors duration-300 hover:bg-white/[0.015]"
     >
       <div className="font-heading text-3xl font-medium text-white md:text-4xl">
         {stat.count ? (

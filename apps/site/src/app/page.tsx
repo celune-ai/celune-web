@@ -26,9 +26,7 @@ export default function Home() {
       <CeluneNav />
       <GridFrame>
         <CeluneHero />
-        <SectionDivider />
         <CeluneStats />
-        <SectionDivider />
         <ProductShowcase />
         <SectionDivider />
         <CeluneDemoShowcase />
