@@ -325,10 +325,10 @@ function ReferDialog({
   const [results, setResults] = useState<
     { email: string; status: 'sent' | 'exists' | 'error' }[] | null
   >(null);
-  const [remaining, setRemaining] = useState<number | null>(null);
+  const [totalReferrals, setTotalReferrals] = useState(0);
 
   function addEmail() {
-    if (emails.length < 5) setEmails([...emails, '']);
+    setEmails([...emails, '']);
   }
 
   function removeEmail(index: number) {
@@ -369,7 +369,7 @@ function ReferDialog({
         return;
       }
       setResults(data.results);
-      setRemaining(data.remaining);
+      setTotalReferrals(data.total_referrals ?? 0);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -385,7 +385,7 @@ function ReferDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => onClose()} />
-      <div className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0d0d12] p-8">
+      <div className="relative w-full max-w-md rounded-2xl bg-[#0d0d12] p-8">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -447,11 +447,11 @@ function ReferDialog({
                 ))}
               </div>
             )}
-            {remaining !== null && remaining > 0 && (
-              <p className="mt-4 text-sm text-white/50">
-                You have {remaining} invite{remaining !== 1 ? 's' : ''} remaining.
-              </p>
-            )}
+            <p className="mt-4 text-sm text-white/50">
+              {totalReferrals >= 2
+                ? 'You unlocked early access! Check your email soon.'
+                : `Refer ${2 - totalReferrals} more to unlock early access.`}
+            </p>
             <div className="mt-6 flex gap-3">
               <button
                 onClick={() => {
@@ -475,8 +475,8 @@ function ReferDialog({
             <div className="mb-6 text-center">
               <h2 className="font-heading text-2xl font-medium text-white">Invite Your Friends</h2>
               <p className="mt-2 text-sm text-white/60">
-                Share early access to Celune with up to 5 friends. They&apos;ll get priority
-                placement on the waitlist.
+                Refer 2 friends to unlock early access. They&apos;ll get priority placement on the
+                waitlist too.
               </p>
             </div>
 
@@ -509,7 +509,7 @@ function ReferDialog({
                 </div>
               ))}
 
-              {emails.length < 5 && (
+              {emails.length < 20 && (
                 <button
                   type="button"
                   onClick={addEmail}
