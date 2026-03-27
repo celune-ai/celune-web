@@ -504,7 +504,7 @@ export function CeluneDemoShowcase() {
   const headingVariant = shouldReduceMotion ? reducedVariants.fadeUp : fadeUp;
 
   return (
-    <section id="demo" className="relative overflow-hidden py-24 md:py-32">
+    <section id="demo" className="relative overflow-hidden py-12 md:py-32">
       <div className="container">
         {/* Section heading — fades up once */}
         <motion.div

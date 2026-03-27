@@ -43,7 +43,7 @@ export function CeluneWaitlist() {
   }
 
   return (
-    <section id="signup" className="relative overflow-hidden py-24 md:py-32">
+    <section id="signup" className="relative overflow-hidden py-12 md:py-32">
       {/* Top fade into page bg */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-32 bg-gradient-to-b from-[#08080A] to-transparent" />
 
