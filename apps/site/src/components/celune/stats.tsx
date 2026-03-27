@@ -165,7 +165,7 @@ export function CeluneStats() {
   return (
     <section id="stats" className="relative overflow-hidden">
       <div className="mx-4 sm:mx-8 lg:mx-12">
-        <div className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4">
+        <div className="grid grid-cols-2 divide-x divide-y divide-dashed divide-white/[0.08] border border-dashed border-white/[0.08] md:grid-cols-4 md:divide-y-0 md:border-y-0">
           {STATS.map((stat) => (
             <StatCard key={stat.label} stat={stat} />
           ))}
