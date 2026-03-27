@@ -74,7 +74,7 @@ export function CelunePricing() {
   const [tab, setTab] = useState<Tab>('usage');
 
   return (
-    <section id="pricing" className="relative py-24 md:py-32">
+    <section id="pricing" className="relative py-12 md:py-32">
       <div className="container">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <div className="mb-3 inline-flex items-center gap-1.5 font-mono text-xs tracking-wider text-neutral-500">

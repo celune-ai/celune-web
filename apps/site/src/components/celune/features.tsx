@@ -426,7 +426,7 @@ function FeatureCard({ card }: { card: (typeof FEATURE_CARDS)[number] }) {
 
 export function CeluneFeatures() {
   return (
-    <section id="features" className="relative overflow-hidden py-24 md:py-32">
+    <section id="features" className="relative overflow-hidden py-12 md:py-32">
       {/* ASCII Waves background — inside page rails */}
       <div className="pointer-events-none absolute left-12 right-12 z-0 overflow-hidden opacity-[0.15]" style={{ top: -1, bottom: 0 }}>
         <CanvasErrorBoundary>

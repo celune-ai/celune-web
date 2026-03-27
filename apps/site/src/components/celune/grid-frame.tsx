@@ -9,7 +9,10 @@
 
 export function Crosshair({ className = '' }: { className?: string }) {
   return (
-    <span className={`text-neutral-700 text-xs leading-none select-none ${className}`} aria-hidden="true">
+    <span
+      className={`text-xs leading-none text-neutral-700 select-none ${className}`}
+      aria-hidden="true"
+    >
       +
     </span>
   );
@@ -17,11 +20,11 @@ export function Crosshair({ className = '' }: { className?: string }) {
 
 export function SectionDivider() {
   return (
-    <div className="relative mx-12">
+    <div className="relative mx-12 hidden md:block">
       <div className="flex items-center">
-        <Crosshair className="shrink-0 -ml-[3px]" />
+        <Crosshair className="-ml-[3px] shrink-0" />
         <div className="flex-1 border-t border-dashed border-white/[0.08]" />
-        <Crosshair className="shrink-0 -mr-[3px]" />
+        <Crosshair className="-mr-[3px] shrink-0" />
       </div>
     </div>
   );
@@ -41,11 +44,11 @@ export function GridFrame({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative">
       {/* Left border — always 48px from screen edge */}
-      <div className="pointer-events-none absolute top-0 bottom-0 left-12 w-px hidden lg:block">
+      <div className="pointer-events-none absolute top-0 bottom-0 left-12 hidden w-px lg:block">
         <div className="h-full border-l border-dashed border-white/[0.06]" />
       </div>
       {/* Right border — always 48px from screen edge */}
-      <div className="pointer-events-none absolute top-0 bottom-0 right-12 w-px hidden lg:block">
+      <div className="pointer-events-none absolute top-0 right-12 bottom-0 hidden w-px lg:block">
         <div className="h-full border-l border-dashed border-white/[0.06]" />
       </div>
       {children}
