@@ -68,7 +68,8 @@ function ReferForm() {
 
   if (!code) {
     return (
-      <div className="text-center">
+      <div className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-white/[0.03] p-8 text-center backdrop-blur-sm">
+        <img src="/celune_light.png" alt="Celune" className="mx-auto mb-6 h-10" />
         <h1 className="font-heading text-3xl font-medium text-white">Invalid Referral Link</h1>
         <p className="mt-4 text-white/60">
           This link is missing a referral code. Please use the link from your waitlist confirmation
@@ -89,7 +90,8 @@ function ReferForm() {
     const existed = results.filter((r) => r.status === 'exists');
 
     return (
-      <div className="w-full max-w-md text-center">
+      <div className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-white/[0.03] p-8 text-center backdrop-blur-sm">
+        <img src="/celune_light.png" alt="Celune" className="mx-auto mb-6 h-10" />
         <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full border border-green-500/20 bg-green-500/10">
           <svg className="h-8 w-8 text-green-400" viewBox="0 0 24 24" fill="none">
             <path
@@ -153,13 +155,13 @@ function ReferForm() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-white/[0.03] p-8 backdrop-blur-sm">
       <div className="mb-8 text-center">
         <img src="/celune_light.png" alt="Celune" className="mx-auto mb-6 h-10" />
         <h1 className="font-heading text-3xl font-medium text-white">Invite Your Friends</h1>
         <p className="mt-3 text-white/60">
-          Share early access to Celune with up to 5 friends. They'll get priority placement on the
-          waitlist.
+          Share early access to Celune with up to 5 friends. They&apos;ll get priority placement on
+          the waitlist.
         </p>
       </div>
 
