@@ -164,7 +164,7 @@ function StatCard({ stat }: StatCardProps) {
 export function CeluneStats() {
   return (
     <section id="stats" className="relative overflow-hidden">
-      <div className="mx-12">
+      <div className="mx-4 sm:mx-8 lg:mx-12">
         <div className="grid grid-cols-2 divide-x divide-dashed divide-white/[0.08] border-x border-dashed border-white/[0.08] md:grid-cols-4">
           {STATS.map((stat) => (
             <StatCard key={stat.label} stat={stat} />
