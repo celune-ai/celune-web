@@ -7,7 +7,8 @@ const AGENTMAIL_INBOX = process.env.AGENTMAIL_INBOX;
 // Resend template IDs — edit templates at resend.com/templates
 const WAITLIST_TEMPLATE_ID =
   process.env.RESEND_WAITLIST_TEMPLATE_ID ?? 'f6e7e9e8-02aa-4ddc-bef2-c7ecc864bed2';
-const REFERRAL_TEMPLATE_ID = process.env.RESEND_REFERRAL_TEMPLATE_ID ?? '';
+const REFERRAL_TEMPLATE_ID =
+  process.env.RESEND_REFERRAL_TEMPLATE_ID ?? '6ea83acf-7c7e-4d2f-995a-6f964486c82e';
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
