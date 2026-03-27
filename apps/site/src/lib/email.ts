@@ -96,20 +96,71 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
   const html = `
     <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px; background: #08080a; color: #e5e5e5;">
       <img src="https://celune.ai/celune_light.png" alt="Celune" width="110" style="margin-bottom: 32px;" />
-      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin: 0 0 8px;">You've been invited!</h1>
-      <p style="font-size: 16px; line-height: 1.65; color: #a3a3a3; margin: 0 0 24px;">
-        Your friend <strong style="color: #ffffff;">${referrerEmail}</strong> thinks you'd love Celune &mdash; an AI agent platform that helps you ship faster with autonomous agent teams.
+
+      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin: 0 0 16px;">${referrerEmail} invited you to Celune</h1>
+
+      <p style="font-size: 16px; line-height: 1.65; color: #a3a3a3; margin: 0 0 28px;">
+        Your friend thinks you'd be a great fit for Celune &mdash; an AI-powered platform where autonomous agent teams research, plan, build, review code, and ship your projects on autopilot.
       </p>
-      <p style="font-size: 16px; line-height: 1.6; color: #a3a3a3; margin: 0 0 32px;">
-        Join the early access waitlist and get priority access when we open the next round.
+
+      <!-- What Celune does -->
+      <div style="background: #111118; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; margin: 0 0 28px;">
+        <p style="font-size: 14px; font-weight: 600; color: #ffffff; margin: 0 0 16px;">What you get with Celune:</p>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
+              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
+            </td>
+            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
+              <strong style="color: #e5e5e5;">A team of 9 AI agents</strong> &mdash; each specialized in engineering, design, security, research, and more
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
+              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
+            </td>
+            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
+              <strong style="color: #e5e5e5;">Full project lifecycle</strong> &mdash; from PRDs and task planning to code review, design feedback, and retros
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
+              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
+            </td>
+            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
+              <strong style="color: #e5e5e5;">Ships while you sleep</strong> &mdash; agents work overnight, hand off progress, and keep building 24/7
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; vertical-align: top; width: 24px;">
+              <span style="color: #22c55e; font-size: 14px;">&#10003;</span>
+            </td>
+            <td style="padding: 6px 0; font-size: 14px; color: #a3a3a3; line-height: 1.5;">
+              <strong style="color: #e5e5e5;">Your second brain</strong> &mdash; a knowledge graph that remembers decisions, preferences, and context across every project
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; margin: 0 0 32px;">
+        <a href="${signupUrl}" style="display: inline-block; background: #22c55e; color: #000; padding: 16px 40px; border-radius: 10px; font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 0.01em;">
+          Learn More &amp; Join the Waitlist
+        </a>
+        <p style="font-size: 12px; color: #525252; margin: 12px 0 0;">Early access is free for a limited time.</p>
+      </div>
+
+      <!-- Divider -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 0 0 24px;"></div>
+
+      <p style="font-size: 13px; color: #525252; margin: 0 0 8px;">
+        Follow along on <a href="https://x.com/celune_ai" style="color: #22c55e; text-decoration: none;">X / Twitter</a> for build-in-public updates and sneak peeks.
       </p>
-      <a href="${signupUrl}" style="display: inline-block; background: #22c55e; color: #000; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none;">
-        Join the Waitlist
-      </a>
-      <p style="font-size: 13px; color: #525252; margin: 32px 0 0;">
-        Or visit <a href="https://celune.ai" style="color: #22c55e; text-decoration: none;">celune.ai</a> to learn more.
+      <p style="font-size: 13px; color: #525252; margin: 0 0 24px;">&mdash; Eric &amp; the Celune Team</p>
+
+      <p style="font-size: 11px; color: #3a3a3a; margin: 0;">
+        You're receiving this because ${referrerEmail} referred you. If this wasn't meant for you, you can safely ignore this email.
       </p>
-      <p style="font-size: 13px; color: #525252; margin: 16px 0 0;">&mdash; Eric &amp; the Celune Team</p>
     </div>
   `;
 
@@ -117,7 +168,7 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
     await resend.emails.send({
       from: FROM_EMAIL,
       to: toEmail,
-      subject: `${referrerEmail} invited you to Celune`,
+      subject: `${referrerEmail} invited you to try Celune`,
       html,
     });
     return true;
