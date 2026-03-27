@@ -20,10 +20,15 @@ export function CeluneFooter() {
               alt="Celune"
               width={120}
               height={24}
-              className="h-5 w-auto opacity-60"
+              className="h-5 w-auto"
             />
             <div className="flex items-center gap-3">
-              <a href="https://github.com/celune-ai" target="_blank" rel="noopener noreferrer" className="text-neutral-700 transition-colors hover:text-white">
+              <a
+                href="https://github.com/celune-ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/60 transition-colors hover:text-white"
+              >
                 <Github className="h-3.5 w-3.5" />
               </a>
             </div>
@@ -35,7 +40,7 @@ export function CeluneFooter() {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-xs text-neutral-600 transition-colors hover:text-neutral-300"
+                className="text-xs text-white/60 transition-colors hover:text-white"
                 {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               >
                 {link.label}
@@ -51,12 +56,22 @@ export function CeluneFooter() {
       </div>
       <div>
         <div className="container flex items-center justify-between py-5">
-          <p className="text-[11px] text-neutral-700">
+          <p className="text-[11px] text-white/50">
             &copy; {new Date().getFullYear()} Celune. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="/privacy" className="text-[11px] text-neutral-700 transition-colors hover:text-neutral-400">Privacy</a>
-            <a href="/terms" className="text-[11px] text-neutral-700 transition-colors hover:text-neutral-400">Terms</a>
+            <a
+              href="/privacy"
+              className="text-[11px] text-white/50 transition-colors hover:text-white/80"
+            >
+              Privacy
+            </a>
+            <a
+              href="/terms"
+              className="text-[11px] text-white/50 transition-colors hover:text-white/80"
+            >
+              Terms
+            </a>
           </div>
         </div>
       </div>
