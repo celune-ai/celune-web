@@ -63,20 +63,9 @@ export async function sendWaitlistWelcome(email: string, referralCode?: string):
     templateHtml ||
     `
     <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px; background: #060a07; color: #e5e5e5;">
-      <!--[if !mso]><!-->
-      <style>
-        .logo-light { display: block !important; }
-        .logo-dark { display: none !important; max-height: 0 !important; overflow: hidden !important; }
-        @media (prefers-color-scheme: light) {
-          .logo-light { display: none !important; max-height: 0 !important; overflow: hidden !important; }
-          .logo-dark { display: block !important; max-height: none !important; overflow: visible !important; }
-        }
-      </style>
-      <div style="display:none;max-height:0;overflow:hidden;">
-        <img class="logo-dark" src="https://celune.ai/celune-dark.png" alt="" width="110" style="display:none;max-height:0;overflow:hidden;margin-bottom:32px;" />
+      <div style="display:inline-block;background-color:#060a07;border-radius:8px;padding:8px 12px;margin-bottom:32px;">
+        <img src="https://celune.ai/celune-light.png" alt="Celune" width="110" style="display:block;" />
       </div>
-      <!--<![endif]-->
-      <img class="logo-light" src="https://celune.ai/celune-light.png" alt="Celune" width="110" style="display:block;margin-bottom:32px;" />
       <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin: 0 0 8px;">You're on the list!</h1>
       <p style="font-size: 16px; line-height: 1.65; color: #a3a3a3; margin: 0 0 32px;">
         Thanks for signing up for early access to Celune. We're onboarding users in small batches to ensure a great experience.
@@ -132,10 +121,10 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
   }
 
   // Fallback: inline HTML
-  const html = `<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');*{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}code,.code{font-family:'SF Mono','Fira Code',Menlo,Consolas,monospace!important;}.logo-light{display:block!important;}.logo-dark{display:none!important;max-height:0!important;overflow:hidden!important;}@media(prefers-color-scheme:light){.logo-light{display:none!important;max-height:0!important;overflow:hidden!important;}.logo-dark{display:block!important;max-height:none!important;overflow:visible!important;}}</style></head><body style="margin:0;padding:0;background-color:#060a07;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  const html = `<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');*{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important;}code,.code{font-family:'SF Mono','Fira Code',Menlo,Consolas,monospace!important;}</style></head><body style="margin:0;padding:0;background-color:#060a07;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#060a07"><tr><td align="center" style="padding:40px 16px">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
-  <tr><td style="padding:0 0 40px"><!--[if !mso]><!--><div style="display:none;max-height:0;overflow:hidden;"><img class="logo-dark" src="https://celune.ai/celune-dark.png" alt="" width="110" style="display:none;max-height:0;overflow:hidden;"/></div><!--<![endif]--><img class="logo-light" src="https://celune.ai/celune-light.png" alt="Celune" width="110" style="display:block;"/></td></tr>
+  <tr><td style="padding:0 0 40px"><div style="display:inline-block;background-color:#060a07;border-radius:8px;padding:8px 12px;"><img src="https://celune.ai/celune-light.png" alt="Celune" width="110" style="display:block;"/></div></td></tr>
   <tr><td style="padding:0 0 8px"><h1 style="margin:0;font-size:28px;font-weight:600;color:#ffffff;line-height:1.3">${referrerEmail} invited you to Celune</h1></td></tr>
   <tr><td style="padding:0 0 32px"><p style="margin:0;font-size:16px;line-height:1.65;color:#a3a3a3">Your friend thinks you'd be a great fit for Celune &mdash; an AI-powered platform where autonomous agent teams research, plan, build, review, and ship your projects on autopilot.</p></td></tr>
   <tr><td style="padding:0 0 32px">
