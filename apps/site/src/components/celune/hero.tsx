@@ -489,7 +489,7 @@ function ReferDialog({
                     value={email}
                     onChange={(e) => updateEmail(i, e.target.value)}
                     placeholder="friend@company.com"
-                    className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/40 focus:border-green-500/50"
+                    className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/40 focus:border-white focus:bg-white/[0.04]"
                   />
                   {emails.length > 1 && (
                     <button
@@ -643,7 +643,7 @@ function HeroEmailInput() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="focus:border-celune-500/50 flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/60"
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-sm text-white transition-colors outline-none placeholder:text-white/60 focus:border-white focus:bg-white/[0.04]"
           />
           <button
             type="submit"
