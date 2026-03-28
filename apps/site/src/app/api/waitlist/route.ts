@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
           existingCode = existing[0].referral_code;
         }
       } catch {}
-      sendWaitlistWelcome(email, existingCode).catch((err) => {
+      await sendWaitlistWelcome(email, existingCode).catch((err) => {
         console.error('[waitlist] Re-send confirmation failed:', err);
       });
       return NextResponse.json({ success: true, referral_code: existingCode });
@@ -137,13 +137,15 @@ export async function POST(request: NextRequest) {
     // Response body already consumed or missing
   }
 
-  // Send welcome email + forward to agentmail inbox (fire-and-forget)
-  sendWaitlistWelcome(email, referralCode).catch((err) => {
-    console.error('[waitlist] Welcome email failed:', err);
-  });
-  forwardToAgentmail(email, body.source || 'landing').catch((err) => {
-    console.error('[waitlist] Agentmail forward failed:', err);
-  });
+  // Await email sends before returning — fire-and-forget gets killed on serverless
+  await Promise.allSettled([
+    sendWaitlistWelcome(email, referralCode).catch((err) => {
+      console.error('[waitlist] Welcome email failed:', err);
+    }),
+    forwardToAgentmail(email, body.source || 'landing').catch((err) => {
+      console.error('[waitlist] Agentmail forward failed:', err);
+    }),
+  ]);
 
   return NextResponse.json({ success: true, referral_code: referralCode });
 }

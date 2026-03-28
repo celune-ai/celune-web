@@ -109,8 +109,10 @@ export async function POST(request: NextRequest) {
       continue;
     }
 
-    // Send referral email (fire-and-forget)
-    sendReferralInvite(email, referrer.email).catch(() => {});
+    // Await email before continuing — fire-and-forget gets killed on serverless
+    await sendReferralInvite(email, referrer.email).catch((err) => {
+      console.error('[refer] Referral email failed:', err);
+    });
     results.push({ email, status: 'sent' });
   }
 
