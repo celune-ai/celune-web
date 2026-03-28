@@ -82,11 +82,6 @@ void main(){
     col.rgb*=1.-(scanline_val*scanline_val)*uScan;
     col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
 
-    // Ordered Bayer dither — quantize to fewer tonal steps
-    float levels=12.0;
-    float dith=bayer8(gl_FragCoord.xy)/levels;
-    col.rgb=floor(col.rgb*levels+dith)/levels;
-
     gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);
 }
 `;

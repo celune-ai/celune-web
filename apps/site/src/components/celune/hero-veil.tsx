@@ -5,7 +5,8 @@ import { DarkVeil } from '@/components/celune/dark-veil';
 export function HeroVeil() {
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[100vh] opacity-20"
+      className="pointer-events-none absolute inset-x-0 z-0 h-[100vh] opacity-30"
+      style={{ top: '-150px' }}
       aria-hidden="true"
     >
       <DarkVeil hueShift={150} speed={0.5} resolutionScale={0.75} />
