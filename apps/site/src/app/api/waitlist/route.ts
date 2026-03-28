@@ -123,8 +123,12 @@ export async function POST(request: NextRequest) {
   }
 
   // Send welcome email + forward to agentmail inbox (fire-and-forget)
-  sendWaitlistWelcome(email, referralCode).catch(() => {});
-  forwardToAgentmail(email, body.source || 'landing').catch(() => {});
+  sendWaitlistWelcome(email, referralCode).catch((err) => {
+    console.error('[waitlist] Welcome email failed:', err);
+  });
+  forwardToAgentmail(email, body.source || 'landing').catch((err) => {
+    console.error('[waitlist] Agentmail forward failed:', err);
+  });
 
   return NextResponse.json({ success: true, referral_code: referralCode });
 }
