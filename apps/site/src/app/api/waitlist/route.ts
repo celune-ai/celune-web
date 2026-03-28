@@ -106,7 +106,22 @@ export async function POST(request: NextRequest) {
   if (!res.ok) {
     const text = await res.text();
     if (text.includes('duplicate') || text.includes('unique')) {
-      return NextResponse.json({ error: "You're already on the list!" }, { status: 409 });
+      // Resend confirmation for existing signups — fetch their referral code
+      const existingRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/waitlist?email=eq.${encodeURIComponent(email)}&select=referral_code`,
+        { headers: supabaseHeaders },
+      );
+      let existingCode: string | undefined;
+      try {
+        const existing = await existingRes.json();
+        if (Array.isArray(existing) && existing[0]?.referral_code) {
+          existingCode = existing[0].referral_code;
+        }
+      } catch {}
+      sendWaitlistWelcome(email, existingCode).catch((err) => {
+        console.error('[waitlist] Re-send confirmation failed:', err);
+      });
+      return NextResponse.json({ success: true, referral_code: existingCode });
     }
     return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
@@ -123,8 +138,12 @@ export async function POST(request: NextRequest) {
   }
 
   // Send welcome email + forward to agentmail inbox (fire-and-forget)
-  sendWaitlistWelcome(email, referralCode).catch(() => {});
-  forwardToAgentmail(email, body.source || 'landing').catch(() => {});
+  sendWaitlistWelcome(email, referralCode).catch((err) => {
+    console.error('[waitlist] Welcome email failed:', err);
+  });
+  forwardToAgentmail(email, body.source || 'landing').catch((err) => {
+    console.error('[waitlist] Agentmail forward failed:', err);
+  });
 
   return NextResponse.json({ success: true, referral_code: referralCode });
 }
