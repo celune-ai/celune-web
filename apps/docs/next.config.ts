@@ -16,6 +16,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   typescript: {
     // @sentry/nextjs ships Next 15 type defs that conflict with Next 16 — ignore until Sentry updates
