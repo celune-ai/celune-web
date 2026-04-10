@@ -1,0 +1,205 @@
+## Why orchestration gets expensive fast
+
+The first instinct when you get access to agent teams is to spin up everything in parallel. Five agents, five tasks, feel the power. The admin dashboard lights up, pulse rings everywhere, and for about an hour it feels like you've unlocked a superpower.
+
+Then the bill hits. And you notice that the agents have been subtly disagreeing with each other about architectural decisions. And the work product, even when coherent within each task, has inconsistent style across tasks. And the review loop is a mess because there are too many open branches.
+
+This is the pattern every team hits when they move from "I have an AI assistant" to "I have a team of agents." The answer isn't "stop using agent teams." The answer is **orchestration tiers** — pick the right level of parallelism for the job, and default low.
+
+Celune's framework uses three tiers. This post walks through when to use each and the rules that prevent the $500 invoice surprise.
+
+---
+
+## Tier 1 — Single Agent
+
+**When:** Focused task, one domain, one deliverable, under 60 minutes of work.
+
+**How:** Direct execution. No delegation. One agent does the task from start to finish.
+
+**Cost:** Low. Usually $0.50-$3 in Claude tokens.
+
+**Examples:**
+
+- Fixing a one-file bug
+- Writing a blog post
+- Updating a config file
+- Adding a single feature flag
+- Doing a focused code review
+- Drafting a Slack message
+
+Tier 1 is the default. If you're not sure which tier to use, it's Tier 1. Most tasks are Tier 1 tasks. The mistake is bumping routine work to Tier 2 because you think parallelism will be faster — it won't, because the coordination overhead exceeds the wall-clock savings for anything under an hour.
+
+The performance characteristic: **latency-bound by the longest single step**. If the task has 10 steps and each step takes 30 seconds, wall clock is 5 minutes plus thinking time. Tier 2 wouldn't make it faster unless the steps are genuinely independent.
+
+---
+
+## Tier 2 — Sub-Agents
+
+**When:** 2-4 independent sub-tasks, decomposable, no cross-talk needed between the sub-tasks while they run.
+
+**How:** The parent agent uses the Task tool (or equivalent) to spawn utility agents for each independent piece. The sub-agents run in parallel. The parent collects results and integrates them.
+
+**Cost:** Medium. Usually $3-$15 depending on scope and sub-agent depth.
+
+**Examples:**
+
+- Running three parallel searches across different parts of a codebase
+- Reviewing a PR across 4 dimensions (security, a11y, performance, style)
+- Drafting 5 blog posts from one brief in parallel
+- Doing parallel research on 3 competitor products
+- Building 3 independent features that don't touch the same files
+
+The key word is **independent**. If the sub-tasks need to negotiate with each other — "sub-agent A, what API shape did you pick? I need to match it" — you're in the wrong tier. Sub-agents that need coordination should be collapsed into a single agent (Tier 1) or promoted to a peer-to-peer team (Tier 3).
+
+### The Tier 2 pattern in Celune
+
+```typescript
+// Parent agent decomposes the task
+const subtasks = [
+  { name: 'security review', scope: 'auth + data handling' },
+  { name: 'a11y review', scope: 'keyboard, ARIA, contrast' },
+  { name: 'performance review', scope: 'bundle, queries, render' },
+  { name: 'style review', scope: 'design system compliance' },
+];
+
+// Spawn each in parallel, in the background
+const handles = await Promise.all(
+  subtasks.map((st) =>
+    client.spawn_subagent({
+      role: 'reviewer',
+      task: st,
+      max_cost: 2.0, // hard cap per sub-agent
+      timeout_min: 15,
+    }),
+  ),
+);
+
+// Collect findings
+const findings = await Promise.all(handles.map((h) => h.await_result()));
+
+// Parent integrates and files
+const critical = findings.flatMap((f) => f.critical);
+const high = findings.flatMap((f) => f.high);
+// ...and so on
+```
+
+The parent never tells the sub-agents about each other. Each sub-agent has the full task context for its own sub-scope and nothing more. When they finish, the parent is the only one who sees all four outputs.
+
+### What makes Tier 2 cheaper than it looks
+
+Each sub-agent has its own context window, which means:
+
+- The parent's context doesn't fill up with 4x the raw content
+- Sub-agents can be smaller models (Haiku, Sonnet) for structured work, reserving Opus for the parent's integration step
+- Failures are isolated: if one sub-agent times out, the others still finish
+
+The smart move is to use **Haiku or Sonnet sub-agents** for bounded scoped work and reserve Opus for the parent's synthesis step. You save 60-80% on tokens that way.
+
+---
+
+## Tier 3 — Agent Teams
+
+**When:** 4+ interdependent components, cross-domain, iterative review needed between agents. The kind of work where agents need to talk to each other, not just report to a parent.
+
+**How:** A full Claude Code agent team with peer-to-peer communication. Agents specialize into roles (engineer, reviewer, PM, designer) and coordinate on a shared task board.
+
+**Cost:** High. Usually $5-$30+ per run, sometimes much more.
+
+**Examples:**
+
+- Building a new product feature end-to-end (PM + engineer + reviewer + designer)
+- Running an overnight launch prep (research + build + review + fix loop)
+- Doing a full security audit with iterative fixes
+- Shipping a 10-post content batch with editorial review loops
+
+The key characteristic is **iteration**. The agents produce drafts, review each other's drafts, revise, review again, and continue until a quality bar is met. This is the mode where agent teams genuinely beat single agents — but only if the iteration is disciplined.
+
+### The hard rules for Tier 3
+
+Celune enforces these by convention:
+
+1. **Tier 3 requires explicit approval** from Eric (or the human-in-the-loop). No auto-escalation from Tier 2.
+2. **Every Tier 3 team must include a review agent** (SCAN or equivalent). Not optional.
+3. **Specify agent roles explicitly**; don't rely on auto-orchestration.
+4. **Each agent has a cost cap** enforced at the framework level. Exceed the cap, the agent gets killed and the work gets marked incomplete.
+5. **Every agent invocation must have a clear deliverable.** "Do some research" is not a deliverable; "produce a 5-source comparison matrix with citations" is.
+6. **Max two review cycles per artifact.** If the team can't converge in two rounds, the artifact gets escalated to a human, not loop-fixed indefinitely.
+
+Rules 4 and 6 are the load-bearing ones. Without them, Tier 3 runs produce brilliant work at ruinous cost, or loop indefinitely on a single artifact.
+
+---
+
+## The decision tree
+
+When a task lands in your queue, walk this sequence:
+
+```
+Is the task a single deliverable in under 60 minutes?
+│
+├── Yes → Tier 1 (default)
+│
+└── No → Does it decompose into 2-4 independent sub-tasks?
+         │
+         ├── Yes, and they don't need to talk to each other mid-run
+         │     → Tier 2
+         │
+         └── Yes, but they need iterative review / peer coordination
+                   OR
+                   There are 4+ components with dependencies
+                   │
+                   └── Tier 3 (requires approval)
+```
+
+Simple. When in doubt, stay in Tier 1.
+
+---
+
+## Signals that you picked the wrong tier
+
+Tier 1 but should have been Tier 2:
+
+- The task has been in progress for 2+ hours
+- You're context-switching between multiple unrelated sub-problems
+- You keep forgetting earlier sub-task state because your context is too crowded
+
+Tier 2 but should have been Tier 1:
+
+- The sub-agents keep asking the parent for clarification
+- You're spending more time coordinating than executing
+- The sub-agents are producing inconsistent styles or approaches
+
+Tier 2 but should have been Tier 3:
+
+- You keep needing to send partial results from one sub-agent to another
+- The parent's integration step is turning into another multi-hour task
+- Review keeps surfacing issues that would have been caught by peer-to-peer coordination
+
+Tier 3 but should have been Tier 2:
+
+- The agents are mostly waiting on each other, not collaborating
+- Review rounds keep finding the same class of issue
+- Cost is ballooning with no visible quality improvement
+
+---
+
+## What Celune enforces automatically
+
+A few guardrails are baked into the platform so you don't have to think about them:
+
+- **Sub-agent spawn throttle.** No more than 5 simultaneous sub-agents per parent, to prevent recursive fanout disasters.
+- **Cost telemetry.** Every agent invocation records its token cost; the dashboard surfaces anomalies.
+- **Heartbeat timeout.** Any agent that stops sending heartbeats for 10 minutes is killed and its task released.
+- **Claim collision prevention.** Atomic task claiming prevents two agents from working on the same task.
+- **Max review cycle counter.** Tasks stuck in more than 2 review loops trigger an escalation badge on the admin dashboard.
+
+These don't prevent every mistake, but they prevent the ones that used to cost real money.
+
+---
+
+## The takeaway
+
+The most expensive mistake in agent orchestration is defaulting to Tier 3 because you think more parallelism is always better. It isn't. Tier 3 is for genuinely interdependent, iterative work that requires peer coordination. Everything else should stay in Tier 1 or Tier 2.
+
+The second most expensive mistake is under-scoping Tier 3. If you're running an agent team, the deliverables, cost caps, and review gates have to be explicit. Otherwise you're paying for agents to invent work for each other.
+
+Default to Tier 1. Escalate to Tier 2 when you have genuine independent decomposition. Escalate to Tier 3 only when you've tried Tier 2 and confirmed you need iteration and coordination. And when you're in Tier 3, follow the six hard rules — they exist because every team that ignored them learned the same lesson the same way.

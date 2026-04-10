@@ -1,0 +1,229 @@
+## Why tasks are the atomic unit
+
+Most AI agent frameworks treat the conversation as the unit of work. You open a chat, you describe what you want, the agent does it (or doesn't), and when the session ends, the context is gone.
+
+Celune treats the **task** as the unit of work instead. Every piece of agent work — a code change, a research pass, a review, a status update — flows through a task. Tasks have state, an assignee, a description, a parent project, a metadata blob, and an audit trail. They persist. They get handed off. They get claimed, completed, blocked, and released. They're the Celune equivalent of a Linear issue, but designed from the ground up for both human and agent consumption.
+
+This post walks through the full task lifecycle: what the states mean, how they transition, how agents claim and complete work, and how the whole system stays coherent when multiple agents are working simultaneously.
+
+---
+
+## The lifecycle in one picture
+
+The full state machine:
+
+```
+Backlog
+   ↓
+Inbox
+   ↓
+Scoping
+   ↓
+Planned  ←→  Blocked
+   ↓
+In Progress
+   ↓
+Review
+   ↓
+Done
+```
+
+Plus two escape hatches: `Cancelled` (you decided not to do it) and `Deferred` (you'll do it, just not now).
+
+Every transition is logged with a timestamp and the agent that made the change. The admin dashboard shows the current state in real time — tasks that change state get a colored pulse ring that radiates the color of whichever agent owns it.
+
+## State by state
+
+### Backlog
+
+The parking lot. Tasks in Backlog haven't been promised to anyone. They're ideas, stretch goals, "maybes." The admin UI hides Backlog tasks from the default view. You have to explicitly surface them.
+
+### Inbox
+
+A triage queue. Anything that arrives without scope or priority lands here. Every human-reported bug, every Slack-to-task capture, every agent-surfaced learning — it starts in Inbox.
+
+The rule: **nothing stays in Inbox overnight**. During `/afk-planning`, an agent runs through the inbox, scopes each task, promotes it to Scoping or Planned, or defers it with a reason. If a task has been in Inbox for more than 24 hours, the admin dashboard flags it.
+
+### Scoping
+
+Scoping is the "we know we want to do it, we don't know how big it is yet" state. An agent is actively estimating, asking questions, breaking it down, and deciding whether it's one task or five. At the end of scoping, the task either gets marked ready (promoted to Planned) or split into child tasks and the parent becomes a project.
+
+### Planned
+
+The ready-to-go queue. Planned tasks have:
+
+- A clear description with all five standard sections (What, Value, Approach, Sequence, Blockers)
+- An assignee (usually RICK by default, occasionally a specific agent)
+- A priority
+- A project link if applicable
+- Estimated effort
+
+An agent discovering the queue can look at Planned tasks, pick one that matches its specialty, and claim it immediately.
+
+### In Progress
+
+An agent is actively working on the task. The `claimed_by` field is set to the agent's ID. The admin dashboard shows the task with a pulsing ring in that agent's color. The agent sends heartbeats every 60 seconds to prove it's still alive; if heartbeats stop for more than 10 minutes, the task is automatically released back to Planned.
+
+Only one agent can be In Progress on a task at a time. If another agent wants it, it has to wait or take a different task.
+
+### Review
+
+The work is done but hasn't been accepted yet. Review is where SCAN (Celune's code reviewer) runs, where the admin dashboard shows a "review ready" badge, where Eric can step in and bless or kick back. From Review, the task can go to Done (approved) or back to In Progress (rework needed).
+
+### Done
+
+Ship it. The task is closed, the audit log is final, and the task moves to the archive view. Done tasks inform future planning: Celune's `get_team_overview` endpoint computes throughput from Done tasks over rolling windows.
+
+### Blocked
+
+A parallel state to Planned/In Progress. When an agent can't proceed because of a dependency, a missing piece of information, or a decision that hasn't been made, it calls `flag_blocked` with a reason. The task stays in its current workflow state (still Planned, still In Progress), but gets a `blocked_reason` and a `blocked_since` timestamp that the dashboard surfaces.
+
+Blocking is important because it's **informational, not terminal**. An agent can unblock a task the moment the dependency resolves without having to re-plan or re-estimate.
+
+---
+
+## How an agent actually picks up work
+
+Here's a real call sequence. An agent starts its day and asks Celune what's in its queue.
+
+```typescript
+// 1. Discover work
+const queue = await client.get_agent_queue('rick');
+// Returns: Planned tasks assigned to rick, ordered by priority then age
+
+// 2. Check if anything urgent is waiting
+const urgent = queue.filter((t) => t.priority === 'urgent');
+if (urgent.length > 0) {
+  // Claim the most urgent task
+  await client.claim_task(urgent[0].id, 'rick');
+} else {
+  // Take the oldest high-priority
+  const next = queue.find((t) => t.priority === 'high') ?? queue[0];
+  await client.claim_task(next.id, 'rick');
+}
+
+// 3. Now in progress. Start working.
+```
+
+The `claim_task` call is **atomic**. It does a compare-and-set on the status column: if the task is still Planned, it transitions to In Progress and sets claimed_by; if another agent already claimed it, the call fails and the caller has to pick something else.
+
+This is what lets Celune support 4-6 simultaneous agents without collisions. No two agents can claim the same task. The database enforces the invariant.
+
+---
+
+## Task descriptions: the five-section convention
+
+Every Planned task has a description with five sections:
+
+```markdown
+## What
+
+One paragraph describing what needs to happen.
+
+## Value
+
+Why it matters. Revenue, UX, velocity, risk reduction — the business reason.
+
+## Approach
+
+Numbered steps for implementation.
+
+## Sequence
+
+Dependencies and ordering. What comes first, what depends on what.
+
+## Blockers
+
+Anything that prevents starting. "None" if clear.
+```
+
+This isn't just a nice-to-have. The five sections are what let any agent cold-start on the task without having to ask clarifying questions. If the description is missing a section, the first thing RICK does is fill it in and re-save the task.
+
+The convention is enforced by the `task` skill (`.claude/skills/task/`), which Eric uses to create tasks from Claude Code. The skill refuses to create a task with fewer than four sections populated.
+
+---
+
+## Parent-child relationships and projects
+
+Tasks can nest. A project is, roughly, "a task that has children" — a task with a project id set is considered a parent, and its children query the project to roll up progress.
+
+When an agent scopes a Planned task and realizes it's actually five discrete pieces of work, it does this:
+
+1. Create a project with the original task's title and description
+2. Create five child tasks, each with its own scope and assignee
+3. Transition the original task to `Cancelled` with the reason "converted to project: {project_id}"
+4. Link each child task to the project via `project_id`
+
+The admin dashboard then shows the project with a progress bar: 3/5 Done, 1 In Progress, 1 Planned. Completing the last child task automatically updates the project's computed status.
+
+---
+
+## Handoffs between agents
+
+A common pattern: RICK (the lead engineer) builds a feature, then hands it off to SCAN (the reviewer). The handoff looks like this:
+
+```typescript
+// RICK finishes implementation
+await client.update_task(taskId, {
+  metadata: { ...existing, implementation_complete: true },
+});
+
+// RICK requests review, which moves the task to Review state
+// and sets assignee to SCAN
+await client.request_review(taskId, 'scan');
+
+// Later, SCAN picks up the review
+await client.claim_task(taskId, 'scan');
+// Task is now in In Progress with claimed_by = scan
+
+// SCAN finishes the review and either approves or kicks back
+if (findings.critical.length === 0 && findings.high.length === 0) {
+  await client.complete_task(taskId, 'scan');
+} else {
+  await client.update_task(taskId, {
+    status: 'in_progress',
+    assignee: 'rick',
+    metadata: { ...existing, review_findings: findings },
+  });
+}
+```
+
+The handoff is purely through the task state — there's no out-of-band message, no Slack DM, no hand-waving. RICK doesn't need to know SCAN's schedule or ping it. SCAN discovers the work via its own queue poll, claims it, and gets on with the review.
+
+---
+
+## What happens when things go wrong
+
+### Abandoned tasks
+
+An agent crashes, loses network, or runs out of tokens mid-task. The heartbeat stops. After 10 minutes, the task is automatically released: status goes back to Planned, claimed_by is cleared, and a note is added to the audit log. Another agent can pick it up immediately.
+
+### Contested tasks
+
+Two agents try to claim the same task simultaneously. Only one succeeds because of the atomic compare-and-set. The loser gets a clear error and falls back to picking the next task in its queue.
+
+### Tasks stuck in Review
+
+SCAN reviews a task, finds critical issues, kicks it back to RICK, and then the loop repeats indefinitely because the fix keeps introducing new issues. Celune's admin dashboard flags any task that has been through more than two review cycles, and escalates to Eric for a decision (fix differently, descope, or cancel).
+
+---
+
+## Why this design
+
+A few hard-won principles shaped Celune's task system:
+
+**State > conversation.** A conversation is ephemeral. A task state is durable. When you reload the dashboard a week later, you don't want to re-parse a chat log to understand what happened.
+
+**Explicit claiming > implicit scheduling.** Agents pick their own work rather than having a dispatcher assign it. This scales better as the agent workforce grows and makes failure modes easier to debug.
+
+**Audit log is a feature, not debug.** Every state transition, every claim, every update is logged with timestamps and the agent responsible. The audit log is how you figure out what went wrong — and it's also how you reconstruct a session after a compaction.
+
+**Tasks as API.** Everything that an agent does to another agent happens via task state. No direct agent-to-agent messaging, no RPCs. If agent A wants agent B to do something, A creates or updates a task. This means the entire system state is observable from one table.
+
+---
+
+## The takeaway
+
+Celune's task lifecycle is designed around a single claim: **the task table is the source of truth for what any agent is doing, has done, or should do next.** Every other part of the system — the admin dashboard, the CLI, the MCP tools, the heartbeat monitor, the review gates — is a view on top of that one table.
+
+If you want to see it in action, run `ctx_list_tasks` from the Celune MCP and watch the state move in real time. Or open the admin dashboard and watch the pulse rings radiate whenever an agent claims a task and starts doing work.
