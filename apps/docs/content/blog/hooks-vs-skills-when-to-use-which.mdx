@@ -1,6 +1,6 @@
 ## Two ways to extend Claude Code
 
-Claude Code has two primary mechanisms for extending what your agent can do beyond the base model: **hooks** and **skills**. They look similar at first glance — both let you inject behavior into the agent's workflow — but they solve very different problems and get used in very different ways.
+Claude Code has two primary mechanisms for extending what your agent can do beyond the base model: **hooks** and **skills**. They look similar at first glance, both let you inject behavior into the agent's workflow, but they solve very different problems and get used in very different ways.
 
 Getting the choice right matters. Using a hook where you wanted a skill means the agent does something automatically that you wanted to invoke on demand. Using a skill where you wanted a hook means the agent forgets to do something that should have been automatic.
 
@@ -14,12 +14,12 @@ A hook is **harness-level automation**. It's a shell command or script that runs
 
 Hooks live in `.claude/settings.json` and are wired to lifecycle events:
 
-- `SessionStart` — runs when a new session begins
-- `SessionEnd` — runs when a session ends (normal exit or compaction)
-- `PreToolUse` — runs before any tool call, can block or modify the call
-- `PostToolUse` — runs after any tool call, can record or react
-- `UserPromptSubmit` — runs when the user sends a message
-- `Stop` — runs when the agent finishes responding
+- `SessionStart`, runs when a new session begins
+- `SessionEnd`, runs when a session ends (normal exit or compaction)
+- `PreToolUse`, runs before any tool call, can block or modify the call
+- `PostToolUse`, runs after any tool call, can record or react
+- `UserPromptSubmit`, runs when the user sends a message
+- `Stop`, runs when the agent finishes responding
 
 The hook script is executed by the harness, not by the agent. The agent doesn't see the hook unless the hook returns output that the harness routes into the agent's context.
 
@@ -47,7 +47,7 @@ Here's a `SessionEnd` hook that auto-captures a session log whenever a session e
 
 Every session that ends triggers the script. The agent doesn't have to remember to write a session log. It just happens. If the script fails, it fails silently (the session still ends).
 
-### Example hook — PreToolUse guard
+### Example hook, PreToolUse guard
 
 Another common pattern: a `PreToolUse` hook that blocks dangerous operations:
 
@@ -94,7 +94,7 @@ Here's a simplified `commit` skill that codifies Eric's git commit conventions:
 ```markdown
 ---
 name: commit
-description: Standardized git commit — runs pre-checks, generates a conventional commit message, creates the commit with Co-Authored-By footer.
+description: Standardized git commit, runs pre-checks, generates a conventional commit message, creates the commit with Co-Authored-By footer.
 ---
 
 # Commit skill
@@ -122,9 +122,9 @@ The rule I use:
 
 > **Automatic behaviors go in hooks. Invocable workflows go in skills.**
 
-If the behavior is "every time X happens, automatically do Y" — that's a hook. The harness enforces it. The agent can't forget, skip, or rationalize around it.
+If the behavior is "every time X happens, automatically do Y", that's a hook. The harness enforces it. The agent can't forget, skip, or rationalize around it.
 
-If the behavior is "when the user says 'do the thing', follow this playbook" — that's a skill. The agent invokes it on demand. The user (or agent) has a clear trigger.
+If the behavior is "when the user says 'do the thing', follow this playbook", that's a skill. The agent invokes it on demand. The user (or agent) has a clear trigger.
 
 ### Rewritten as a flowchart
 
@@ -227,7 +227,7 @@ When you're about to add new functionality to a Claude Code setup, ask:
    - Yes → Hook (and review who can modify `settings.json`)
    - No → Skill
 
-If all five answers point the same way, you have your answer. If they're split, think about which question dominates — usually it's question 1 (reliability) or question 5 (safety).
+If all five answers point the same way, you have your answer. If they're split, think about which question dominates, usually it's question 1 (reliability) or question 5 (safety).
 
 ---
 
@@ -237,20 +237,20 @@ The Celune Claude Code setup includes both hooks and skills out of the box:
 
 **Default hooks:**
 
-- `SessionStart` — load CLAUDE.md, inject workspace context
-- `SessionEnd` — auto-capture session log, flush memory
-- `PreToolUse Bash` — block dangerous commands (rm -rf, force-push, curl | bash)
-- `PreToolUse WebFetch` — block (redirect to context-mode MCP)
-- `UserPromptSubmit` — detect slash commands and route to skills
+- `SessionStart`, load CLAUDE.md, inject workspace context
+- `SessionEnd`, auto-capture session log, flush memory
+- `PreToolUse Bash`, block dangerous commands (rm -rf, force-push, curl | bash)
+- `PreToolUse WebFetch`, block (redirect to context-mode MCP)
+- `UserPromptSubmit`, detect slash commands and route to skills
 
 **Default skills:**
 
-- `/commit` — standardized commit workflow
-- `/research` — deep market research
-- `/closing-time` — end-of-session ritual
-- `/flush` — mid-session memory save
-- `/kickoff` — resume from handoff state
-- `/afk-*` — long-running overnight workflows
+- `/commit`, standardized commit workflow
+- `/research`, deep market research
+- `/closing-time`, end-of-session ritual
+- `/flush`, mid-session memory save
+- `/kickoff`, resume from handoff state
+- `/afk-*`, long-running overnight workflows
 
 The hooks run automatically. The skills are invoked by Eric (or by RICK delegating to other agents). Together they form the runtime personality of the Celune agent setup.
 
@@ -258,7 +258,7 @@ The hooks run automatically. The skills are invoked by Eric (or by RICK delegati
 
 ## The takeaway
 
-Hooks and skills are not interchangeable. Hooks are harness-level automation that runs on every lifecycle event without the agent's involvement — perfect for safety guards, continuity, and always-on behaviors. Skills are agent-level workflows invoked on demand, perfect for deliberate actions with rich context and parameters.
+Hooks and skills are not interchangeable. Hooks are harness-level automation that runs on every lifecycle event without the agent's involvement, perfect for safety guards, continuity, and always-on behaviors. Skills are agent-level workflows invoked on demand, perfect for deliberate actions with rich context and parameters.
 
 When you're deciding, the rule is: **automatic behaviors go in hooks, invocable workflows go in skills**. And when in doubt, trace the failure mode: if "the agent forgot" is a catastrophic outcome, make it a hook. If "the agent chose to skip" is fine, make it a skill.
 

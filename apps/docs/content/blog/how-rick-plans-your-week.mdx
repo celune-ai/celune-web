@@ -2,7 +2,7 @@
 
 RICK is the lead engineering agent in the Celune agent workforce, but the job title undersells the role. RICK is closer to a general manager than a coder. It's the first agent you talk to in the morning, the one that picks up the daily task queue, decides what to delegate, claims what it keeps, reports progress, and wraps the day with a handoff.
 
-You can think of RICK as the operating system for your workweek. This post walks through how RICK plans your week — from Monday morning's inbox triage to Friday afternoon's retrospective — and the mental model that makes it work.
+You can think of RICK as the operating system for your workweek. This post walks through how RICK plans your week, from Monday morning's inbox triage to Friday afternoon's retrospective, and the mental model that makes it work.
 
 ---
 
@@ -42,11 +42,11 @@ Every morning, RICK starts cold. Previous sessions are compacted, context is gon
 
 The context assembly order:
 
-1. **`CLAUDE.md`** — Eric's identity, the rules, the stable decisions. This is the one thing RICK knows about Eric and the business before reading anything else.
-2. **Last 1-2 session logs** — `memory/sessions/YYYY-MM-DD.md`. What happened yesterday? What decisions were made? What got blocked?
-3. **Slack context** — `memory/slack-context.md`. If Eric handed off from a Slack conversation, that's where RICK picks up.
-4. **Celune workspace pulse** — `mcp__celune__get_workspace_pulse`. Current active agents, recent task activity, anything blocked.
-5. **Open overnight tracking** — `memory/overnight/*.md`. If there was an overnight run, what's the state?
+1. **`CLAUDE.md`**, Eric's identity, the rules, the stable decisions. This is the one thing RICK knows about Eric and the business before reading anything else.
+2. **Last 1-2 session logs**, `memory/sessions/YYYY-MM-DD.md`. What happened yesterday? What decisions were made? What got blocked?
+3. **Slack context**, `memory/slack-context.md`. If Eric handed off from a Slack conversation, that's where RICK picks up.
+4. **Celune workspace pulse**, `mcp__celune__get_workspace_pulse`. Current active agents, recent task activity, anything blocked.
+5. **Open overnight tracking**, `memory/overnight/*.md`. If there was an overnight run, what's the state?
 
 This takes about 2 minutes and 3,000-5,000 tokens. After this, RICK has enough context to start making decisions without asking Eric clarifying questions.
 
@@ -131,7 +131,7 @@ Typical Tier 2 scenarios:
 
 - **Research** goes to DELV (the researcher agent). DELV has a different prompt, a different model (Haiku), and a structured output format. RICK calls DELV and waits for the result.
 - **Code review** goes to SCAN. When RICK finishes a feature, it creates a review task and hands it off. SCAN runs the review panel and files findings.
-- **Writing** goes to SAGE. Blog posts, PR descriptions, documentation — SAGE has the voice guide and the style rules loaded.
+- **Writing** goes to SAGE. Blog posts, PR descriptions, documentation, SAGE has the voice guide and the style rules loaded.
 
 Each delegation is a task-state handoff, not an inline call. RICK updates the task's assignee and lets the target agent pick it up from its queue.
 
@@ -155,13 +155,13 @@ Eric glances at the dashboard to see what's happening without interrupting RICK.
 
 At end of day, RICK wraps up with a predictable sequence:
 
-1. **Session log.** `memory/sessions/YYYY-MM-DD.md` — what happened today, decisions made, files changed, open threads, learnings.
+1. **Session log.** `memory/sessions/YYYY-MM-DD.md`, what happened today, decisions made, files changed, open threads, learnings.
 2. **CLAUDE.md update.** If stable decisions were made (new hard rule, new convention, new guardrail), RICK updates CLAUDE.md directly.
 3. **Promote learnings.** Anything that passed the inbox-to-knowledge bar gets promoted to `05-knowledge/`.
 4. **Carryover.** Any of today's top 3 that didn't finish get marked with a "carryover" tag and move to tomorrow's top of queue automatically.
 5. **End-of-day summary.** A Slack message to Eric with the day's wins, the day's blockers, and the first task for tomorrow morning.
 
-The end-of-day wrap is critical because it's how the next day's RICK starts with context. Without the session log and summary, tomorrow's RICK has to reconstruct everything from scratch — and it usually reconstructs it wrong.
+The end-of-day wrap is critical because it's how the next day's RICK starts with context. Without the session log and summary, tomorrow's RICK has to reconstruct everything from scratch, and it usually reconstructs it wrong.
 
 ---
 
@@ -174,7 +174,7 @@ On top of the daily loop, RICK runs a weekly rhythm:
 - **Friday afternoon:** Retrospective. What shipped, what got stuck, what we learned. Update any stale knowledge files.
 - **Friday end-of-day:** Clean the vault. Run `/closing-time`, re-index memory, check for stale files, promote inbox items.
 
-The weekly retrospective is stored in `memory/sessions/weekly-YYYY-WW.md` (week number). It's short — usually 10 bullets. It's the main input for the next Monday's scoping.
+The weekly retrospective is stored in `memory/sessions/weekly-YYYY-WW.md` (week number). It's short, usually 10 bullets. It's the main input for the next Monday's scoping.
 
 ---
 
@@ -188,7 +188,7 @@ A few things that go wrong and how RICK handles them:
 
 **Plan drift.** Top 3 gets replaced mid-day with a new top 3. Usually fine, but sometimes this is anxiety-driven. The fix: RICK tracks when the top 3 changes and flags it in the session log. Over time, this surfaces whether Eric's plans are stable or fluid.
 
-**End-of-day fatigue.** RICK decides to skip the wrap because nothing interesting happened. This is always wrong — the wrap is cheap, the absence of a wrap is expensive. The fix: the wrap is triggered by a hook, not a decision.
+**End-of-day fatigue.** RICK decides to skip the wrap because nothing interesting happened. This is always wrong, the wrap is cheap, the absence of a wrap is expensive. The fix: the wrap is triggered by a hook, not a decision.
 
 ---
 
@@ -196,6 +196,6 @@ A few things that go wrong and how RICK handles them:
 
 RICK plans your week by running a disciplined daily loop: load context, triage inbox, pick top 3, execute, wrap. Each step is small. The value is in the consistency. A week with a clean inbox, three finished priorities a day, and a Friday retrospective moves projects forward faster than any single 12-hour heroic session.
 
-The mental model: **RICK is the general manager of your workweek, not the executor.** It picks what to work on, delegates the right things to the right agents, reports progress, and wraps the day. The executor is whichever agent is best for the task — sometimes RICK, sometimes DELV, sometimes SCAN, sometimes SAGE.
+The mental model: **RICK is the general manager of your workweek, not the executor.** It picks what to work on, delegates the right things to the right agents, reports progress, and wraps the day. The executor is whichever agent is best for the task, sometimes RICK, sometimes DELV, sometimes SCAN, sometimes SAGE.
 
 If you want to run your own version, the minimum viable setup is: a CLAUDE.md file, a session log convention, and a daily wrap habit. Everything else is progressive enhancement.

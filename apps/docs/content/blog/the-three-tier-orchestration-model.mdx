@@ -4,13 +4,13 @@ The first instinct when you get access to agent teams is to spin up everything i
 
 Then the bill hits. And you notice that the agents have been subtly disagreeing with each other about architectural decisions. And the work product, even when coherent within each task, has inconsistent style across tasks. And the review loop is a mess because there are too many open branches.
 
-This is the pattern every team hits when they move from "I have an AI assistant" to "I have a team of agents." The answer isn't "stop using agent teams." The answer is **orchestration tiers** — pick the right level of parallelism for the job, and default low.
+This is the pattern every team hits when they move from "I have an AI assistant" to "I have a team of agents." The answer isn't "stop using agent teams." The answer is **orchestration tiers**, pick the right level of parallelism for the job, and default low.
 
 Celune's framework uses three tiers. This post walks through when to use each and the rules that prevent the $500 invoice surprise.
 
 ---
 
-## Tier 1 — Single Agent
+## Tier 1, Single Agent
 
 **When:** Focused task, one domain, one deliverable, under 60 minutes of work.
 
@@ -27,13 +27,13 @@ Celune's framework uses three tiers. This post walks through when to use each an
 - Doing a focused code review
 - Drafting a Slack message
 
-Tier 1 is the default. If you're not sure which tier to use, it's Tier 1. Most tasks are Tier 1 tasks. The mistake is bumping routine work to Tier 2 because you think parallelism will be faster — it won't, because the coordination overhead exceeds the wall-clock savings for anything under an hour.
+Tier 1 is the default. If you're not sure which tier to use, it's Tier 1. Most tasks are Tier 1 tasks. The mistake is bumping routine work to Tier 2 because you think parallelism will be faster, it won't, because the coordination overhead exceeds the wall-clock savings for anything under an hour.
 
 The performance characteristic: **latency-bound by the longest single step**. If the task has 10 steps and each step takes 30 seconds, wall clock is 5 minutes plus thinking time. Tier 2 wouldn't make it faster unless the steps are genuinely independent.
 
 ---
 
-## Tier 2 — Sub-Agents
+## Tier 2, Sub-Agents
 
 **When:** 2-4 independent sub-tasks, decomposable, no cross-talk needed between the sub-tasks while they run.
 
@@ -49,7 +49,7 @@ The performance characteristic: **latency-bound by the longest single step**. If
 - Doing parallel research on 3 competitor products
 - Building 3 independent features that don't touch the same files
 
-The key word is **independent**. If the sub-tasks need to negotiate with each other — "sub-agent A, what API shape did you pick? I need to match it" — you're in the wrong tier. Sub-agents that need coordination should be collapsed into a single agent (Tier 1) or promoted to a peer-to-peer team (Tier 3).
+The key word is **independent**. If the sub-tasks need to negotiate with each other, "sub-agent A, what API shape did you pick? I need to match it", you're in the wrong tier. Sub-agents that need coordination should be collapsed into a single agent (Tier 1) or promoted to a peer-to-peer team (Tier 3).
 
 ### The Tier 2 pattern in Celune
 
@@ -97,7 +97,7 @@ The smart move is to use **Haiku or Sonnet sub-agents** for bounded scoped work 
 
 ---
 
-## Tier 3 — Agent Teams
+## Tier 3, Agent Teams
 
 **When:** 4+ interdependent components, cross-domain, iterative review needed between agents. The kind of work where agents need to talk to each other, not just report to a parent.
 
@@ -112,7 +112,7 @@ The smart move is to use **Haiku or Sonnet sub-agents** for bounded scoped work 
 - Doing a full security audit with iterative fixes
 - Shipping a 10-post content batch with editorial review loops
 
-The key characteristic is **iteration**. The agents produce drafts, review each other's drafts, revise, review again, and continue until a quality bar is met. This is the mode where agent teams genuinely beat single agents — but only if the iteration is disciplined.
+The key characteristic is **iteration**. The agents produce drafts, review each other's drafts, revise, review again, and continue until a quality bar is met. This is the mode where agent teams genuinely beat single agents, but only if the iteration is disciplined.
 
 ### The hard rules for Tier 3
 
@@ -202,4 +202,4 @@ The most expensive mistake in agent orchestration is defaulting to Tier 3 becaus
 
 The second most expensive mistake is under-scoping Tier 3. If you're running an agent team, the deliverables, cost caps, and review gates have to be explicit. Otherwise you're paying for agents to invent work for each other.
 
-Default to Tier 1. Escalate to Tier 2 when you have genuine independent decomposition. Escalate to Tier 3 only when you've tried Tier 2 and confirmed you need iteration and coordination. And when you're in Tier 3, follow the six hard rules — they exist because every team that ignored them learned the same lesson the same way.
+Default to Tier 1. Escalate to Tier 2 when you have genuine independent decomposition. Escalate to Tier 3 only when you've tried Tier 2 and confirmed you need iteration and coordination. And when you're in Tier 3, follow the six hard rules, they exist because every team that ignored them learned the same lesson the same way.

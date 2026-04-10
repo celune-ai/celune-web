@@ -2,7 +2,7 @@
 
 Most AI agent frameworks treat the conversation as the unit of work. You open a chat, you describe what you want, the agent does it (or doesn't), and when the session ends, the context is gone.
 
-Celune treats the **task** as the unit of work instead. Every piece of agent work — a code change, a research pass, a review, a status update — flows through a task. Tasks have state, an assignee, a description, a parent project, a metadata blob, and an audit trail. They persist. They get handed off. They get claimed, completed, blocked, and released. They're the Celune equivalent of a Linear issue, but designed from the ground up for both human and agent consumption.
+Celune treats the **task** as the unit of work instead. Every piece of agent work, a code change, a research pass, a review, a status update, flows through a task. Tasks have state, an assignee, a description, a parent project, a metadata blob, and an audit trail. They persist. They get handed off. They get claimed, completed, blocked, and released. They're the Celune equivalent of a Linear issue, but designed from the ground up for both human and agent consumption.
 
 This post walks through the full task lifecycle: what the states mean, how they transition, how agents claim and complete work, and how the whole system stays coherent when multiple agents are working simultaneously.
 
@@ -30,7 +30,7 @@ Done
 
 Plus two escape hatches: `Cancelled` (you decided not to do it) and `Deferred` (you'll do it, just not now).
 
-Every transition is logged with a timestamp and the agent that made the change. The admin dashboard shows the current state in real time — tasks that change state get a colored pulse ring that radiates the color of whichever agent owns it.
+Every transition is logged with a timestamp and the agent that made the change. The admin dashboard shows the current state in real time, tasks that change state get a colored pulse ring that radiates the color of whichever agent owns it.
 
 ## State by state
 
@@ -40,7 +40,7 @@ The parking lot. Tasks in Backlog haven't been promised to anyone. They're ideas
 
 ### Inbox
 
-A triage queue. Anything that arrives without scope or priority lands here. Every human-reported bug, every Slack-to-task capture, every agent-surfaced learning — it starts in Inbox.
+A triage queue. Anything that arrives without scope or priority lands here. Every human-reported bug, every Slack-to-task capture, every agent-surfaced learning, it starts in Inbox.
 
 The rule: **nothing stays in Inbox overnight**. During `/afk-planning`, an agent runs through the inbox, scopes each task, promotes it to Scoping or Planned, or defers it with a reason. If a task has been in Inbox for more than 24 hours, the admin dashboard flags it.
 
@@ -122,7 +122,7 @@ One paragraph describing what needs to happen.
 
 ## Value
 
-Why it matters. Revenue, UX, velocity, risk reduction — the business reason.
+Why it matters. Revenue, UX, velocity, risk reduction, the business reason.
 
 ## Approach
 
@@ -145,7 +145,7 @@ The convention is enforced by the `task` skill (`.claude/skills/task/`), which E
 
 ## Parent-child relationships and projects
 
-Tasks can nest. A project is, roughly, "a task that has children" — a task with a project id set is considered a parent, and its children query the project to roll up progress.
+Tasks can nest. A project is, roughly, "a task that has children", a task with a project id set is considered a parent, and its children query the project to roll up progress.
 
 When an agent scopes a Planned task and realizes it's actually five discrete pieces of work, it does this:
 
@@ -188,7 +188,7 @@ if (findings.critical.length === 0 && findings.high.length === 0) {
 }
 ```
 
-The handoff is purely through the task state — there's no out-of-band message, no Slack DM, no hand-waving. RICK doesn't need to know SCAN's schedule or ping it. SCAN discovers the work via its own queue poll, claims it, and gets on with the review.
+The handoff is purely through the task state, there's no out-of-band message, no Slack DM, no hand-waving. RICK doesn't need to know SCAN's schedule or ping it. SCAN discovers the work via its own queue poll, claims it, and gets on with the review.
 
 ---
 
@@ -216,7 +216,7 @@ A few hard-won principles shaped Celune's task system:
 
 **Explicit claiming > implicit scheduling.** Agents pick their own work rather than having a dispatcher assign it. This scales better as the agent workforce grows and makes failure modes easier to debug.
 
-**Audit log is a feature, not debug.** Every state transition, every claim, every update is logged with timestamps and the agent responsible. The audit log is how you figure out what went wrong — and it's also how you reconstruct a session after a compaction.
+**Audit log is a feature, not debug.** Every state transition, every claim, every update is logged with timestamps and the agent responsible. The audit log is how you figure out what went wrong, and it's also how you reconstruct a session after a compaction.
 
 **Tasks as API.** Everything that an agent does to another agent happens via task state. No direct agent-to-agent messaging, no RPCs. If agent A wants agent B to do something, A creates or updates a task. This means the entire system state is observable from one table.
 
@@ -224,6 +224,6 @@ A few hard-won principles shaped Celune's task system:
 
 ## The takeaway
 
-Celune's task lifecycle is designed around a single claim: **the task table is the source of truth for what any agent is doing, has done, or should do next.** Every other part of the system — the admin dashboard, the CLI, the MCP tools, the heartbeat monitor, the review gates — is a view on top of that one table.
+Celune's task lifecycle is designed around a single claim: **the task table is the source of truth for what any agent is doing, has done, or should do next.** Every other part of the system, the admin dashboard, the CLI, the MCP tools, the heartbeat monitor, the review gates, is a view on top of that one table.
 
 If you want to see it in action, run `ctx_list_tasks` from the Celune MCP and watch the state move in real time. Or open the admin dashboard and watch the pulse rings radiate whenever an agent claims a task and starts doing work.

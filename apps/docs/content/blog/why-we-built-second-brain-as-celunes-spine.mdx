@@ -1,6 +1,6 @@
 ## The Celune-second-brain split
 
-Celune the product and second-brain the vault are two different things, deliberately. Celune is the agent operating system — tasks, projects, memory, agents, the admin dashboard. Second-brain is an Obsidian vault that sits in a local git repository on Eric's laptop.
+Celune the product and second-brain the vault are two different things, deliberately. Celune is the agent operating system, tasks, projects, memory, agents, the admin dashboard. Second-brain is an Obsidian vault that sits in a local git repository on Eric's laptop.
 
 They talk to each other. But they are not the same thing, and the direction of truth matters a lot.
 
@@ -12,7 +12,7 @@ This post explains why that's the design, what it buys, and how we sync the two.
 
 ## What "spine" means
 
-We call second-brain Celune's "spine" because it's the backbone the whole product hangs off. Every decision Eric makes, every learning an agent writes down, every design principle, every post-mortem, every project plan — it lives as markdown in the vault first. Celune reads from the vault, indexes it, and serves it back to agents as context.
+We call second-brain Celune's "spine" because it's the backbone the whole product hangs off. Every decision Eric makes, every learning an agent writes down, every design principle, every post-mortem, every project plan, it lives as markdown in the vault first. Celune reads from the vault, indexes it, and serves it back to agents as context.
 
 Concretely, the vault structure looks like this:
 
@@ -43,7 +43,7 @@ Three reasons, ranked by importance.
 
 ### 1. You own your data, forever
 
-If Celune the product goes away — acquisition, pivot, bankruptcy, whatever — Eric still has every decision, every project plan, every learning, every session log. They're text files on his hard drive. No export needed. No vendor lock-in. Git history shows how it evolved.
+If Celune the product goes away, acquisition, pivot, bankruptcy, whatever, Eric still has every decision, every project plan, every learning, every session log. They're text files on his hard drive. No export needed. No vendor lock-in. Git history shows how it evolved.
 
 This is not a small thing. Most agent products store memory in proprietary vector databases you can't easily extract. Celune's approach makes the product exit-proof for the user. You could delete Celune tomorrow and the knowledge you built up still lives in the vault.
 
@@ -84,7 +84,7 @@ The stratification matters because different layers serve different needs:
 - **Identity** goes in a session's system prompt. It's the most expensive to load, so it stays small and stable.
 - **Session logs** are the auto-capture safety net. If a session crashes or times out, the most recent log is the recovery point.
 - **Curated knowledge** is pulled in on-demand when a topic is relevant. Higher latency, higher relevance.
-- **Decisions** are pulled in when Celune detects a similar choice being made. "You're deciding between Supabase and Firebase — last time you made this choice, here's the reasoning."
+- **Decisions** are pulled in when Celune detects a similar choice being made. "You're deciding between Supabase and Firebase, last time you made this choice, here's the reasoning."
 - **Search index** is the catch-all. Full-text over everything, for when the targeted layers miss.
 
 ---
@@ -93,7 +93,7 @@ The stratification matters because different layers serve different needs:
 
 Raw thoughts start in `00-inbox/`. They don't have structure, don't cross-link, don't need to be curated. The inbox is the "junk drawer" where anything goes.
 
-When a pattern appears in the inbox more than once — or when a session log captures a durable learning — the pattern gets promoted to `05-knowledge/` with a proper structure: title, context, principle, examples, related files. The promotion is manual and deliberate. Not everything graduates.
+When a pattern appears in the inbox more than once, or when a session log captures a durable learning, the pattern gets promoted to `05-knowledge/` with a proper structure: title, context, principle, examples, related files. The promotion is manual and deliberate. Not everything graduates.
 
 The `/closing-time` skill nudges this at end-of-session: "2 things in your inbox look like they could promote to knowledge. Want to curate them now?" Eric says yes or no. The system doesn't auto-promote because auto-promotion creates noise.
 
@@ -141,11 +141,11 @@ Write-through caching, basically. Local is authoritative; remote is a cache.
 
 ## The trade-off
 
-The downside of this design is coordination. If Eric has multiple machines (laptop, desktop, cloud box), the vault needs to be kept in sync across all of them. Git is the sync layer — the vault lives in a private GitHub repo, every machine pulls and pushes, conflicts are resolved by hand.
+The downside of this design is coordination. If Eric has multiple machines (laptop, desktop, cloud box), the vault needs to be kept in sync across all of them. Git is the sync layer, the vault lives in a private GitHub repo, every machine pulls and pushes, conflicts are resolved by hand.
 
 This is more friction than a fully-cloud memory system where all state lives in one database. But the friction is worth it. You never lose data. You never get locked in. You always have offline-first access.
 
-The same trade applies to collaboration. second-brain is single-player. Multi-user vaults don't really work with the local-canonical model — you'd have to pick one user's laptop as the source of truth, or switch to a shared database and lose the portability.
+The same trade applies to collaboration. second-brain is single-player. Multi-user vaults don't really work with the local-canonical model, you'd have to pick one user's laptop as the source of truth, or switch to a shared database and lose the portability.
 
 For Celune today, single-player is fine. Eric is the user. The agents serve Eric. When we productize Celune for teams, the spine model will have to evolve: probably a per-user vault plus a shared team knowledge layer. That's a future post.
 
@@ -157,4 +157,4 @@ For Celune today, single-player is fine. Eric is the user. The agents serve Eric
 
 The agents treat the vault as a living document. They write to it, they read from it, they promote patterns from inbox to knowledge, they log sessions, they update CLAUDE.md when decisions stabilize. The vault is not a backup of Celune's memory. Celune's memory is a real-time projection of the vault.
 
-If you want to see how the pattern works in a real codebase, the vault lives at `github.com/smejkaldesign/second-brain` (private repo) and the skill definitions that encode this protocol live in `.claude/skills/`. Start with the `closing-time` skill — it's the clearest view of how a session becomes durable memory.
+If you want to see how the pattern works in a real codebase, the vault lives at `github.com/smejkaldesign/second-brain` (private repo) and the skill definitions that encode this protocol live in `.claude/skills/`. Start with the `closing-time` skill, it's the clearest view of how a session becomes durable memory.
