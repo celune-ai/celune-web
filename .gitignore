@@ -38,3 +38,10 @@ pnpm-debug.log*
 *.swp
 *.swo
 .cache/
+
+# node compile cache
+node-compile-cache/
+
+# secrets (never commit)
+.mcp.json
+
