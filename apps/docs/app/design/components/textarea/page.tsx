@@ -11,15 +11,19 @@ export default function TextareaPage() {
   return (
     <>
       <h1>Textarea</h1>
-      <p>Same focus and border treatment as Input. Set <code>rows</code> for height.</p>
+      <p>
+        Same focus and border treatment as Input. Set <code>rows</code> for height.
+      </p>
 
       <ComponentPreview>
         <DemoTextarea />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Textarea } from '@repo/ui/components/textarea'
+      <CodeBlock
+        code={`import { Textarea } from '@repo/ui/components/textarea'
 
-<Textarea placeholder="Write a message..." rows={3} />`} />
+<Textarea placeholder="Write a message..." rows={3} />`}
+      />
 
       <h2>Usage</h2>
 
@@ -34,8 +38,26 @@ export default function TextareaPage() {
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>rows</code></td><td><code>number</code></td><td><code>3</code></td></tr>
-          <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td></tr>
+          <tr>
+            <td>
+              <code>rows</code>
+            </td>
+            <td>
+              <code>number</code>
+            </td>
+            <td>
+              <code>3</code>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>placeholder</code>
+            </td>
+            <td>
+              <code>string</code>
+            </td>
+            <td>—</td>
+          </tr>
         </tbody>
       </table>
     </>

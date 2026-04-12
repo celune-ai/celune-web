@@ -1,6 +1,6 @@
 I've been running a second brain for years. Obsidian vault, daily notes, project folders, the whole system. Thousands of notes. And here's the honest truth: most of that knowledge sits there doing nothing.
 
-The capture problem is solved. We figured that out. Obsidian, Notion, Roam, Logseq — pick your tool, and you can get information *in* fast. The problem was always getting it back *out* at the right moment, in the right context, without spending twenty minutes searching.
+The capture problem is solved. We figured that out. Obsidian, Notion, Roam, Logseq — pick your tool, and you can get information _in_ fast. The problem was always getting it back _out_ at the right moment, in the right context, without spending twenty minutes searching.
 
 In 2026, that problem is finally getting solved. And the answer isn't better search. It's agents.
 
@@ -14,7 +14,7 @@ But the ratio is terrible. For every note I successfully retrieve, there are doz
 
 This is the filing cabinet problem. A filing cabinet is only as good as your ability to remember what's in it and where you put it. Your second brain has the same limitation. It's passive storage with a search bar.
 
-The PKM community has tried to solve this with better linking, better tagging, better folder structures, MOCs (Maps of Content), and various review rituals. These help. But they're all manual. They all depend on *you* doing the work of synthesis and retrieval.
+The PKM community has tried to solve this with better linking, better tagging, better folder structures, MOCs (Maps of Content), and various review rituals. These help. But they're all manual. They all depend on _you_ doing the work of synthesis and retrieval.
 
 What if your second brain could do that work itself?
 
@@ -24,15 +24,15 @@ What if your second brain could do that work itself?
 
 The shift happening right now is structural, not incremental. Model Context Protocol (MCP) — the open standard that Anthropic released and the industry adopted — lets AI agents connect directly to local tools and data sources. Including your knowledge base.
 
-This isn't "AI-powered search." It's not a chatbot sitting on top of your notes. It's a protocol that lets agents *read*, *search*, *create*, and *modify* files in your vault. Your second brain goes from a filing cabinet to a live workspace that agents actively participate in.
+This isn't "AI-powered search." It's not a chatbot sitting on top of your notes. It's a protocol that lets agents _read_, _search_, _create_, and _modify_ files in your vault. Your second brain goes from a filing cabinet to a live workspace that agents actively participate in.
 
 The current best-in-class setup looks something like this:
 
-| Layer | Tool | Role |
-|-------|------|------|
-| Knowledge base | Obsidian (local vault) | Storage, linking, daily capture |
-| AI runtime | Claude Code / Claude Desktop | Agent execution, reasoning |
-| Connection layer | MCP servers | Bridge between agent and vault |
+| Layer              | Tool                          | Role                                     |
+| ------------------ | ----------------------------- | ---------------------------------------- |
+| Knowledge base     | Obsidian (local vault)        | Storage, linking, daily capture          |
+| AI runtime         | Claude Code / Claude Desktop  | Agent execution, reasoning               |
+| Connection layer   | MCP servers                   | Bridge between agent and vault           |
 | Memory persistence | Brain manifest / memory files | What the agent remembers across sessions |
 
 The key insight: your vault stays local. The agent connects to it through MCP, reads what it needs, and operates on your files directly. No uploading your entire brain to a cloud service. No third-party indexing. The files stay on your machine.
@@ -45,11 +45,11 @@ The key insight: your vault stays local. The agent connects to it through MCP, r
 
 This is the big one. Agents can read hundreds of notes and surface connections you missed entirely.
 
-I'll give you a concrete example. I had notes on three separate topics: RBAC permission patterns from a security project, a user research summary about team onboarding friction, and a technical spike on workspace isolation. Completely separate folders, written months apart. An agent reading across all three immediately flagged that the onboarding friction was *caused by* the permission model I'd documented, and the workspace isolation pattern I'd spiked would solve it.
+I'll give you a concrete example. I had notes on three separate topics: RBAC permission patterns from a security project, a user research summary about team onboarding friction, and a technical spike on workspace isolation. Completely separate folders, written months apart. An agent reading across all three immediately flagged that the onboarding friction was _caused by_ the permission model I'd documented, and the workspace isolation pattern I'd spiked would solve it.
 
 I never would have connected those three notes manually. They were in different projects, different time periods, different mental contexts. But an agent doing a broad read across the vault found the thread in seconds.
 
-This isn't search. Search requires you to know what you're looking for. This is pattern recognition across your entire knowledge base — the thing second brains were *supposed* to do but couldn't without a human manually reviewing everything.
+This isn't search. Search requires you to know what you're looking for. This is pattern recognition across your entire knowledge base — the thing second brains were _supposed_ to do but couldn't without a human manually reviewing everything.
 
 ### 2. Proactive Retrieval
 
@@ -73,11 +73,18 @@ The digital garden metaphor becomes literal. You have a gardener.
 
 This is where it gets interesting for teams and multi-agent setups.
 
-Your second brain becomes a shared context layer for *all* your agents. Every agent on your team — whether it's handling code review, project management, research, or design — reads from the same knowledge base. Institutional knowledge isn't trapped in one person's head or one agent's context window. It's persistent and shared.
+Your second brain becomes a shared context layer for _all_ your agents. Every agent on your team — whether it's handling code review, project management, research, or design — reads from the same knowledge base. Institutional knowledge isn't trapped in one person's head or one agent's context window. It's persistent and shared.
 
-At Celune, we built a brain manifest system around this idea. Agent memory compounds across sessions — what one agent learns gets written back to the knowledge base, and every other agent benefits from it. The vault isn't just *your* memory anymore. It's the team's memory.
+At Celune, we built a brain manifest system around this idea. Agent memory compounds across sessions — what one agent learns gets written back to the knowledge base, and every other agent benefits from it. The vault isn't just _your_ memory anymore. It's the team's memory.
 
-<ProductScreenshot src="/blog/screenshots/memory-system.jpg" alt="Celune agent memory system showing categorized memory entries organized by type — user preferences, project facts, feedback, and references" width={1200} height={750} layout="full" caption="The memory system in action — categorized entries that persist across sessions and are shared across the entire agent team." />
+<ProductScreenshot
+  src="/blog/screenshots/memory-system.jpg"
+  alt="Celune agent memory system showing categorized memory entries organized by type — user preferences, project facts, feedback, and references"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="The memory system in action — categorized entries that persist across sessions and are shared across the entire agent team."
+/>
 
 This matters because the biggest bottleneck in knowledge work isn't individual productivity. It's context transfer. How do you get what Person A knows into Person B's workflow? A shared second brain with agent access solves this at the infrastructure level.
 
@@ -101,17 +108,24 @@ The open protocol approach (MCP) also means you're not locked into one AI provid
 
 Here's an honest assessment of where things stand in early 2026:
 
-| Approach | Strengths | Limitations |
-|----------|-----------|-------------|
-| Obsidian + MCP + Claude | Local-first, full vault access, open protocol | Requires setup, technical users |
-| Notion AI | Built-in, zero setup, good for teams | Cloud-only, limited agent capabilities |
-| Mem | AI-native from the start, good synthesis | Cloud-only, smaller ecosystem |
-| Reflect + AI | Clean UX, good for personal notes | Limited integration surface |
-| Logseq + plugins | Open source, graph-based | Smaller community, fewer AI integrations |
+| Approach                | Strengths                                     | Limitations                              |
+| ----------------------- | --------------------------------------------- | ---------------------------------------- |
+| Obsidian + MCP + Claude | Local-first, full vault access, open protocol | Requires setup, technical users          |
+| Notion AI               | Built-in, zero setup, good for teams          | Cloud-only, limited agent capabilities   |
+| Mem                     | AI-native from the start, good synthesis      | Cloud-only, smaller ecosystem            |
+| Reflect + AI            | Clean UX, good for personal notes             | Limited integration surface              |
+| Logseq + plugins        | Open source, graph-based                      | Smaller community, fewer AI integrations |
 
 The Obsidian + MCP stack is winning on capability. It's the most flexible, the most private, and the most powerful. But it's also the hardest to set up. There's a real gap between "technically possible" and "accessible to normal people."
 
-<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard showing agent activity metrics and knowledge base monitoring" width={1200} height={750} layout="float-right" caption="Monitoring your second brain's health — track agent activity, memory growth, and system status in one view." />
+<ProductScreenshot
+  src="/blog/screenshots/dashboard.jpg"
+  alt="Celune system health dashboard showing agent activity metrics and knowledge base monitoring"
+  width={1200}
+  height={750}
+  layout="float-right"
+  caption="Monitoring your second brain's health — track agent activity, memory growth, and system status in one view."
+/>
 
 That gap is closing fast. MCP server setup is getting simpler. Obsidian plugins are abstracting the configuration. And platforms like Celune are building the persistent memory layer so agents don't start from zero every session.
 
@@ -129,7 +143,7 @@ If you're running a second brain and haven't connected it to an AI agent yet, he
 
 2. **Set up MCP.** Connect your vault as an MCP resource. If you're using Claude Code or Claude Desktop, this is straightforward configuration.
 
-3. **Start with retrieval, not creation.** Let the agent read your existing notes before you ask it to create new ones. The value is in what you've *already* captured.
+3. **Start with retrieval, not creation.** Let the agent read your existing notes before you ask it to create new ones. The value is in what you've _already_ captured.
 
 4. **Build a memory layer.** This is where most setups fall short. Without persistent memory, your agent forgets everything between sessions. You need some form of brain manifest or memory file that persists what the agent learned.
 

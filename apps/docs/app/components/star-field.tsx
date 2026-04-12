@@ -27,7 +27,9 @@ function createStar(width: number, height: number): Star {
     y: Math.random() * height,
     z: Math.random(),
     size: Math.random() * 1.5 + 0.5,
-    r, g, b,
+    r,
+    g,
+    b,
   };
 }
 

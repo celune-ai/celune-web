@@ -11,13 +11,16 @@ export default function DialogPage() {
   return (
     <>
       <h1>Dialog</h1>
-      <p>Radix Dialog with <code>bg-surface-100</code> background.</p>
+      <p>
+        Radix Dialog with <code>bg-surface-100</code> background.
+      </p>
 
       <ComponentPreview>
         <DemoDialog />
       </ComponentPreview>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Dialog,
   DialogTrigger,
   DialogContent,
@@ -46,14 +49,18 @@ export default function DialogPage() {
       <Button variant="destructive">Delete</Button>
     </DialogFooter>
   </DialogContent>
-</Dialog>`} />
+</Dialog>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Dialog, DialogTrigger, DialogContent, DialogHeader,
   DialogTitle, DialogDescription, DialogFooter, DialogClose,
-} from '@repo/ui/components/dialog'`} lang="tsx" />
+} from '@repo/ui/components/dialog'`}
+        lang="tsx"
+      />
     </>
   );
 }

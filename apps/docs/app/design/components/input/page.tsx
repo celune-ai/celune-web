@@ -20,9 +20,11 @@ export default function InputPage() {
         <DemoInput placeholder="Enter your email..." />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Input } from '@repo/ui/components/input'
+      <CodeBlock
+        code={`import { Input } from '@repo/ui/components/input'
 
-<Input placeholder="Enter your email..." />`} />
+<Input placeholder="Enter your email..." />`}
+      />
 
       <h2>Usage</h2>
 
@@ -39,9 +41,35 @@ export default function InputPage() {
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>type</code></td><td>HTML input type</td><td><code>text</code></td></tr>
-          <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td></tr>
-          <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td></tr>
+          <tr>
+            <td>
+              <code>type</code>
+            </td>
+            <td>HTML input type</td>
+            <td>
+              <code>text</code>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>placeholder</code>
+            </td>
+            <td>
+              <code>string</code>
+            </td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>
+              <code>disabled</code>
+            </td>
+            <td>
+              <code>boolean</code>
+            </td>
+            <td>
+              <code>false</code>
+            </td>
+          </tr>
         </tbody>
       </table>
     </>

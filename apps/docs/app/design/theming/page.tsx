@@ -25,7 +25,7 @@ export default async function ThemingPage() {
       <p>
         The admin app and this docs site both apply <code>class="dark"</code> to the{' '}
         <code>{'<html>'}</code> element in their root layouts. This is not a user preference toggle
- - it is the intended aesthetic. The dark selector activates all semantic token overrides
+        - it is the intended aesthetic. The dark selector activates all semantic token overrides
         immediately on page load with no flash of light content.
       </p>
 
@@ -145,7 +145,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <p>
         Each app can override or extend the shared token set by adding its own declarations to{' '}
         <code>globals.css</code>. This is how the docs app uses a different font from the admin app
- - both reference <code>--font-sans</code>, but each app points that variable at a different
+        - both reference <code>--font-sans</code>, but each app points that variable at a different
         font family.
       </p>
 

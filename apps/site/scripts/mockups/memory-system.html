@@ -1,346 +1,426 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
-<title>Agent Memory — Celune</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Agent Memory — Celune</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0a0a0f;
-    color: #e4e4e7;
-    min-height: 900px;
-    display: flex;
-    justify-content: center;
-    -webkit-font-smoothing: antialiased;
-  }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #0a0a0f;
+        color: #e4e4e7;
+        min-height: 900px;
+        display: flex;
+        justify-content: center;
+        -webkit-font-smoothing: antialiased;
+      }
 
-  .page {
-    width: 1440px;
-    min-height: 900px;
-    padding: 48px 80px;
-  }
+      .page {
+        width: 1440px;
+        min-height: 900px;
+        padding: 48px 80px;
+      }
 
-  /* ── Header ─────────────────────────────────── */
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
+      /* ── Header ─────────────────────────────────── */
+      .header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 32px;
+      }
 
-  .header-left h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
+      .header-left h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.02em;
+      }
 
-  .header-left .subtitle {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #71717a;
-    font-weight: 400;
-  }
+      .header-left .subtitle {
+        margin-top: 6px;
+        font-size: 14px;
+        color: #71717a;
+        font-weight: 400;
+      }
 
-  .search-bar {
-    position: relative;
-    width: 340px;
-  }
+      .search-bar {
+        position: relative;
+        width: 340px;
+      }
 
-  .search-bar input {
-    width: 100%;
-    height: 42px;
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    padding: 0 16px 0 42px;
-    font-size: 14px;
-    color: #e4e4e7;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+      .search-bar input {
+        width: 100%;
+        height: 42px;
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 0 16px 0 42px;
+        font-size: 14px;
+        color: #e4e4e7;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+      }
 
-  .search-bar input::placeholder { color: #52525b; }
-  .search-bar input:focus { border-color: rgba(34,197,94,0.4); }
+      .search-bar input::placeholder {
+        color: #52525b;
+      }
+      .search-bar input:focus {
+        border-color: rgba(34, 197, 94, 0.4);
+      }
 
-  .search-bar .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #52525b;
-    pointer-events: none;
-  }
+      .search-bar .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #52525b;
+        pointer-events: none;
+      }
 
-  /* ── Tabs ────────────────────────────────────── */
-  .tabs {
-    display: flex;
-    gap: 4px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 28px;
-  }
+      /* ── Tabs ────────────────────────────────────── */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 28px;
+      }
 
-  .tab {
-    padding: 10px 18px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #71717a;
-    cursor: pointer;
-    position: relative;
-    transition: color 0.15s;
-    white-space: nowrap;
-  }
+      .tab {
+        padding: 10px 18px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #71717a;
+        cursor: pointer;
+        position: relative;
+        transition: color 0.15s;
+        white-space: nowrap;
+      }
 
-  .tab:hover { color: #a1a1aa; }
+      .tab:hover {
+        color: #a1a1aa;
+      }
 
-  .tab.active {
-    color: #22c55e;
-  }
+      .tab.active {
+        color: #22c55e;
+      }
 
-  .tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 12px;
-    right: 12px;
-    height: 2px;
-    background: #22c55e;
-    border-radius: 2px 2px 0 0;
-  }
+      .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 12px;
+        right: 12px;
+        height: 2px;
+        background: #22c55e;
+        border-radius: 2px 2px 0 0;
+      }
 
-  .tab .count {
-    margin-left: 5px;
-    color: #52525b;
-    font-weight: 400;
-  }
+      .tab .count {
+        margin-left: 5px;
+        color: #52525b;
+        font-weight: 400;
+      }
 
-  .tab.active .count { color: rgba(34,197,94,0.6); }
+      .tab.active .count {
+        color: rgba(34, 197, 94, 0.6);
+      }
 
-  /* ── Memory list ─────────────────────────────── */
-  .memory-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+      /* ── Memory list ─────────────────────────────── */
+      .memory-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
 
-  .memory-card {
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 20px 24px;
-    transition: border-color 0.15s, background 0.15s;
-    cursor: default;
-  }
+      .memory-card {
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px 24px;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        cursor: default;
+      }
 
-  .memory-card:hover {
-    border-color: rgba(255,255,255,0.14);
-    background: #131318;
-  }
+      .memory-card:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: #131318;
+      }
 
-  .card-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
+      .card-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
 
-  /* Category badges */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 3px 10px;
-    border-radius: 6px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
+      /* Category badges */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 3px 10px;
+        border-radius: 6px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
 
-  .badge-feedback  { background: rgba(245,158,11,0.12); color: #f59e0b; }
-  .badge-user      { background: rgba(59,130,246,0.12);  color: #3b82f6; }
-  .badge-project   { background: rgba(34,197,94,0.12);   color: #22c55e; }
-  .badge-reference { background: rgba(168,85,247,0.12);  color: #a855f7; }
+      .badge-feedback {
+        background: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+      }
+      .badge-user {
+        background: rgba(59, 130, 246, 0.12);
+        color: #3b82f6;
+      }
+      .badge-project {
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+      }
+      .badge-reference {
+        background: rgba(168, 85, 247, 0.12);
+        color: #a855f7;
+      }
 
-  .card-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-  .card-desc {
-    font-size: 13.5px;
-    color: #71717a;
-    line-height: 1.5;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 14px;
-  }
+      .card-desc {
+        font-size: 13.5px;
+        color: #71717a;
+        line-height: 1.5;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 14px;
+      }
 
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-  .meta {
-    font-size: 12px;
-    color: #52525b;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+      .meta {
+        font-size: 12px;
+        color: #52525b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
 
-  .meta .sep { color: #3f3f46; }
+      .meta .sep {
+        color: #3f3f46;
+      }
 
-  .agent {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: #71717a;
-  }
+      .agent {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #71717a;
+      }
 
-  .agent-avatar {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-  }
+      .agent-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
 
-  .avatar-green  { background: linear-gradient(135deg, #22c55e, #16a34a); }
-  .avatar-blue   { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-  .avatar-purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
-  .avatar-amber  { background: linear-gradient(135deg, #f59e0b, #d97706); }
-</style>
-</head>
-<body>
-<div class="page">
+      .avatar-green {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+      }
+      .avatar-blue {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+      }
+      .avatar-purple {
+        background: linear-gradient(135deg, #a855f7, #7c3aed);
+      }
+      .avatar-amber {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-left">
+          <h1>Agent Memory</h1>
+          <p class="subtitle">24 memories across 4 categories</p>
+        </div>
+        <div class="search-bar">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M7.333 12.667A5.333 5.333 0 1 0 7.333 2a5.333 5.333 0 0 0 0 10.667ZM14 14l-2.9-2.9"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <input type="text" placeholder="Search memories..." />
+        </div>
+      </div>
 
-  <!-- Header -->
-  <div class="header">
-    <div class="header-left">
-      <h1>Agent Memory</h1>
-      <p class="subtitle">24 memories across 4 categories</p>
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active">All<span class="count">(24)</span></div>
+        <div class="tab">User<span class="count">(6)</span></div>
+        <div class="tab">Feedback<span class="count">(8)</span></div>
+        <div class="tab">Project<span class="count">(7)</span></div>
+        <div class="tab">Reference<span class="count">(3)</span></div>
+      </div>
+
+      <!-- Memory list -->
+      <div class="memory-list">
+        <!-- 1 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-feedback">Feedback</span>
+            <span class="card-title">Integration tests must hit real database</span>
+          </div>
+          <p class="card-desc">
+            No mocks for DB tests. Reason: prior incident where mock/prod divergence masked a
+            migration failure.
+          </p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 2d ago <span class="sep">&middot;</span> Updated 1d ago
+              <span class="sep">&middot;</span> Used 5 times</span
+            >
+            <span class="agent"><span class="agent-avatar avatar-green">C</span>Code Agent</span>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-user">User</span>
+            <span class="card-title">Eric is a senior full-stack engineer</span>
+          </div>
+          <p class="card-desc">
+            Deep Go expertise, new to React frontend. Frame explanations in backend analogues.
+          </p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 5d ago <span class="sep">&middot;</span> Updated 3d ago
+              <span class="sep">&middot;</span> Used 12 times</span
+            >
+            <span class="agent"><span class="agent-avatar avatar-blue">P</span>Planner Agent</span>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-project">Project</span>
+            <span class="card-title">Auth middleware rewrite &mdash; legal compliance</span>
+          </div>
+          <p class="card-desc">
+            Driven by legal requirements for session token storage, not tech debt cleanup.
+          </p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 4d ago <span class="sep">&middot;</span> Updated 2d ago
+              <span class="sep">&middot;</span> Used 8 times</span
+            >
+            <span class="agent"><span class="agent-avatar avatar-green">C</span>Code Agent</span>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-reference">Reference</span>
+            <span class="card-title">Pipeline bugs tracked in Linear INGEST</span>
+          </div>
+          <p class="card-desc">
+            All pipeline-related bugs and incidents are tracked in the Linear project 'INGEST'.
+          </p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 1w ago <span class="sep">&middot;</span> Updated 4d ago
+              <span class="sep">&middot;</span> Used 3 times</span
+            >
+            <span class="agent"
+              ><span class="agent-avatar avatar-purple">R</span>Research Agent</span
+            >
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-feedback">Feedback</span>
+            <span class="card-title">No trailing summaries in responses</span>
+          </div>
+          <p class="card-desc">User prefers terse responses. Don't recap what was just done.</p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 3d ago <span class="sep">&middot;</span> Updated 1d ago
+              <span class="sep">&middot;</span> Used 17 times</span
+            >
+            <span class="agent"><span class="agent-avatar avatar-blue">P</span>Planner Agent</span>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="badge badge-project">Project</span>
+            <span class="card-title">Merge freeze begins Mar 5</span>
+          </div>
+          <p class="card-desc">
+            Mobile team cutting release branch. Flag non-critical PR work after that date.
+          </p>
+          <div class="card-footer">
+            <span class="meta"
+              >Created 1w ago <span class="sep">&middot;</span> Updated 5d ago
+              <span class="sep">&middot;</span> Used 4 times</span
+            >
+            <span class="agent"><span class="agent-avatar avatar-amber">O</span>Ops Agent</span>
+          </div>
+        </div>
+      </div>
+      <!-- /memory-list -->
     </div>
-    <div class="search-bar">
-      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M7.333 12.667A5.333 5.333 0 1 0 7.333 2a5.333 5.333 0 0 0 0 10.667ZM14 14l-2.9-2.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <input type="text" placeholder="Search memories...">
-    </div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab active">All<span class="count">(24)</span></div>
-    <div class="tab">User<span class="count">(6)</span></div>
-    <div class="tab">Feedback<span class="count">(8)</span></div>
-    <div class="tab">Project<span class="count">(7)</span></div>
-    <div class="tab">Reference<span class="count">(3)</span></div>
-  </div>
-
-  <!-- Memory list -->
-  <div class="memory-list">
-
-    <!-- 1 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-feedback">Feedback</span>
-        <span class="card-title">Integration tests must hit real database</span>
-      </div>
-      <p class="card-desc">No mocks for DB tests. Reason: prior incident where mock/prod divergence masked a migration failure.</p>
-      <div class="card-footer">
-        <span class="meta">Created 2d ago <span class="sep">&middot;</span> Updated 1d ago <span class="sep">&middot;</span> Used 5 times</span>
-        <span class="agent"><span class="agent-avatar avatar-green">C</span>Code Agent</span>
-      </div>
-    </div>
-
-    <!-- 2 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-user">User</span>
-        <span class="card-title">Eric is a senior full-stack engineer</span>
-      </div>
-      <p class="card-desc">Deep Go expertise, new to React frontend. Frame explanations in backend analogues.</p>
-      <div class="card-footer">
-        <span class="meta">Created 5d ago <span class="sep">&middot;</span> Updated 3d ago <span class="sep">&middot;</span> Used 12 times</span>
-        <span class="agent"><span class="agent-avatar avatar-blue">P</span>Planner Agent</span>
-      </div>
-    </div>
-
-    <!-- 3 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-project">Project</span>
-        <span class="card-title">Auth middleware rewrite &mdash; legal compliance</span>
-      </div>
-      <p class="card-desc">Driven by legal requirements for session token storage, not tech debt cleanup.</p>
-      <div class="card-footer">
-        <span class="meta">Created 4d ago <span class="sep">&middot;</span> Updated 2d ago <span class="sep">&middot;</span> Used 8 times</span>
-        <span class="agent"><span class="agent-avatar avatar-green">C</span>Code Agent</span>
-      </div>
-    </div>
-
-    <!-- 4 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-reference">Reference</span>
-        <span class="card-title">Pipeline bugs tracked in Linear INGEST</span>
-      </div>
-      <p class="card-desc">All pipeline-related bugs and incidents are tracked in the Linear project 'INGEST'.</p>
-      <div class="card-footer">
-        <span class="meta">Created 1w ago <span class="sep">&middot;</span> Updated 4d ago <span class="sep">&middot;</span> Used 3 times</span>
-        <span class="agent"><span class="agent-avatar avatar-purple">R</span>Research Agent</span>
-      </div>
-    </div>
-
-    <!-- 5 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-feedback">Feedback</span>
-        <span class="card-title">No trailing summaries in responses</span>
-      </div>
-      <p class="card-desc">User prefers terse responses. Don't recap what was just done.</p>
-      <div class="card-footer">
-        <span class="meta">Created 3d ago <span class="sep">&middot;</span> Updated 1d ago <span class="sep">&middot;</span> Used 17 times</span>
-        <span class="agent"><span class="agent-avatar avatar-blue">P</span>Planner Agent</span>
-      </div>
-    </div>
-
-    <!-- 6 -->
-    <div class="memory-card">
-      <div class="card-top">
-        <span class="badge badge-project">Project</span>
-        <span class="card-title">Merge freeze begins Mar 5</span>
-      </div>
-      <p class="card-desc">Mobile team cutting release branch. Flag non-critical PR work after that date.</p>
-      <div class="card-footer">
-        <span class="meta">Created 1w ago <span class="sep">&middot;</span> Updated 5d ago <span class="sep">&middot;</span> Used 4 times</span>
-        <span class="agent"><span class="agent-avatar avatar-amber">O</span>Ops Agent</span>
-      </div>
-    </div>
-
-  </div><!-- /memory-list -->
-
-</div><!-- /page -->
-</body>
+    <!-- /page -->
+  </body>
 </html>

@@ -33,19 +33,19 @@ function AgentLeadIllustration({ hovering }: { hovering: boolean }) {
   return (
     <div className="flex h-full flex-col justify-between px-6 pt-8 pb-6 font-mono text-[10px]">
       {/* Lead identity card */}
-      <div className="mb-4 flex items-center gap-3 border border-celune-500/40 bg-celune-500/[0.06] px-4 py-3">
-        <div className="relative flex h-9 w-9 shrink-0 items-center justify-center border border-celune-500/50 bg-celune-500/10">
+      <div className="border-celune-500/40 bg-celune-500/[0.06] mb-4 flex items-center gap-3 border px-4 py-3">
+        <div className="border-celune-500/50 bg-celune-500/10 relative flex h-9 w-9 shrink-0 items-center justify-center border">
           <span className="text-[16px] leading-none">◈</span>
           {hovering && !reduced && (
             <span
-              className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-celune-500"
+              className="bg-celune-500 absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full"
               style={{ animation: 'ping 1.4s cubic-bezier(0,0,0.2,1) infinite' }}
             />
           )}
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-celune-400">ATLAS</span>
+            <span className="text-celune-400 font-bold">ATLAS</span>
             <span className="text-neutral-600">·</span>
             <span className="text-neutral-500">Your Agent Lead</span>
           </div>
@@ -100,13 +100,25 @@ function AgentLeadIllustration({ hovering }: { hovering: boolean }) {
               </span>
               <span
                 className="w-10 shrink-0 font-bold transition-colors duration-500"
-                style={{ color: isDone ? '#22c55e' : isActive ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)' }}
+                style={{
+                  color: isDone
+                    ? '#22c55e'
+                    : isActive
+                      ? 'rgba(255,255,255,0.6)'
+                      : 'rgba(255,255,255,0.2)',
+                }}
               >
                 [{t.agent}]
               </span>
               <span
                 className="transition-colors duration-500"
-                style={{ color: isDone ? 'rgba(255,255,255,0.5)' : isActive ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)' }}
+                style={{
+                  color: isDone
+                    ? 'rgba(255,255,255,0.5)'
+                    : isActive
+                      ? 'rgba(255,255,255,0.4)'
+                      : 'rgba(255,255,255,0.15)',
+                }}
               >
                 {t.task}
               </span>
@@ -143,7 +155,8 @@ function AgentLeadIllustration({ hovering }: { hovering: boolean }) {
 const AGENT_LEAD_POINTS = [
   {
     label: 'Personalized personality',
-    detail: 'Choose how your lead communicates — calm and direct, energetic, methodical, or encouraging.',
+    detail:
+      'Choose how your lead communicates — calm and direct, energetic, methodical, or encouraging.',
   },
   {
     label: 'Real voice, powered by ElevenLabs',
@@ -151,11 +164,13 @@ const AGENT_LEAD_POINTS = [
   },
   {
     label: 'AI-generated avatar',
-    detail: "A face that matches their personality — yours from day one, not a generic placeholder.",
+    detail:
+      'A face that matches their personality — yours from day one, not a generic placeholder.',
   },
   {
     label: 'Orchestrates 9 specialized agents',
-    detail: 'SAGE, NOIR, SCAN, DELV, TREK, ECHO, BOND, VITA and more — delegating the right work to the right agent.',
+    detail:
+      'SAGE, NOIR, SCAN, DELV, TREK, ECHO, BOND, VITA and more — delegating the right work to the right agent.',
   },
 ];
 
@@ -168,7 +183,7 @@ export function CeluneAgentLead() {
     <section id="agent-lead" className="relative py-24 md:py-32">
       <div className="dot-grid-bg absolute inset-0 opacity-30" />
 
-      <div className="container relative z-10">
+      <div className="relative z-10 container">
         {/* Heading */}
         <div className="mb-16">
           <SectionLabel>Agent Lead</SectionLabel>
@@ -178,8 +193,9 @@ export function CeluneAgentLead() {
             <span className="text-neutral-500">Your Closest AI Coworker.</span>
           </h2>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Name them. Choose their personality. Pick their voice. Your Agent Lead becomes the center of your AI team —
-            orchestrating specialized agents, delegating tasks, and keeping everything on track.
+            Name them. Choose their personality. Pick their voice. Your Agent Lead becomes the
+            center of your AI team — orchestrating specialized agents, delegating tasks, and keeping
+            everything on track.
           </p>
         </div>
 
@@ -200,8 +216,8 @@ export function CeluneAgentLead() {
             {AGENT_LEAD_POINTS.map((point) => (
               <div key={point.label} className="flex gap-4">
                 <div className="mt-0.5 shrink-0">
-                  <div className="flex h-5 w-5 items-center justify-center border border-celune-500/30 bg-celune-500/[0.08]">
-                    <div className="h-1.5 w-1.5 bg-celune-500" />
+                  <div className="border-celune-500/30 bg-celune-500/[0.08] flex h-5 w-5 items-center justify-center border">
+                    <div className="bg-celune-500 h-1.5 w-1.5" />
                   </div>
                 </div>
                 <div>
@@ -215,11 +231,17 @@ export function CeluneAgentLead() {
             <div className="pt-2">
               <a
                 href={`${URL_APP}/signup`}
-                className="inline-flex items-center gap-2 border border-celune-500/40 bg-celune-500/10 px-6 py-3 font-mono text-sm font-medium text-celune-400 transition-colors duration-200 hover:border-celune-500/60 hover:bg-celune-500/15 hover:text-celune-300"
+                className="border-celune-500/40 bg-celune-500/10 text-celune-400 hover:border-celune-500/60 hover:bg-celune-500/15 hover:text-celune-300 inline-flex items-center gap-2 border px-6 py-3 font-mono text-sm font-medium transition-colors duration-200"
               >
                 Create Your Agent Lead
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
-                  <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M3 7H11M7 3L11 7L7 11"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </a>
             </div>

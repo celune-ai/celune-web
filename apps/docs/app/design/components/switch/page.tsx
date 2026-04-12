@@ -11,7 +11,9 @@ export default function SwitchPage() {
   return (
     <>
       <h1>Switch</h1>
-      <p>Radix Switch. On: <code>bg-brand</code>. Off: <code>bg-surface-400</code>.</p>
+      <p>
+        Radix Switch. On: <code>bg-brand</code>. Off: <code>bg-surface-400</code>.
+      </p>
 
       <ComponentPreview>
         <div className="flex items-center gap-6">
@@ -26,13 +28,15 @@ export default function SwitchPage() {
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`import { Switch } from '@repo/ui/components/switch'
+      <CodeBlock
+        code={`import { Switch } from '@repo/ui/components/switch'
 import { Label } from '@repo/ui/components/label'
 
 <div className="flex items-center gap-2">
   <Switch id="notifications" />
   <Label htmlFor="notifications">Enable notifications</Label>
-</div>`} />
+</div>`}
+      />
 
       <h2>Usage</h2>
 

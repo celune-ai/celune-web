@@ -17,7 +17,8 @@ export default function TooltipPage() {
         <DemoTooltip />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@repo/ui/components/tooltip'
+      <CodeBlock
+        code={`import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@repo/ui/components/tooltip'
 
 <TooltipProvider>
   <Tooltip>
@@ -26,13 +27,17 @@ export default function TooltipPage() {
     </TooltipTrigger>
     <TooltipContent>Edit task</TooltipContent>
   </Tooltip>
-</TooltipProvider>`} />
+</TooltipProvider>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Tooltip, TooltipTrigger, TooltipContent, TooltipProvider,
-} from '@repo/ui/components/tooltip'`} lang="tsx" />
+} from '@repo/ui/components/tooltip'`}
+        lang="tsx"
+      />
     </>
   );
 }

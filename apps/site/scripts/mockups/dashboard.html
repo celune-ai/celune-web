@@ -1,426 +1,586 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Celune — System Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Celune — System Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0a0a0f;
-    color: #e4e4e7;
-    min-height: 900px;
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #0a0a0f;
+        color: #e4e4e7;
+        min-height: 900px;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-  .dashboard {
-    width: 1440px;
-    min-height: 900px;
-    padding: 32px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
+      .dashboard {
+        width: 1440px;
+        min-height: 900px;
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
 
-  /* ── Header ── */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 8px;
-  }
+      /* ── Header ── */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 8px;
+      }
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
 
-  .header-left h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
+      .header-left h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.02em;
+      }
 
-  .logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    color: #fff;
-  }
+      .logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+      }
 
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(34,197,94,0.08);
-    border: 1px solid rgba(34,197,94,0.2);
-    border-radius: 100px;
-    padding: 6px 14px 6px 10px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #22c55e;
-  }
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        border-radius: 100px;
+        padding: 6px 14px 6px 10px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #22c55e;
+      }
 
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 8px rgba(34,197,94,0.6);
-    animation: pulse 2s ease-in-out infinite;
-  }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        animation: pulse 2s ease-in-out infinite;
+      }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34,197,94,0.6); }
-    50% { opacity: 0.7; box-shadow: 0 0 14px rgba(34,197,94,0.4); }
-  }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+        50% {
+          opacity: 0.7;
+          box-shadow: 0 0 14px rgba(34, 197, 94, 0.4);
+        }
+      }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    color: #71717a;
-  }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #71717a;
+      }
 
-  .header-right span { font-weight: 500; }
+      .header-right span {
+        font-weight: 500;
+      }
 
-  /* ── Metric Cards ── */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
+      /* ── Metric Cards ── */
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
 
-  .card {
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 22px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.15);
-  }
+      .card {
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.3),
+          0 4px 16px rgba(0, 0, 0, 0.15);
+      }
 
-  .card-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #71717a;
-    letter-spacing: 0.01em;
-  }
+      .card-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #71717a;
+        letter-spacing: 0.01em;
+      }
 
-  .card-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
+      .card-row {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
 
-  .card-value {
-    font-size: 34px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: #fff;
-    line-height: 1.1;
-  }
+      .card-value {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #fff;
+        line-height: 1.1;
+      }
 
-  .card-value.green { color: #22c55e; }
+      .card-value.green {
+        color: #22c55e;
+      }
 
-  .card-delta {
-    font-size: 13px;
-    font-weight: 600;
-    color: #22c55e;
-  }
+      .card-delta {
+        font-size: 13px;
+        font-weight: 600;
+        color: #22c55e;
+      }
 
-  .card-delta.neutral { color: #71717a; }
+      .card-delta.neutral {
+        color: #71717a;
+      }
 
-  /* ── Middle: Chart + Activity ── */
-  .middle {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 16px;
-    flex: 1;
-    min-height: 0;
-  }
+      /* ── Middle: Chart + Activity ── */
+      .middle {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 16px;
+        flex: 1;
+        min-height: 0;
+      }
 
-  .chart-card {
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 24px 28px 20px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.15);
-  }
+      .chart-card {
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 24px 28px 20px;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.3),
+          0 4px 16px rgba(0, 0, 0, 0.15);
+      }
 
-  .chart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
+      .chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
 
-  .chart-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-  }
+      .chart-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+      }
 
-  .chart-subtitle {
-    font-size: 12px;
-    color: #71717a;
-    font-weight: 500;
-  }
+      .chart-subtitle {
+        font-size: 12px;
+        color: #71717a;
+        font-weight: 500;
+      }
 
-  .chart-period {
-    display: flex;
-    gap: 4px;
-  }
+      .chart-period {
+        display: flex;
+        gap: 4px;
+      }
 
-  .chart-period button {
-    background: none;
-    border: 1px solid rgba(255,255,255,0.08);
-    color: #71717a;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+      .chart-period button {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #71717a;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
 
-  .chart-period button.active {
-    background: rgba(255,255,255,0.06);
-    color: #e4e4e7;
-    border-color: rgba(255,255,255,0.14);
-  }
+      .chart-period button.active {
+        background: rgba(255, 255, 255, 0.06);
+        color: #e4e4e7;
+        border-color: rgba(255, 255, 255, 0.14);
+      }
 
-  .chart-area {
-    flex: 1;
-    min-height: 0;
-  }
+      .chart-area {
+        flex: 1;
+        min-height: 0;
+      }
 
-  .chart-area svg { width: 100%; height: 100%; display: block; }
+      .chart-area svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
 
-  /* ── Activity Feed ── */
-  .activity-card {
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.15);
-  }
+      /* ── Activity Feed ── */
+      .activity-card {
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.3),
+          0 4px 16px rgba(0, 0, 0, 0.15);
+      }
 
-  .activity-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 20px;
-  }
+      .activity-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 20px;
+      }
 
-  .activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex: 1;
-  }
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        flex: 1;
+      }
 
-  .activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
 
-  .activity-item:last-child { border-bottom: none; }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
 
-  .activity-time {
-    font-size: 12px;
-    color: #52525b;
-    font-weight: 500;
-    min-width: 52px;
-    padding-top: 2px;
-    text-align: right;
-  }
+      .activity-time {
+        font-size: 12px;
+        color: #52525b;
+        font-weight: 500;
+        min-width: 52px;
+        padding-top: 2px;
+        text-align: right;
+      }
 
-  .agent-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
+      .agent-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
 
-  .agent-scan {
-    background: rgba(59,130,246,0.12);
-    color: #60a5fa;
-    border: 1px solid rgba(59,130,246,0.2);
-  }
+      .agent-scan {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+      }
 
-  .agent-rick {
-    background: rgba(168,85,247,0.12);
-    color: #c084fc;
-    border: 1px solid rgba(168,85,247,0.2);
-  }
+      .agent-rick {
+        background: rgba(168, 85, 247, 0.12);
+        color: #c084fc;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+      }
 
-  .agent-luma {
-    background: rgba(251,191,36,0.12);
-    color: #fbbf24;
-    border: 1px solid rgba(251,191,36,0.2);
-  }
+      .agent-luma {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fbbf24;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+      }
 
-  .agent-nyx {
-    background: rgba(244,63,94,0.12);
-    color: #fb7185;
-    border: 1px solid rgba(244,63,94,0.2);
-  }
+      .agent-nyx {
+        background: rgba(244, 63, 94, 0.12);
+        color: #fb7185;
+        border: 1px solid rgba(244, 63, 94, 0.2);
+      }
 
-  .agent-atlas {
-    background: rgba(34,197,94,0.12);
-    color: #4ade80;
-    border: 1px solid rgba(34,197,94,0.2);
-  }
+      .agent-atlas {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
 
-  .activity-body {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+      .activity-body {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
-  .activity-desc {
-    font-size: 13px;
-    color: #a1a1aa;
-    line-height: 1.45;
-  }
+      .activity-desc {
+        font-size: 13px;
+        color: #a1a1aa;
+        line-height: 1.45;
+      }
 
-  .activity-desc strong {
-    color: #d4d4d8;
-    font-weight: 600;
-  }
-</style>
-</head>
-<body>
-
-<div class="dashboard">
-
-  <!-- Header -->
-  <header class="header">
-    <div class="header-left">
-      <div class="logo">C</div>
-      <h1>System Dashboard</h1>
-      <div class="status-badge">
-        <span class="status-dot"></span>
-        All systems operational
-      </div>
-    </div>
-    <div class="header-right">
-      <span>Last updated 12s ago</span>
-    </div>
-  </header>
-
-  <!-- Metric Cards -->
-  <section class="metrics">
-    <div class="card">
-      <span class="card-label">Tasks Completed</span>
-      <div class="card-row">
-        <span class="card-value green">47</span>
-        <span class="card-delta">&uarr; 12%</span>
-      </div>
-    </div>
-    <div class="card">
-      <span class="card-label">Active Agents</span>
-      <div class="card-row">
-        <span class="card-value">5</span>
-      </div>
-    </div>
-    <div class="card">
-      <span class="card-label">System Uptime</span>
-      <div class="card-row">
-        <span class="card-value green">99.8%</span>
-      </div>
-    </div>
-    <div class="card">
-      <span class="card-label">Cost Today</span>
-      <div class="card-row">
-        <span class="card-value">$12.40</span>
-        <span class="card-delta neutral">&darr; 8% vs yesterday</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Middle -->
-  <section class="middle">
-
-    <!-- Chart -->
-    <div class="chart-card">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Task Velocity</div>
-          <div class="chart-subtitle">Tasks completed per day</div>
+      .activity-desc strong {
+        color: #d4d4d8;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <div class="logo">C</div>
+          <h1>System Dashboard</h1>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            All systems operational
+          </div>
         </div>
-        <div class="chart-period">
-          <button>7d</button>
-          <button class="active">14d</button>
-          <button>30d</button>
+        <div class="header-right">
+          <span>Last updated 12s ago</span>
         </div>
-      </div>
-      <div class="chart-area">
-        <!--
+      </header>
+
+      <!-- Metric Cards -->
+      <section class="metrics">
+        <div class="card">
+          <span class="card-label">Tasks Completed</span>
+          <div class="card-row">
+            <span class="card-value green">47</span>
+            <span class="card-delta">&uarr; 12%</span>
+          </div>
+        </div>
+        <div class="card">
+          <span class="card-label">Active Agents</span>
+          <div class="card-row">
+            <span class="card-value">5</span>
+          </div>
+        </div>
+        <div class="card">
+          <span class="card-label">System Uptime</span>
+          <div class="card-row">
+            <span class="card-value green">99.8%</span>
+          </div>
+        </div>
+        <div class="card">
+          <span class="card-label">Cost Today</span>
+          <div class="card-row">
+            <span class="card-value">$12.40</span>
+            <span class="card-delta neutral">&darr; 8% vs yesterday</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Middle -->
+      <section class="middle">
+        <!-- Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Task Velocity</div>
+              <div class="chart-subtitle">Tasks completed per day</div>
+            </div>
+            <div class="chart-period">
+              <button>7d</button>
+              <button class="active">14d</button>
+              <button>30d</button>
+            </div>
+          </div>
+          <div class="chart-area">
+            <!--
           Viewbox: 0 0 920 340
           Data area: x 50..890, y 20..300
           14 data points (days), values roughly 18..52 mapped into y range
         -->
-        <svg viewBox="0 0 920 340" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#22c55e" stop-opacity="0.18"/>
-              <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
+            <svg viewBox="0 0 920 340" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#22c55e" stop-opacity="0.18" />
+                  <stop offset="100%" stop-color="#22c55e" stop-opacity="0" />
+                </linearGradient>
+              </defs>
 
-          <!-- Horizontal grid lines -->
-          <line x1="50" y1="20"  x2="890" y2="20"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="50" y1="90"  x2="890" y2="90"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="50" y1="160" x2="890" y2="160" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="50" y1="230" x2="890" y2="230" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="50" y1="300" x2="890" y2="300" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+              <!-- Horizontal grid lines -->
+              <line
+                x1="50"
+                y1="20"
+                x2="890"
+                y2="20"
+                stroke="rgba(255,255,255,0.05)"
+                stroke-width="1"
+              />
+              <line
+                x1="50"
+                y1="90"
+                x2="890"
+                y2="90"
+                stroke="rgba(255,255,255,0.05)"
+                stroke-width="1"
+              />
+              <line
+                x1="50"
+                y1="160"
+                x2="890"
+                y2="160"
+                stroke="rgba(255,255,255,0.05)"
+                stroke-width="1"
+              />
+              <line
+                x1="50"
+                y1="230"
+                x2="890"
+                y2="230"
+                stroke="rgba(255,255,255,0.05)"
+                stroke-width="1"
+              />
+              <line
+                x1="50"
+                y1="300"
+                x2="890"
+                y2="300"
+                stroke="rgba(255,255,255,0.08)"
+                stroke-width="1"
+              />
 
-          <!-- Y-axis labels -->
-          <text x="40" y="25"  fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="end">60</text>
-          <text x="40" y="95"  fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="end">45</text>
-          <text x="40" y="165" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="end">30</text>
-          <text x="40" y="235" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="end">15</text>
-          <text x="40" y="305" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="end">0</text>
+              <!-- Y-axis labels -->
+              <text
+                x="40"
+                y="25"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="end"
+              >
+                60
+              </text>
+              <text
+                x="40"
+                y="95"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="end"
+              >
+                45
+              </text>
+              <text
+                x="40"
+                y="165"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="end"
+              >
+                30
+              </text>
+              <text
+                x="40"
+                y="235"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="end"
+              >
+                15
+              </text>
+              <text
+                x="40"
+                y="305"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="end"
+              >
+                0
+              </text>
 
-          <!-- X-axis labels (14 days: Mar 2 — Mar 15) -->
-          <text x="114.6" y="325" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="middle">Mar 3</text>
-          <text x="308.5" y="325" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="middle">Mar 6</text>
-          <text x="502.3" y="325" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="middle">Mar 9</text>
-          <text x="696.2" y="325" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="middle">Mar 12</text>
-          <text x="890"   y="325" fill="#52525b" font-size="11" font-family="Inter,sans-serif" text-anchor="middle">Mar 15</text>
+              <!-- X-axis labels (14 days: Mar 2 — Mar 15) -->
+              <text
+                x="114.6"
+                y="325"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="middle"
+              >
+                Mar 3
+              </text>
+              <text
+                x="308.5"
+                y="325"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="middle"
+              >
+                Mar 6
+              </text>
+              <text
+                x="502.3"
+                y="325"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="middle"
+              >
+                Mar 9
+              </text>
+              <text
+                x="696.2"
+                y="325"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="middle"
+              >
+                Mar 12
+              </text>
+              <text
+                x="890"
+                y="325"
+                fill="#52525b"
+                font-size="11"
+                font-family="Inter,sans-serif"
+                text-anchor="middle"
+              >
+                Mar 15
+              </text>
 
-          <!--
+              <!--
             14 data points (task counts): 18, 22, 20, 26, 24, 30, 28, 33, 36, 34, 40, 42, 45, 47
             Mapping: value -> y = 300 - (value/60)*280
             x spacing: 50 + i*(840/13) = 50 + i*64.6
@@ -441,8 +601,9 @@
               d14 x=890   v=47  y=80.7
           -->
 
-          <!-- Gradient fill area -->
-          <path d="
+              <!-- Gradient fill area -->
+              <path
+                d="
             M 50 216
             C 82.3 206.6, 82.3 206.6, 114.6 197.3
             C 146.9 188, 146.9 215, 179.2 206.7
@@ -458,10 +619,13 @@
             C 793.1 100, 793.1 94, 825.4 90
             C 857.7 86, 857.7 83.3, 890 80.7
             L 890 300 L 50 300 Z
-          " fill="url(#areaGrad)"/>
+          "
+                fill="url(#areaGrad)"
+              />
 
-          <!-- Line -->
-          <path d="
+              <!-- Line -->
+              <path
+                d="
             M 50 216
             C 82.3 206.6, 82.3 206.6, 114.6 197.3
             C 146.9 188, 146.9 215, 179.2 206.7
@@ -476,86 +640,174 @@
             C 728.5 106.7, 728.5 108, 760.8 104
             C 793.1 100, 793.1 94, 825.4 90
             C 857.7 86, 857.7 83.3, 890 80.7
-          " fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          "
+                fill="none"
+                stroke="#22c55e"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
 
-          <!-- Data point dots -->
-          <circle cx="50"    cy="216"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="114.6" cy="197.3" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="179.2" cy="206.7" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="243.8" cy="178.7" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="308.5" cy="188"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="373.1" cy="160"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="437.7" cy="169.3" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="502.3" cy="146"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="566.9" cy="132"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="631.5" cy="141.3" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="696.2" cy="113.3" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="760.8" cy="104"   r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="825.4" cy="90"    r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="890"   cy="80.7"  r="4"   fill="#22c55e" stroke="#22c55e" stroke-width="2"/>
-        </svg>
-      </div>
+              <!-- Data point dots -->
+              <circle cx="50" cy="216" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2" />
+              <circle
+                cx="114.6"
+                cy="197.3"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="179.2"
+                cy="206.7"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="243.8"
+                cy="178.7"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="308.5"
+                cy="188"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="373.1"
+                cy="160"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="437.7"
+                cy="169.3"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="502.3"
+                cy="146"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="566.9"
+                cy="132"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="631.5"
+                cy="141.3"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="696.2"
+                cy="113.3"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle
+                cx="760.8"
+                cy="104"
+                r="3.5"
+                fill="#111116"
+                stroke="#22c55e"
+                stroke-width="2"
+              />
+              <circle cx="825.4" cy="90" r="3.5" fill="#111116" stroke="#22c55e" stroke-width="2" />
+              <circle cx="890" cy="80.7" r="4" fill="#22c55e" stroke="#22c55e" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="activity-card">
+          <div class="activity-title">Recent Activity</div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <span class="activity-time">2m ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-scan">SCAN</span>
+                <span class="activity-desc">Completed code review on <strong>PR #47</strong></span>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <span class="activity-time">8m ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-rick">RICK</span>
+                <span class="activity-desc"
+                  >Claimed task: <strong>Implement auth middleware</strong></span
+                >
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <span class="activity-time">15m ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-luma">LUMA</span>
+                <span class="activity-desc"
+                  >Deployed <strong>v2.4.1</strong> to staging environment</span
+                >
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <span class="activity-time">32m ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-nyx">NYX</span>
+                <span class="activity-desc"
+                  >Resolved incident <strong>INC-204</strong> &mdash; API latency spike</span
+                >
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <span class="activity-time">1h ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-atlas">ATLAS</span>
+                <span class="activity-desc"
+                  >Generated weekly cost report for <strong>March 8-14</strong></span
+                >
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <span class="activity-time">2h ago</span>
+              <div class="activity-body">
+                <span class="agent-badge agent-scan">SCAN</span>
+                <span class="activity-desc"
+                  >Opened <strong>PR #48</strong> &mdash; Refactor database connection pool</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <!-- Activity Feed -->
-    <div class="activity-card">
-      <div class="activity-title">Recent Activity</div>
-      <div class="activity-list">
-
-        <div class="activity-item">
-          <span class="activity-time">2m ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-scan">SCAN</span>
-            <span class="activity-desc">Completed code review on <strong>PR #47</strong></span>
-          </div>
-        </div>
-
-        <div class="activity-item">
-          <span class="activity-time">8m ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-rick">RICK</span>
-            <span class="activity-desc">Claimed task: <strong>Implement auth middleware</strong></span>
-          </div>
-        </div>
-
-        <div class="activity-item">
-          <span class="activity-time">15m ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-luma">LUMA</span>
-            <span class="activity-desc">Deployed <strong>v2.4.1</strong> to staging environment</span>
-          </div>
-        </div>
-
-        <div class="activity-item">
-          <span class="activity-time">32m ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-nyx">NYX</span>
-            <span class="activity-desc">Resolved incident <strong>INC-204</strong> &mdash; API latency spike</span>
-          </div>
-        </div>
-
-        <div class="activity-item">
-          <span class="activity-time">1h ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-atlas">ATLAS</span>
-            <span class="activity-desc">Generated weekly cost report for <strong>March 8-14</strong></span>
-          </div>
-        </div>
-
-        <div class="activity-item">
-          <span class="activity-time">2h ago</span>
-          <div class="activity-body">
-            <span class="agent-badge agent-scan">SCAN</span>
-            <span class="activity-desc">Opened <strong>PR #48</strong> &mdash; Refactor database connection pool</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </section>
-
-</div>
-
-</body>
+  </body>
 </html>

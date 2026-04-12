@@ -17,7 +17,7 @@ interface DitherImageProps {
   /** Additional CSS classes */
   className?: string;
   /** Color palette as hex strings — defaults to monochrome black/white */
-  palette?: string[];
+  palette?: readonly string[];
 }
 
 // ─── Palette helpers ─────────────────────────────────────────────────────────

@@ -11,7 +11,9 @@ export default function CheckboxPage() {
   return (
     <>
       <h1>Checkbox</h1>
-      <p>Radix Checkbox. Checked state uses <code>bg-brand</code>.</p>
+      <p>
+        Radix Checkbox. Checked state uses <code>bg-brand</code>.
+      </p>
 
       <ComponentPreview>
         <div className="flex flex-col gap-3">
@@ -20,13 +22,15 @@ export default function CheckboxPage() {
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`import { Checkbox } from '@repo/ui/components/checkbox'
+      <CodeBlock
+        code={`import { Checkbox } from '@repo/ui/components/checkbox'
 import { Label } from '@repo/ui/components/label'
 
 <div className="flex items-center gap-2">
   <Checkbox id="terms" />
   <Label htmlFor="terms">Accept terms and conditions</Label>
-</div>`} />
+</div>`}
+      />
 
       <h2>Usage</h2>
 

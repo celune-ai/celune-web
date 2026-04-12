@@ -1,0 +1,265 @@
+## Two ways to extend Claude Code
+
+Claude Code has two primary mechanisms for extending what your agent can do beyond the base model: **hooks** and **skills**. They look similar at first glance, both let you inject behavior into the agent's workflow, but they solve very different problems and get used in very different ways.
+
+Getting the choice right matters. Using a hook where you wanted a skill means the agent does something automatically that you wanted to invoke on demand. Using a skill where you wanted a hook means the agent forgets to do something that should have been automatic.
+
+This post walks through what each is, the decision rule, and the patterns that show up in real Celune deployments.
+
+---
+
+## What is a hook?
+
+A hook is **harness-level automation**. It's a shell command or script that runs automatically at a specific event in the Claude Code lifecycle, without the agent having to decide to invoke it.
+
+Hooks live in `.claude/settings.json` and are wired to lifecycle events:
+
+- `SessionStart`, runs when a new session begins
+- `SessionEnd`, runs when a session ends (normal exit or compaction)
+- `PreToolUse`, runs before any tool call, can block or modify the call
+- `PostToolUse`, runs after any tool call, can record or react
+- `UserPromptSubmit`, runs when the user sends a message
+- `Stop`, runs when the agent finishes responding
+
+The hook script is executed by the harness, not by the agent. The agent doesn't see the hook unless the hook returns output that the harness routes into the agent's context.
+
+### Example hook
+
+Here's a `SessionEnd` hook that auto-captures a session log whenever a session ends:
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/rickbot/Documents/GitHub/second-brain/scripts/auto-session-log.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Every session that ends triggers the script. The agent doesn't have to remember to write a session log. It just happens. If the script fails, it fails silently (the session still ends).
+
+### Example hook, PreToolUse guard
+
+Another common pattern: a `PreToolUse` hook that blocks dangerous operations:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/guards/check-bash.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+The script inspects the bash command the agent is about to run. If it contains `rm -rf /` or `curl | bash` or a force-push to main, the script returns an error code and the harness blocks the call. The agent sees "your command was blocked" and has to try something else.
+
+This is how you implement hard safety guarantees that don't depend on the agent remembering rules.
+
+---
+
+## What is a skill?
+
+A skill is **agent-level functionality**. It's a bundle of instructions (and optionally scripts or references) that the agent can invoke on demand when it needs to do a specific kind of task.
+
+Skills live in `.claude/skills/<skill-name>/` and have:
+
+- A `SKILL.md` file with the prompt/instructions and a description
+- Optional helper scripts (Python, Node, shell) the skill calls
+- Optional reference files (cheat sheets, examples) that get loaded into context when the skill runs
+
+The agent invokes a skill by name (often via a slash command like `/commit` or `/research`), and the harness loads the skill's instructions into the agent's context at that moment.
+
+### Example skill
+
+Here's a simplified `commit` skill that codifies Eric's git commit conventions:
+
+```markdown
+---
+name: commit
+description: Standardized git commit, runs pre-checks, generates a conventional commit message, creates the commit with Co-Authored-By footer.
+---
+
+# Commit skill
+
+Before committing:
+
+1. Run `git status` to see what will be committed
+2. Run `git diff --cached` to review staged changes
+3. Run `git log -5` to match the repo's commit message style
+
+Generate a commit message following the conventional commits pattern.
+Always include the Co-Authored-By footer.
+
+NEVER use `git commit --no-verify`.
+NEVER force-push.
+```
+
+The agent invokes this skill when Eric says "commit this" or types `/commit`. The skill's instructions get loaded into context, the agent follows them, and the commit is made consistently every time.
+
+---
+
+## The decision rule
+
+The rule I use:
+
+> **Automatic behaviors go in hooks. Invocable workflows go in skills.**
+
+If the behavior is "every time X happens, automatically do Y", that's a hook. The harness enforces it. The agent can't forget, skip, or rationalize around it.
+
+If the behavior is "when the user says 'do the thing', follow this playbook", that's a skill. The agent invokes it on demand. The user (or agent) has a clear trigger.
+
+### Rewritten as a flowchart
+
+```
+Do you want this to happen without being asked?
+│
+├── Yes → Hook
+│         │
+│         └── Wire it to SessionStart, SessionEnd, PreToolUse, etc.
+│
+└── No  → Skill
+          │
+          └── Give it a slash command and a clear description
+```
+
+Simple. 90% of choices fit one side or the other. The edge cases are the interesting ones.
+
+---
+
+## When hooks are the wrong choice
+
+Sometimes "automatic" sounds right but turns out to be fragile.
+
+### Hook example that went wrong: auto-index on every file change
+
+Early on I had a `PostToolUse` hook that re-indexed the vault's FTS5 database every time the agent edited a markdown file. The theory: always-fresh index, no manual re-index needed.
+
+What actually happened: the agent edited 30 files in a single session. The hook ran 30 times. Each run took 15 seconds. The agent spent most of the session waiting for the index to update, and the index was a constantly shifting target because the next edit would land before the previous index finished.
+
+The fix: replace the hook with a skill. Instead of auto-indexing on every edit, I added a `reindex` skill that the agent invokes once at the end of a work session, or that runs via the `SessionEnd` hook as a one-shot. One index per session instead of one per edit.
+
+Lesson: **hooks compound**. Anything that runs on every tool call needs to be very cheap, or you pay its cost repeatedly.
+
+### Hook example that went right: block dangerous bash
+
+A `PreToolUse` hook that blocks `rm -rf /`, `git push --force origin main`, and `curl | bash` will never run often, but when it runs, it saves you from a catastrophic mistake. The cost per invocation is a 50ms script; the benefit is "the agent can never delete your home directory even if it gets confused."
+
+Hooks are perfect for low-frequency, high-stakes guards.
+
+---
+
+## When skills are the wrong choice
+
+### Skill example that went wrong: /save-session
+
+Early on I had a `save-session` skill the agent was supposed to invoke at the end of every session. The theory: the agent decides when to save based on whether there's anything worth saving.
+
+What actually happened: the agent forgot to invoke the skill about half the time. Sessions ended without a log. Yesterday's decisions evaporated. The whole point of having a session log (resilience to context loss) was defeated by making the logging decision optional.
+
+The fix: move session-log capture from a skill to a `SessionEnd` hook. The hook is now triggered automatically, no matter what. The `closing-time` skill still exists for thorough wrap-ups with extra curation, but the baseline log is never skipped.
+
+Lesson: **anything that matters for continuity should be a hook, not a skill**. Don't trust the agent to remember routine maintenance.
+
+### Skill example that went right: /research
+
+The `research` skill is a 300-line playbook for running deep market research. It knows about the Perplexity API, the output format, the source-quality rubric, the internal templates. It's invoked maybe once a day, by Eric explicitly saying "/research [topic]."
+
+Making this a hook would be absurd. Research is a deliberate, on-demand action with rich parameters. The agent needs to bring all its context to bear when invoking it. That's exactly what a skill is for.
+
+---
+
+## Combining hooks and skills
+
+The most powerful pattern is **a skill that registers a hook**, or **a hook that invokes a skill**.
+
+Example 1: `closing-time` skill + `SessionEnd` hook
+
+- `SessionEnd` hook runs every time a session ends, writes a minimal session log. This is the safety net.
+- `closing-time` skill is invoked explicitly by Eric for thorough wrap-ups. It runs the log capture plus knowledge promotion, decision recording, CLAUDE.md updates, and git commits.
+
+Both exist. The hook is the baseline; the skill is the deluxe version.
+
+Example 2: `auto-approve` skill toggles a hook
+
+- `auto-approve` skill is a slash command Eric invokes to enable auto-approval for PR self-review on non-main branches.
+- When invoked, it writes a config file that a `PreToolUse` hook reads. The hook then approves or rejects tool calls based on the current config.
+- Eric runs `/auto-approve on` in the morning before going AFK. The hook enforces the policy without Eric having to re-say it every tool call.
+
+The skill is the control plane. The hook is the enforcement plane.
+
+---
+
+## Practical checklist for deciding
+
+When you're about to add new functionality to a Claude Code setup, ask:
+
+1. **Does this need to happen every time, reliably, without the agent thinking about it?**
+   - Yes → Hook
+   - No → Skill
+2. **Is it cheap enough to run on every tool call / session event / user prompt?**
+   - Yes → Hook is fine
+   - No → Skill, or a hook that triggers once and caches
+3. **Does it need parameters from the agent or the user?**
+   - Yes → Skill (hooks don't have a natural parameter interface)
+   - No → Hook
+4. **Does the agent need to reason about when to invoke it?**
+   - Yes → Skill
+   - No → Hook
+5. **Is it a safety guard that must not be bypassable?**
+   - Yes → Hook (and review who can modify `settings.json`)
+   - No → Skill
+
+If all five answers point the same way, you have your answer. If they're split, think about which question dominates, usually it's question 1 (reliability) or question 5 (safety).
+
+---
+
+## What Celune ships by default
+
+The Celune Claude Code setup includes both hooks and skills out of the box:
+
+**Default hooks:**
+
+- `SessionStart`, load CLAUDE.md, inject workspace context
+- `SessionEnd`, auto-capture session log, flush memory
+- `PreToolUse Bash`, block dangerous commands (rm -rf, force-push, curl | bash)
+- `PreToolUse WebFetch`, block (redirect to context-mode MCP)
+- `UserPromptSubmit`, detect slash commands and route to skills
+
+**Default skills:**
+
+- `/commit`, standardized commit workflow
+- `/research`, deep market research
+- `/closing-time`, end-of-session ritual
+- `/flush`, mid-session memory save
+- `/kickoff`, resume from handoff state
+- `/afk-*`, long-running overnight workflows
+
+The hooks run automatically. The skills are invoked by Eric (or by RICK delegating to other agents). Together they form the runtime personality of the Celune agent setup.
+
+---
+
+## The takeaway
+
+Hooks and skills are not interchangeable. Hooks are harness-level automation that runs on every lifecycle event without the agent's involvement, perfect for safety guards, continuity, and always-on behaviors. Skills are agent-level workflows invoked on demand, perfect for deliberate actions with rich context and parameters.
+
+When you're deciding, the rule is: **automatic behaviors go in hooks, invocable workflows go in skills**. And when in doubt, trace the failure mode: if "the agent forgot" is a catastrophic outcome, make it a hook. If "the agent chose to skip" is fine, make it a skill.
+
+Celune's own hook and skill library is a working reference if you want to see the patterns in a production setup.

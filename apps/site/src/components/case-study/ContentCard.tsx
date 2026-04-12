@@ -18,13 +18,13 @@ export default function ContentCard({
   return (
     <button
       onClick={onClick}
-      className="cursor-pointer rounded-lg border-2 bg-foreground/5 px-6 py-4 text-left transition-all duration-200 hover:bg-foreground/10 focus:outline-none focus-visible:outline-none active:outline-none md:px-8 md:py-6"
+      className="bg-foreground/5 hover:bg-foreground/10 cursor-pointer rounded-lg border-2 px-6 py-4 text-left transition-all duration-200 focus:outline-none focus-visible:outline-none active:outline-none md:px-8 md:py-6"
       style={{
         borderColor: isSelected ? selectedColor : 'transparent',
       }}
     >
-      <h3 className="mb-3 font-inter text-lg font-medium text-foreground">{title}</h3>
-      <p className="font-inter leading-relaxed text-foreground/70">{description}</p>
+      <h3 className="font-inter text-foreground mb-3 text-lg font-medium">{title}</h3>
+      <p className="font-inter text-foreground/70 leading-relaxed">{description}</p>
     </button>
   );
 }

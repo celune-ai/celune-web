@@ -1,0 +1,160 @@
+## The Celune-second-brain split
+
+Celune the product and second-brain the vault are two different things, deliberately. Celune is the agent operating system, tasks, projects, memory, agents, the admin dashboard. Second-brain is an Obsidian vault that sits in a local git repository on Eric's laptop.
+
+They talk to each other. But they are not the same thing, and the direction of truth matters a lot.
+
+The rule: **second-brain is the master. Celune is downstream.** When they disagree, the local vault wins. When you're deciding where a piece of knowledge lives, the answer is almost always "both, but the local copy is canonical."
+
+This post explains why that's the design, what it buys, and how we sync the two.
+
+---
+
+## What "spine" means
+
+We call second-brain Celune's "spine" because it's the backbone the whole product hangs off. Every decision Eric makes, every learning an agent writes down, every design principle, every post-mortem, every project plan, it lives as markdown in the vault first. Celune reads from the vault, indexes it, and serves it back to agents as context.
+
+Concretely, the vault structure looks like this:
+
+```
+MyBrain/
+├── CLAUDE.md              # Identity, rules, stable decisions
+├── 00-inbox/              # Raw captures, un-curated
+├── 03-professional/       # Role-specific long-lived notes
+├── 04-projects/           # PRDs, project plans, specs
+├── 05-knowledge/          # Curated learnings, reference docs
+├── 06-personal/           # Life stuff
+├── index.md               # Manually-maintained file index
+├── log.md                 # Grep-parseable change log
+└── memory/
+    ├── brain.sqlite       # FTS5 index of all markdown
+    ├── sessions/          # Per-session logs (auto-captured)
+    ├── decisions/         # Structured decision records
+    └── slack-context.md   # Cross-platform conversation state
+```
+
+Agents read from this vault. Celune indexes it. The Celune admin dashboard queries indexed content. The MCP server exposes it to Claude Code sessions. But the canonical data lives in the vault as markdown files you can `grep`, `diff`, and version-control.
+
+---
+
+## Why local-canonical
+
+Three reasons, ranked by importance.
+
+### 1. You own your data, forever
+
+If Celune the product goes away, acquisition, pivot, bankruptcy, whatever, Eric still has every decision, every project plan, every learning, every session log. They're text files on his hard drive. No export needed. No vendor lock-in. Git history shows how it evolved.
+
+This is not a small thing. Most agent products store memory in proprietary vector databases you can't easily extract. Celune's approach makes the product exit-proof for the user. You could delete Celune tomorrow and the knowledge you built up still lives in the vault.
+
+### 2. Markdown is the right format for durable memory
+
+Markdown is:
+
+- Human-readable (no reformatting needed to understand it)
+- Trivially diffable (git works out of the box)
+- Grep-friendly (FTS5 search just indexes raw text)
+- Obsidian-native (wiki links, graph view, backlinks)
+- Machine-parseable (every LLM knows how to read it)
+
+A structured database would give you better query semantics. But you'd lose the ability to read, edit, and reason about memory like a normal text file. And you'd need a database migration every time the schema evolved. Markdown doesn't have a schema. It evolves organically.
+
+### 3. Offline-first with sync, not sync-only
+
+Because the canonical copy lives on Eric's laptop, agents can work offline. Claude Code sessions read local files first, and Celune's remote memory is a best-effort augmentation. Network hiccups don't block work.
+
+When the network comes back, `/memory-sync` pulls recent Celune memories back to local, deduplicates, and appends them. The direction of sync is clear: remote to local, not the other way around.
+
+---
+
+## The five memory layers
+
+Inside the vault, memory is stratified into five layers based on how stable the information is:
+
+| Layer                 | Location                        | Purpose                                                      | Rewrite frequency   |
+| --------------------- | ------------------------------- | ------------------------------------------------------------ | ------------------- |
+| **Identity**          | `CLAUDE.md`                     | Who Eric is, how we work, stable decisions                   | Rarely (monthly)    |
+| **Session logs**      | `memory/sessions/YYYY-MM-DD.md` | What happened in a session                                   | Never (append-only) |
+| **Curated knowledge** | `05-knowledge/*.md`             | Proven patterns, reference docs                              | Occasionally        |
+| **Decision log**      | `memory/decisions/`             | Structured decision records with context, options, rationale | Never (append-only) |
+| **Search index**      | `memory/brain.sqlite`           | FTS5 index over all markdown                                 | Continuously        |
+
+The stratification matters because different layers serve different needs:
+
+- **Identity** goes in a session's system prompt. It's the most expensive to load, so it stays small and stable.
+- **Session logs** are the auto-capture safety net. If a session crashes or times out, the most recent log is the recovery point.
+- **Curated knowledge** is pulled in on-demand when a topic is relevant. Higher latency, higher relevance.
+- **Decisions** are pulled in when Celune detects a similar choice being made. "You're deciding between Supabase and Firebase, last time you made this choice, here's the reasoning."
+- **Search index** is the catch-all. Full-text over everything, for when the targeted layers miss.
+
+---
+
+## Promotion: from inbox to knowledge
+
+Raw thoughts start in `00-inbox/`. They don't have structure, don't cross-link, don't need to be curated. The inbox is the "junk drawer" where anything goes.
+
+When a pattern appears in the inbox more than once, or when a session log captures a durable learning, the pattern gets promoted to `05-knowledge/` with a proper structure: title, context, principle, examples, related files. The promotion is manual and deliberate. Not everything graduates.
+
+The `/closing-time` skill nudges this at end-of-session: "2 things in your inbox look like they could promote to knowledge. Want to curate them now?" Eric says yes or no. The system doesn't auto-promote because auto-promotion creates noise.
+
+---
+
+## The `index.md` and `log.md` pattern
+
+Two files in the vault get treated specially.
+
+`index.md` is a manually-curated index of every file in the vault with a one-line description. At ~225 files, this index is hand-maintained and hand-searched by agents before they reach for vector search. Counterintuitively, a curated index outperforms semantic search at this scale. When an agent needs to find a file, it greps the index first; only if that misses does it fall back to FTS5.
+
+`log.md` is a grep-parseable change log. Every time the vault changes in a significant way, a line gets added:
+
+```
+## [2026-04-09] Added benefind-site-architecture.md to 05-knowledge
+## [2026-04-09] Promoted celune-execution-bridge-spec to 05-knowledge
+## [2026-04-08] Updated CLAUDE.md with auto-approve rule
+```
+
+Agents tail this file when they need a time-ordered view of recent vault activity. `grep "^## \[" MyBrain/log.md | tail -10` is a standard warm-up move at the start of a session.
+
+---
+
+## How this shows up in agents
+
+When an agent starts a session, this is the context assembly sequence:
+
+1. Read `CLAUDE.md` (identity, rules, hard constraints)
+2. Check `memory/sessions/` for the most recent 1-2 session logs
+3. Check `memory/slack-context.md` for cross-platform conversation handoff
+4. Check `memory/overnight/` for any open overnight task tracking
+5. Only then fetch remote Celune state (workspace, pulse, recent memories)
+
+Steps 1-4 happen from local files without a network call. Step 5 is the augmentation layer. If the network is slow or the Celune MCP is flaky, the agent still has 90% of what it needs.
+
+When the agent writes back, the order is reversed:
+
+1. Update local markdown first (inbox, session log, CLAUDE.md)
+2. Then push to Celune remote (via `store_memory` or `create_task`)
+3. Then commit to git if significant
+
+Write-through caching, basically. Local is authoritative; remote is a cache.
+
+---
+
+## The trade-off
+
+The downside of this design is coordination. If Eric has multiple machines (laptop, desktop, cloud box), the vault needs to be kept in sync across all of them. Git is the sync layer, the vault lives in a private GitHub repo, every machine pulls and pushes, conflicts are resolved by hand.
+
+This is more friction than a fully-cloud memory system where all state lives in one database. But the friction is worth it. You never lose data. You never get locked in. You always have offline-first access.
+
+The same trade applies to collaboration. second-brain is single-player. Multi-user vaults don't really work with the local-canonical model, you'd have to pick one user's laptop as the source of truth, or switch to a shared database and lose the portability.
+
+For Celune today, single-player is fine. Eric is the user. The agents serve Eric. When we productize Celune for teams, the spine model will have to evolve: probably a per-user vault plus a shared team knowledge layer. That's a future post.
+
+---
+
+## The takeaway
+
+"Second-brain is the master" is the most important architectural decision Celune made. It shapes where data lives, how agents read it, how sync works, what happens if the product goes down, and how Eric thinks about memory in the first place.
+
+The agents treat the vault as a living document. They write to it, they read from it, they promote patterns from inbox to knowledge, they log sessions, they update CLAUDE.md when decisions stabilize. The vault is not a backup of Celune's memory. Celune's memory is a real-time projection of the vault.
+
+If you want to see how the pattern works in a real codebase, the vault lives at `github.com/smejkaldesign/second-brain` (private repo) and the skill definitions that encode this protocol live in `.claude/skills/`. Start with the `closing-time` skill, it's the clearest view of how a session becomes durable memory.

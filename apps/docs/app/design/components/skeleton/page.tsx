@@ -17,13 +17,15 @@ export default function SkeletonPage() {
         <DemoSkeleton />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Skeleton } from '@repo/ui/components/skeleton'
+      <CodeBlock
+        code={`import { Skeleton } from '@repo/ui/components/skeleton'
 
 <div className="flex flex-col gap-3">
   <Skeleton className="h-4 w-48" />
   <Skeleton className="h-4 w-64" />
   <Skeleton className="h-4 w-40" />
-</div>`} />
+</div>`}
+      />
 
       <h2>Usage</h2>
 

@@ -28,7 +28,8 @@ export default function BadgePage() {
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`import { Badge } from '@repo/ui/components/badge'
+      <CodeBlock
+        code={`import { Badge } from '@repo/ui/components/badge'
 
 <Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
@@ -36,7 +37,8 @@ export default function BadgePage() {
 <Badge variant="brand">Brand</Badge>
 <Badge variant="warning">Warning</Badge>
 <Badge variant="destructive">Destructive</Badge>
-<Badge variant="ghost">Ghost</Badge>`} />
+<Badge variant="ghost">Ghost</Badge>`}
+      />
 
       <h2>Usage</h2>
 
@@ -53,7 +55,19 @@ export default function BadgePage() {
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>variant</code></td><td><code>default</code> | <code>secondary</code> | <code>outline</code> | <code>brand</code> | <code>success</code> | <code>warning</code> | <code>destructive</code> | <code>ghost</code></td><td><code>default</code></td></tr>
+          <tr>
+            <td>
+              <code>variant</code>
+            </td>
+            <td>
+              <code>default</code> | <code>secondary</code> | <code>outline</code> |{' '}
+              <code>brand</code> | <code>success</code> | <code>warning</code> |{' '}
+              <code>destructive</code> | <code>ghost</code>
+            </td>
+            <td>
+              <code>default</code>
+            </td>
+          </tr>
         </tbody>
       </table>
     </>
