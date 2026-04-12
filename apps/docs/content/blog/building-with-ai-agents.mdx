@@ -1,0 +1,91 @@
+## The Premise
+
+About six months ago I started treating AI agents not as tools but as team members. Not metaphorically — literally. Named agents with defined roles, a shared task board, a real product backlog. The kind of structure you'd expect in a small startup.
+
+What followed was one of the most productive stretches I've had as a solo product builder. It was also one of the most instructive in terms of what goes wrong when the foundation isn't right.
+
+This is an account of what actually works.
+
+---
+
+## The Setup
+
+The studio runs on a Turborepo monorepo with three apps — a portfolio site, an admin dashboard, and a docs site (you're on it). Supabase handles the backend. Everything is deployed to Vercel.
+
+The agent workforce looks like this:
+
+| Agent | Role                  | Model         |
+| ----- | --------------------- | ------------- |
+| RICK  | Lead engineer + coder | Claude Opus   |
+| SAGE  | PM + writer           | Claude Sonnet |
+| NOIR  | Designer              | Claude Sonnet |
+| SCAN  | Code reviewer         | Claude Sonnet |
+| DELV  | Researcher            | Claude Haiku  |
+
+Flat structure. No hierarchy. RICK codes directly rather than delegating through layers.
+
+---
+
+## What Actually Works
+
+### 1. Tasks as the universal unit of work
+
+Every piece of work — including this blog post — starts as a Supabase task. Not a mental checklist, not a sticky note. A real row in the database with a status, assignee, and description.
+
+The discipline sounds tedious. In practice it creates something valuable: a paper trail that ties productivity to cost. When you're paying per token, the question "what did we build today?" has a real answer.
+
+### 2. Claiming and completing in real time
+
+The kanban must reflect real-time state. No batch updates after the fact. When an agent picks up a task, it claims it immediately. When it's done, it completes it immediately.
+
+This sounds obvious but it breaks down fast when you're working across multiple sessions. The rule holds because the tooling enforces it — the CLI makes it a single command.
+
+### 3. Prompt caching with a stable prefix
+
+The most impactful performance change was structuring prompts with a stable prefix: Identity → Rules → Process → Task. The stable portion gets cached by Anthropic's API. Token costs dropped significantly once this was in place.
+
+The key insight: context that changes per-request (the actual task) goes at the end. Everything that stays constant (who the agent is, how it works) stays at the top.
+
+### 4. Cheap models for bounded tasks
+
+DELV (researcher) runs on Haiku. The research quality is genuinely good for structured tasks like "summarize this library's API" or "find the three most relevant examples." Haiku is fast and cheap enough to use liberally.
+
+The mistake is using Haiku for tasks that require judgment. Anything ambiguous, architectural, or involving tradeoffs goes to Sonnet or Opus. Model selection is a cost lever, not an intelligence lever.
+
+---
+
+## What Breaks
+
+### Stale context
+
+The biggest failure mode is an agent working from outdated context. It happens when:
+
+- A task description wasn't updated after a decision changed
+- A sub-agent was launched before the parent finished relevant work
+- The CLAUDE.md memory wasn't flushed after a significant architectural shift
+
+The fix is discipline around memory hygiene. After any session that changes how the system works, write it down immediately. Not later. The agent that runs tomorrow will thank you.
+
+### Over-delegation
+
+It's tempting to spawn a sub-agent for everything. The overhead isn't obvious until you're debugging why three agents produced inconsistent output on what should have been a coordinated feature.
+
+The rule now: RICK codes directly for anything that requires architectural judgment. Sub-agents get isolated, well-defined tasks with clear acceptance criteria. Parallelism is a tool for throughput, not a substitute for coordination.
+
+### Underdescribed tasks
+
+A task with a vague description produces vague work. "Add blog to docs site" is not a task description. "Create blog listing page at /blog with MDX dynamic routes for individual posts, sample post at content/blog/\*.mdx, and Blog link in header nav" is a task description.
+
+The extra minute spent writing a real description saves hours of back-and-forth.
+
+---
+
+## The Takeaway
+
+The productivity gains from agent-assisted development are real — but they compound on good foundations. Clean task hygiene, real-time state tracking, structured prompts, and deliberate model selection each contribute. Miss one and the others degrade.
+
+The most surprising thing: the discipline required isn't technical. It's operational. The same habits that make a small team effective make an agent team effective.
+
+---
+
+_This is the first post on the Smejkal Design blog. More on building in public, AI-assisted development, and the studio's approach to product work coming soon._
