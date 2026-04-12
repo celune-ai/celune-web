@@ -45,7 +45,6 @@ export function CodePlayground({
             base: '#ffffff',
             disabled: '#4b4b4b',
             hover: '#c5c5c5',
-            inputBackground: '#232323',
             accent: '#3ecf8e',
             error: '#ff453a',
             errorSurface: '#3b1d1d',

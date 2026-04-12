@@ -17,7 +17,8 @@ export default function SelectPage() {
         <DemoSelect />
       </ComponentPreview>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Select,
   SelectTrigger,
   SelectContent,
@@ -34,13 +35,17 @@ export default function SelectPage() {
     <SelectItem value="two">Option Two</SelectItem>
     <SelectItem value="three">Option Three</SelectItem>
   </SelectContent>
-</Select>`} />
+</Select>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
-} from '@repo/ui/components/select'`} lang="tsx" />
+} from '@repo/ui/components/select'`}
+        lang="tsx"
+      />
     </>
   );
 }

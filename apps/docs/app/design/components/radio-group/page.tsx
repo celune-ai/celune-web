@@ -9,9 +9,12 @@ export default function RadioGroupPage() {
   return (
     <>
       <h1>Radio Group</h1>
-      <p>Radix Radio Group for single-choice selection. Selected state uses <code>bg-brand</code>.</p>
+      <p>
+        Radix Radio Group for single-choice selection. Selected state uses <code>bg-brand</code>.
+      </p>
 
-      <CodeBlock code={`import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group'
+      <CodeBlock
+        code={`import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group'
 import { Label } from '@repo/ui/components/label'
 
 <RadioGroup defaultValue="option-one">
@@ -23,11 +26,15 @@ import { Label } from '@repo/ui/components/label'
     <RadioGroupItem value="option-two" id="option-two" />
     <Label htmlFor="option-two">Option Two</Label>
   </div>
-</RadioGroup>`} />
+</RadioGroup>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group'`} lang="tsx" />
+      <CodeBlock
+        code={`import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group'`}
+        lang="tsx"
+      />
     </>
   );
 }

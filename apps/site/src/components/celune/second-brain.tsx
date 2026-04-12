@@ -40,7 +40,7 @@ function SecondBrainIllustration({ hovering }: { hovering: boolean }) {
         <span className="text-neutral-400">recall --query &quot;payment provider choice&quot;</span>
         {hovering && !reduced && (
           <span
-            className="ml-auto inline-block h-3.5 w-0.5 bg-celune-400"
+            className="bg-celune-400 ml-auto inline-block h-3.5 w-0.5"
             style={{ animation: 'pulse 1s step-end infinite' }}
           />
         )}
@@ -62,9 +62,7 @@ function SecondBrainIllustration({ hovering }: { hovering: boolean }) {
               key={m.text}
               className="flex items-start gap-2.5 border px-2.5 py-2.5 transition-colors duration-500"
               style={{
-                borderColor: isHighlighted
-                  ? 'rgba(34,197,94,0.35)'
-                  : 'rgba(255,255,255,0.05)',
+                borderColor: isHighlighted ? 'rgba(34,197,94,0.35)' : 'rgba(255,255,255,0.05)',
                 backgroundColor: isHighlighted ? 'rgba(34,197,94,0.04)' : 'transparent',
               }}
             >
@@ -79,7 +77,9 @@ function SecondBrainIllustration({ hovering }: { hovering: boolean }) {
                 <div
                   className="h-8 w-0.5 transition-colors duration-500"
                   style={{
-                    backgroundColor: isHighlighted ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.06)',
+                    backgroundColor: isHighlighted
+                      ? 'rgba(34,197,94,0.4)'
+                      : 'rgba(255,255,255,0.06)',
                   }}
                 />
               </div>
@@ -92,7 +92,9 @@ function SecondBrainIllustration({ hovering }: { hovering: boolean }) {
                 </div>
                 <div
                   className="transition-colors duration-500"
-                  style={{ color: isHighlighted ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)' }}
+                  style={{
+                    color: isHighlighted ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)',
+                  }}
                 >
                   {m.text}
                 </div>
@@ -116,11 +118,13 @@ function SecondBrainIllustration({ hovering }: { hovering: boolean }) {
 const SECOND_BRAIN_POINTS = [
   {
     label: 'Semantic memory search',
-    detail: 'Ask in plain language. pgvector finds the most relevant memories — not just keyword matches.',
+    detail:
+      'Ask in plain language. pgvector finds the most relevant memories — not just keyword matches.',
   },
   {
     label: 'Auto-learns from every conversation',
-    detail: 'Decisions, preferences, and patterns are captured automatically. No manual note-taking.',
+    detail:
+      'Decisions, preferences, and patterns are captured automatically. No manual note-taking.',
   },
   {
     label: '1K to unlimited memories by plan',
@@ -138,14 +142,13 @@ export function CeluneSecondBrain() {
   const [hovering, setHovering] = useState(false);
 
   return (
-    <section id="second-brain" className="relative py-24 md:py-32 overflow-visible">
-
+    <section id="second-brain" className="relative overflow-visible py-24 md:py-32">
       {/* Decorative rounded border — top corners (mirrors features section) */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
         <div className="h-12 w-[calc(100%-3rem)] max-w-6xl rounded-t-[20px] border-x border-t border-white/[0.07]" />
       </div>
 
-      <div className="container relative z-10">
+      <div className="relative z-10 container">
         {/* Heading */}
         <div className="mb-16">
           <SectionLabel>Second Brain</SectionLabel>
@@ -155,8 +158,9 @@ export function CeluneSecondBrain() {
             <span className="text-neutral-500">Gets Smarter Every Session.</span>
           </h2>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Every conversation, decision, and preference is stored and recalled. Your agents learn from past
-            interactions — so you never repeat yourself, and they never forget what matters.
+            Every conversation, decision, and preference is stored and recalled. Your agents learn
+            from past interactions — so you never repeat yourself, and they never forget what
+            matters.
           </p>
         </div>
 
@@ -167,8 +171,8 @@ export function CeluneSecondBrain() {
             {SECOND_BRAIN_POINTS.map((point) => (
               <div key={point.label} className="flex gap-4">
                 <div className="mt-0.5 shrink-0">
-                  <div className="flex h-5 w-5 items-center justify-center border border-celune-500/30 bg-celune-500/[0.08]">
-                    <div className="h-1.5 w-1.5 bg-celune-500" />
+                  <div className="border-celune-500/30 bg-celune-500/[0.08] flex h-5 w-5 items-center justify-center border">
+                    <div className="bg-celune-500 h-1.5 w-1.5" />
                   </div>
                 </div>
                 <div>
@@ -182,11 +186,17 @@ export function CeluneSecondBrain() {
             <div className="pt-2">
               <a
                 href={`${URL_APP}/signup`}
-                className="inline-flex items-center gap-2 border border-celune-500/40 bg-celune-500/10 px-6 py-3 font-mono text-sm font-medium text-celune-400 transition-colors duration-200 hover:border-celune-500/60 hover:bg-celune-500/15 hover:text-celune-300"
+                className="border-celune-500/40 bg-celune-500/10 text-celune-400 hover:border-celune-500/60 hover:bg-celune-500/15 hover:text-celune-300 inline-flex items-center gap-2 border px-6 py-3 font-mono text-sm font-medium transition-colors duration-200"
               >
                 Start Building Your Brain
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
-                  <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M3 7H11M7 3L11 7L7 11"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </a>
             </div>

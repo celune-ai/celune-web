@@ -157,7 +157,7 @@ export default function IntroductionPage() {
       </table>
 
       <p>
-        Each app - <code>apps/web</code>, <code>apps/admin</code>, and <code>apps/docs</code>  - 
+        Each app - <code>apps/web</code>, <code>apps/admin</code>, and <code>apps/docs</code> -
         installs the workspace packages and adds its own
         <code>globals.css</code> with app-specific <code>@theme inline</code>
         overrides where needed.

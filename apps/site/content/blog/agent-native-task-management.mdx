@@ -12,18 +12,25 @@ Agent-native task management isn't about adding an AI chatbot to your existing p
 
 The differences are fundamental:
 
-| Human-native | Agent-native |
-| ------------ | ------------ |
-| Visual kanban boards | Programmatic APIs and CLIs |
-| Drag-and-drop reordering | Dependency graphs with topological sorting |
-| Status updates via UI clicks | Claim/complete via command |
-| Descriptions in natural language | Structured descriptions with machine-readable sections |
-| Context lives in the reader's head | Context is explicit and attached to the task |
-| Time estimates | Token cost tracking |
+| Human-native                       | Agent-native                                           |
+| ---------------------------------- | ------------------------------------------------------ |
+| Visual kanban boards               | Programmatic APIs and CLIs                             |
+| Drag-and-drop reordering           | Dependency graphs with topological sorting             |
+| Status updates via UI clicks       | Claim/complete via command                             |
+| Descriptions in natural language   | Structured descriptions with machine-readable sections |
+| Context lives in the reader's head | Context is explicit and attached to the task           |
+| Time estimates                     | Token cost tracking                                    |
 
 The most telling difference: in a human-native tool, the board _is_ the interface. In an agent-native tool, the board is a visualization of an underlying data model that agents interact with directly.
 
-<ProductScreenshot src="/blog/screenshots/task-board.jpg" alt="Celune kanban board with Inbox, In Progress, and Done columns — the visual layer on top of a programmatic task database" width={1200} height={750} layout="full" caption="The Celune task board — a visual dashboard over the same database agents interact with via CLI and API." />
+<ProductScreenshot
+  src="/blog/screenshots/task-board.jpg"
+  alt="Celune kanban board with Inbox, In Progress, and Done columns — the visual layer on top of a programmatic task database"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="The Celune task board — a visual dashboard over the same database agents interact with via CLI and API."
+/>
 
 ---
 
@@ -47,7 +54,14 @@ But teams create coordination problems. Who's working on what? What's blocked? W
 
 When you're paying per token, you need to know what each token bought. A task system that tracks which agent worked which task, for how long, at what model tier — that's not a nice-to-have. It's how you answer "are we spending our AI budget effectively?"
 
-<ProductScreenshot src="/blog/screenshots/cost-tracking.jpg" alt="Celune cost analytics dashboard showing per-agent costs, model usage breakdown, and token spend over time" width={1200} height={750} layout="full" caption="Per-agent cost tracking answers the question every AI team needs answered: where are the tokens going?" />
+<ProductScreenshot
+  src="/blog/screenshots/cost-tracking.jpg"
+  alt="Celune cost analytics dashboard showing per-agent costs, model usage breakdown, and token spend over time"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="Per-agent cost tracking answers the question every AI team needs answered: where are the tokens going?"
+/>
 
 ---
 
@@ -97,7 +111,14 @@ This isn't hypothetical. It's what we're running in production at Celune. The ta
 
 ---
 
-<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system dashboard with real-time metrics, charts, and activity feed showing agent task completions" width={1200} height={750} layout="float-left" caption="Real-time dashboards reflect the event stream — every task claim, completion, and status change appears instantly." />
+<ProductScreenshot
+  src="/blog/screenshots/dashboard.jpg"
+  alt="Celune system dashboard with real-time metrics, charts, and activity feed showing agent task completions"
+  width={1200}
+  height={750}
+  layout="float-left"
+  caption="Real-time dashboards reflect the event stream — every task claim, completion, and status change appears instantly."
+/>
 
 <ClearFloat />
 

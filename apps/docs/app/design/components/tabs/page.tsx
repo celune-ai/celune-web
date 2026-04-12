@@ -17,7 +17,8 @@ export default function TabsPage() {
         <DemoTabs />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/tabs'
+      <CodeBlock
+        code={`import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/tabs'
 
 <Tabs defaultValue="overview">
   <TabsList>
@@ -28,11 +29,15 @@ export default function TabsPage() {
   <TabsContent value="overview">Overview content</TabsContent>
   <TabsContent value="settings">Settings content</TabsContent>
   <TabsContent value="activity">Activity content</TabsContent>
-</Tabs>`} />
+</Tabs>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/tabs'`} lang="tsx" />
+      <CodeBlock
+        code={`import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/tabs'`}
+        lang="tsx"
+      />
     </>
   );
 }

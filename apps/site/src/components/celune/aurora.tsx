@@ -41,12 +41,66 @@ export function Aurora({ className = '' }: { className?: string }) {
 
     // Warm aurora palette: amber, coral, rose, teal, soft violet
     const blobs: Blob[] = [
-      { x: 0.3, y: 0.6, r: 0.45, color: [255, 140, 50], vx: 0.012, vy: 0.008, phase: 0, speed: 0.3 },
-      { x: 0.7, y: 0.5, r: 0.5, color: [220, 80, 60], vx: -0.01, vy: 0.006, phase: 1.2, speed: 0.25 },
-      { x: 0.5, y: 0.7, r: 0.55, color: [180, 60, 100], vx: 0.008, vy: -0.01, phase: 2.4, speed: 0.35 },
-      { x: 0.2, y: 0.4, r: 0.4, color: [40, 160, 140], vx: 0.015, vy: 0.012, phase: 3.6, speed: 0.2 },
-      { x: 0.8, y: 0.7, r: 0.35, color: [140, 80, 180], vx: -0.012, vy: -0.008, phase: 4.8, speed: 0.28 },
-      { x: 0.5, y: 0.8, r: 0.6, color: [255, 170, 60], vx: 0.006, vy: 0.004, phase: 0.8, speed: 0.15 },
+      {
+        x: 0.3,
+        y: 0.6,
+        r: 0.45,
+        color: [255, 140, 50],
+        vx: 0.012,
+        vy: 0.008,
+        phase: 0,
+        speed: 0.3,
+      },
+      {
+        x: 0.7,
+        y: 0.5,
+        r: 0.5,
+        color: [220, 80, 60],
+        vx: -0.01,
+        vy: 0.006,
+        phase: 1.2,
+        speed: 0.25,
+      },
+      {
+        x: 0.5,
+        y: 0.7,
+        r: 0.55,
+        color: [180, 60, 100],
+        vx: 0.008,
+        vy: -0.01,
+        phase: 2.4,
+        speed: 0.35,
+      },
+      {
+        x: 0.2,
+        y: 0.4,
+        r: 0.4,
+        color: [40, 160, 140],
+        vx: 0.015,
+        vy: 0.012,
+        phase: 3.6,
+        speed: 0.2,
+      },
+      {
+        x: 0.8,
+        y: 0.7,
+        r: 0.35,
+        color: [140, 80, 180],
+        vx: -0.012,
+        vy: -0.008,
+        phase: 4.8,
+        speed: 0.28,
+      },
+      {
+        x: 0.5,
+        y: 0.8,
+        r: 0.6,
+        color: [255, 170, 60],
+        vx: 0.006,
+        vy: 0.004,
+        phase: 0.8,
+        speed: 0.15,
+      },
     ];
 
     let t = 0;
@@ -111,7 +165,14 @@ export function Aurora({ className = '' }: { className?: string }) {
       // Horizon arc glow
       ctx.globalCompositeOperation = 'screen';
       const arcY = h * 0.85;
-      const arcGrad = ctx.createRadialGradient(w / 2, arcY + h * 0.3, 0, w / 2, arcY + h * 0.3, w * 0.7);
+      const arcGrad = ctx.createRadialGradient(
+        w / 2,
+        arcY + h * 0.3,
+        0,
+        w / 2,
+        arcY + h * 0.3,
+        w * 0.7,
+      );
       arcGrad.addColorStop(0, 'rgba(255, 160, 60, 0.25)');
       arcGrad.addColorStop(0.3, 'rgba(220, 100, 50, 0.1)');
       arcGrad.addColorStop(0.6, 'rgba(180, 60, 80, 0.04)');

@@ -40,12 +40,10 @@ export function ProductScreenshot({
   }
 
   const floatClass =
-    layout === 'float-right'
-      ? 'md:float-right md:ml-6 md:mr-0'
-      : 'md:float-left md:mr-6 md:ml-0';
+    layout === 'float-right' ? 'md:float-right md:ml-6 md:mr-0' : 'md:float-left md:mr-6 md:ml-0';
 
   return (
-    <figure className={`my-4 w-full md:mb-4 md:mt-1 md:w-1/2 ${floatClass}`}>
+    <figure className={`my-4 w-full md:mt-1 md:mb-4 md:w-1/2 ${floatClass}`}>
       <div className="relative overflow-hidden rounded-lg border border-white/[0.08]">
         <Image
           src={src}
@@ -57,9 +55,7 @@ export function ProductScreenshot({
         />
       </div>
       {caption && (
-        <figcaption className="mt-2 font-mono text-[11px] text-neutral-500">
-          {caption}
-        </figcaption>
+        <figcaption className="mt-2 font-mono text-[11px] text-neutral-500">{caption}</figcaption>
       )}
     </figure>
   );

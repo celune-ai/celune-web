@@ -9,9 +9,13 @@ export default function PopoverPage() {
   return (
     <>
       <h1>Popover</h1>
-      <p>Radix Popover for floating content panels. Uses <code>bg-surface-100</code> with border and shadow.</p>
+      <p>
+        Radix Popover for floating content panels. Uses <code>bg-surface-100</code> with border and
+        shadow.
+      </p>
 
-      <CodeBlock code={`import { Popover, PopoverTrigger, PopoverContent } from '@repo/ui/components/popover'
+      <CodeBlock
+        code={`import { Popover, PopoverTrigger, PopoverContent } from '@repo/ui/components/popover'
 
 <Popover>
   <PopoverTrigger asChild>
@@ -25,11 +29,15 @@ export default function PopoverPage() {
       </p>
     </div>
   </PopoverContent>
-</Popover>`} />
+</Popover>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import { Popover, PopoverTrigger, PopoverContent } from '@repo/ui/components/popover'`} lang="tsx" />
+      <CodeBlock
+        code={`import { Popover, PopoverTrigger, PopoverContent } from '@repo/ui/components/popover'`}
+        lang="tsx"
+      />
     </>
   );
 }

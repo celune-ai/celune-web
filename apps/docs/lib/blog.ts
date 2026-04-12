@@ -49,6 +49,56 @@ export const posts: BlogPost[] = [
     tags: ['AI', 'Memory', 'Knowledge Graph', 'Agents', 'Engineering'],
     published: true,
   },
+  {
+    slug: 'inside-celunes-task-lifecycle',
+    title: "Inside Celune's Task Lifecycle",
+    description:
+      'Backlog, Inbox, Scoping, Planned, In Progress, Review, Done — the full lifecycle that powers Celune agent coordination, with claim semantics, handoffs, and failure modes.',
+    date: '2026-04-09',
+    author: 'Eric Smejkal',
+    tags: ['Celune', 'Agents', 'Task System', 'Engineering', 'Claude Code'],
+    published: true,
+  },
+  {
+    slug: 'why-we-built-second-brain-as-celunes-spine',
+    title: "Why We Built Second-Brain as Celune's Spine",
+    description:
+      'Local-canonical memory, five stratified layers, and markdown as the durable substrate. Why the vault wins over a cloud-native database for agent memory.',
+    date: '2026-04-09',
+    author: 'Eric Smejkal',
+    tags: ['Celune', 'Memory', 'Second Brain', 'Agents', 'Architecture'],
+    published: true,
+  },
+  {
+    slug: 'the-three-tier-orchestration-model',
+    title: 'The Three-Tier Orchestration Model',
+    description:
+      'When to use a single agent, when to spawn sub-agents, when to stand up a full agent team. The decision tree, the hard rules, and the cost-control guardrails.',
+    date: '2026-04-09',
+    author: 'Eric Smejkal',
+    tags: ['Celune', 'Agents', 'Orchestration', 'Claude Code', 'Engineering'],
+    published: true,
+  },
+  {
+    slug: 'how-rick-plans-your-week',
+    title: 'How RICK Plans Your Week',
+    description:
+      'RICK is the general manager of your workweek: daily inbox triage, top-3 selection, delegation decisions, and the end-of-day wrap that keeps tomorrow stable.',
+    date: '2026-04-09',
+    author: 'Eric Smejkal',
+    tags: ['Celune', 'RICK', 'Agents', 'Planning', 'Productivity'],
+    published: true,
+  },
+  {
+    slug: 'hooks-vs-skills-when-to-use-which',
+    title: 'Hooks vs Skills: When to Use Which',
+    description:
+      'Hooks are harness-level automation. Skills are agent-level workflows. The decision rule, the failure modes, and the patterns that combine both.',
+    date: '2026-04-09',
+    author: 'Eric Smejkal',
+    tags: ['Claude Code', 'Hooks', 'Skills', 'Celune', 'Engineering'],
+    published: true,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

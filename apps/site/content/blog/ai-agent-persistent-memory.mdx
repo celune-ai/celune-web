@@ -12,11 +12,11 @@ Persistent memory for AI agents isn't a database. It's not a vector store. It's 
 
 There are three distinct layers:
 
-| Layer | What it stores | How it's accessed |
-| ----- | -------------- | ----------------- |
-| Session memory | Current conversation, in-progress work | Automatic (context window) |
-| Working memory | Decisions, preferences, project state | Written/read per session |
-| Long-term memory | Identity, skills, accumulated knowledge | Loaded at session start |
+| Layer            | What it stores                          | How it's accessed          |
+| ---------------- | --------------------------------------- | -------------------------- |
+| Session memory   | Current conversation, in-progress work  | Automatic (context window) |
+| Working memory   | Decisions, preferences, project state   | Written/read per session   |
+| Long-term memory | Identity, skills, accumulated knowledge | Loaded at session start    |
 
 Most agent frameworks give you session memory for free. Working memory is where things get interesting. Long-term memory is where they get hard.
 
@@ -55,7 +55,14 @@ reference → Where to find things in external systems
 
 When an agent starts a coding task, it loads `project` and `feedback` memories. When it's writing content, it loads `user` preferences. The categories act as a filter that keeps context lean.
 
-<ProductScreenshot src="/blog/screenshots/memory-system.jpg" alt="Celune memory system interface showing typed memory categories with entries for user preferences, project facts, feedback, and references" width={1200} height={750} layout="full" caption="Typed memory categories in practice — each entry is tagged by type so agents load only what is relevant to the current task." />
+<ProductScreenshot
+  src="/blog/screenshots/memory-system.jpg"
+  alt="Celune memory system interface showing typed memory categories with entries for user preferences, project facts, feedback, and references"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="Typed memory categories in practice — each entry is tagged by type so agents load only what is relevant to the current task."
+/>
 
 ### 2. Write-on-learn, not write-on-close
 
@@ -112,7 +119,14 @@ Persistent memory doesn't solve everything. The current limitations are real:
 
 **Memories can conflict.** Early in a project you decided on REST. Later you switched to GraphQL. If both memories exist without versioning, the agent gets confused. Temporal ordering and explicit supersession ("this replaces the March 5 decision") helps, but it's not solved.
 
-<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team cards showing RICK, SAGE, NOIR, SCAN, and DELV agents — each with their own identity and shared memory access" width={1200} height={750} layout="float-right" caption="Multiple agents sharing a memory store — each has its own identity namespace while accessing shared project-level memories." />
+<ProductScreenshot
+  src="/blog/screenshots/agent-config.jpg"
+  alt="Celune agent team cards showing RICK, SAGE, NOIR, SCAN, and DELV agents — each with their own identity and shared memory access"
+  width={1200}
+  height={750}
+  layout="float-right"
+  caption="Multiple agents sharing a memory store — each has its own identity namespace while accessing shared project-level memories."
+/>
 
 **Cross-agent memory is harder.** When multiple agents share a memory store, coordination matters. Agent A shouldn't overwrite Agent B's working context. Namespacing by agent identity helps, but shared project-level memories still need merge logic.
 

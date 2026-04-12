@@ -6,40 +6,104 @@ export const metadata = {
 };
 
 const FORM_COMPONENTS = [
-  { href: '/design/components/button', name: 'Button', description: 'Primary action component with semantic variants' },
-  { href: '/design/components/input', name: 'Input', description: 'Text input with brand focus ring' },
+  {
+    href: '/design/components/button',
+    name: 'Button',
+    description: 'Primary action component with semantic variants',
+  },
+  {
+    href: '/design/components/input',
+    name: 'Input',
+    description: 'Text input with brand focus ring',
+  },
   { href: '/design/components/textarea', name: 'Textarea', description: 'Multi-line text input' },
   { href: '/design/components/select', name: 'Select', description: 'Radix Select dropdown' },
-  { href: '/design/components/checkbox', name: 'Checkbox', description: 'Radix Checkbox with brand checked state' },
-  { href: '/design/components/switch', name: 'Switch', description: 'Toggle switch for binary options' },
-  { href: '/design/components/radio-group', name: 'Radio Group', description: 'Single-choice selection group' },
+  {
+    href: '/design/components/checkbox',
+    name: 'Checkbox',
+    description: 'Radix Checkbox with brand checked state',
+  },
+  {
+    href: '/design/components/switch',
+    name: 'Switch',
+    description: 'Toggle switch for binary options',
+  },
+  {
+    href: '/design/components/radio-group',
+    name: 'Radio Group',
+    description: 'Single-choice selection group',
+  },
   { href: '/design/components/label', name: 'Label', description: 'Accessible form field label' },
 ];
 
 const DISPLAY_COMPONENTS = [
-  { href: '/design/components/badge', name: 'Badge', description: 'Status indicators and classification tags' },
-  { href: '/design/components/card', name: 'Card', description: 'Surface container with header, content, footer' },
-  { href: '/design/components/alert', name: 'Alert', description: 'Callout boxes with semantic variants' },
-  { href: '/design/components/avatar', name: 'Avatar', description: 'User avatar with fallback initials' },
-  { href: '/design/components/skeleton', name: 'Skeleton', description: 'Animated loading placeholder' },
-  { href: '/design/components/progress', name: 'Progress', description: 'Progress bar with brand fill' },
-  { href: '/design/components/table', name: 'Table', description: 'Styled table primitives for data display' },
+  {
+    href: '/design/components/badge',
+    name: 'Badge',
+    description: 'Status indicators and classification tags',
+  },
+  {
+    href: '/design/components/card',
+    name: 'Card',
+    description: 'Surface container with header, content, footer',
+  },
+  {
+    href: '/design/components/alert',
+    name: 'Alert',
+    description: 'Callout boxes with semantic variants',
+  },
+  {
+    href: '/design/components/avatar',
+    name: 'Avatar',
+    description: 'User avatar with fallback initials',
+  },
+  {
+    href: '/design/components/skeleton',
+    name: 'Skeleton',
+    description: 'Animated loading placeholder',
+  },
+  {
+    href: '/design/components/progress',
+    name: 'Progress',
+    description: 'Progress bar with brand fill',
+  },
+  {
+    href: '/design/components/table',
+    name: 'Table',
+    description: 'Styled table primitives for data display',
+  },
 ];
 
 const OVERLAY_COMPONENTS = [
-  { href: '/design/components/dialog', name: 'Dialog', description: 'Modal dialog with surface background' },
+  {
+    href: '/design/components/dialog',
+    name: 'Dialog',
+    description: 'Modal dialog with surface background',
+  },
   { href: '/design/components/popover', name: 'Popover', description: 'Floating content panel' },
   { href: '/design/components/tooltip', name: 'Tooltip', description: 'Dark tooltip on hover' },
 ];
 
 const NAVIGATION_COMPONENTS = [
   { href: '/design/components/tabs', name: 'Tabs', description: 'Pill-style tab navigation' },
-  { href: '/design/components/accordion', name: 'Accordion', description: 'Collapsible content sections' },
-  { href: '/design/components/scroll-area', name: 'Scroll Area', description: 'Custom scrollbar styling' },
+  {
+    href: '/design/components/accordion',
+    name: 'Accordion',
+    description: 'Collapsible content sections',
+  },
+  {
+    href: '/design/components/scroll-area',
+    name: 'Scroll Area',
+    description: 'Custom scrollbar styling',
+  },
   { href: '/design/components/toggle', name: 'Toggle', description: 'Binary on/off toggle button' },
 ];
 
-function ComponentGrid({ items }: { items: { href: string; name: string; description: string }[] }) {
+function ComponentGrid({
+  items,
+}: {
+  items: { href: string; name: string; description: string }[];
+}) {
   return (
     <div className="not-prose my-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
       {items.map(({ href, name, description }) => (
@@ -97,12 +161,24 @@ export default function ComponentsPage() {
       </p>
 
       <ul>
-        <li><strong>Page header</strong> - Breadcrumb + h1 + description + action button(s)</li>
-        <li><strong>Form item layout</strong> - Label + Input/Select + description + error message</li>
-        <li><strong>Confirmation modal</strong> - Dialog + destructive Button + cancel</li>
-        <li><strong>Data table</strong> - Table + sort headers + pagination</li>
-        <li><strong>Metric card</strong> - Card + large value + label + trend indicator</li>
-        <li><strong>Empty state</strong> - Icon + heading + description + CTA Button</li>
+        <li>
+          <strong>Page header</strong> - Breadcrumb + h1 + description + action button(s)
+        </li>
+        <li>
+          <strong>Form item layout</strong> - Label + Input/Select + description + error message
+        </li>
+        <li>
+          <strong>Confirmation modal</strong> - Dialog + destructive Button + cancel
+        </li>
+        <li>
+          <strong>Data table</strong> - Table + sort headers + pagination
+        </li>
+        <li>
+          <strong>Metric card</strong> - Card + large value + label + trend indicator
+        </li>
+        <li>
+          <strong>Empty state</strong> - Icon + heading + description + CTA Button
+        </li>
       </ul>
 
       <h2>Chart components</h2>
@@ -113,8 +189,20 @@ export default function ComponentsPage() {
       </p>
 
       <ul>
-        <li><a href="/design/charts"><strong>Charts</strong></a> - <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>, <code>LogsBarChart</code>, <code>ChartTooltip</code></li>
-        <li><a href="/design/metrics"><strong>Metric Cards</strong></a> - <code>MetricCard</code>, <code>MetricCardValue</code>, <code>MetricCardDifferential</code>, <code>MetricCardSparkline</code></li>
+        <li>
+          <a href="/design/charts">
+            <strong>Charts</strong>
+          </a>{' '}
+          - <code>ChartCard</code>, <code>BarChartCard</code>, <code>LineChartCard</code>,{' '}
+          <code>LogsBarChart</code>, <code>ChartTooltip</code>
+        </li>
+        <li>
+          <a href="/design/metrics">
+            <strong>Metric Cards</strong>
+          </a>{' '}
+          - <code>MetricCard</code>, <code>MetricCardValue</code>,{' '}
+          <code>MetricCardDifferential</code>, <code>MetricCardSparkline</code>
+        </li>
       </ul>
     </>
   );

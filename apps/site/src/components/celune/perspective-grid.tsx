@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { cn } from "@/lib/cn";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { cn } from '@/lib/cn';
 
 export interface PerspectiveGridProps {
   /** Width of the component in pixels or CSS value */
@@ -40,10 +40,10 @@ export interface PerspectiveGridProps {
 }
 
 const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
-  width = "100%",
+  width = '100%',
   height = 400,
   speed = 0.5,
-  color = "#FF9FFC",
+  color = '#FF9FFC',
   gridScale = 1.0,
   lineThickness = 1,
   antialiasQuality = 64.0,
@@ -53,7 +53,7 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
   perspective = 0.0,
   gridLength = 10.0,
   curve = 0.0,
-  bottomFade = "#0a0a0a",
+  bottomFade = '#0a0a0a',
   className,
   children,
 }) => {
@@ -87,7 +87,7 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: "high-performance",
+      powerPreference: 'high-performance',
     });
     renderer.setClearColor(0x000000, 0);
 
@@ -95,9 +95,9 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
     renderer.setSize(actualWidth, actualHeight, false);
     renderer.setPixelRatio(pixelRatio);
 
-    renderer.domElement.style.width = "100%";
-    renderer.domElement.style.height = "100%";
-    renderer.domElement.style.display = "block";
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
 
     container.appendChild(renderer.domElement);
 
@@ -256,10 +256,10 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
       uniforms.iResolution.value.set(newBufferWidth, newBufferHeight, 1.0);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(rafRef.current);
       scene.remove(mesh);
       geometry.dispose();
@@ -283,12 +283,12 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
     curve,
   ]);
 
-  const widthStyle = typeof width === "number" ? `${width}px` : width;
-  const heightStyle = typeof height === "number" ? `${height}px` : height;
+  const widthStyle = typeof width === 'number' ? `${width}px` : width;
+  const heightStyle = typeof height === 'number' ? `${height}px` : height;
 
   return (
     <div
-      className={cn("relative overflow-hidden", className)}
+      className={cn('relative overflow-hidden', className)}
       style={{
         width: widthStyle,
         height: heightStyle,
@@ -297,21 +297,19 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = ({
       <div ref={containerRef} className="absolute inset-0" />
       {bottomFade && (
         <div
-          className="absolute bottom-0 left-0 right-0 h-[30%] pointer-events-none z-5"
+          className="pointer-events-none absolute right-0 bottom-0 left-0 z-5 h-[30%]"
           style={{
             background: `linear-gradient(to top, ${bottomFade}, transparent)`,
           }}
         />
       )}
       {children && (
-        <div className="relative z-10 w-full h-full pointer-events-none">
-          {children}
-        </div>
+        <div className="pointer-events-none relative z-10 h-full w-full">{children}</div>
       )}
     </div>
   );
 };
 
-PerspectiveGrid.displayName = "PerspectiveGrid";
+PerspectiveGrid.displayName = 'PerspectiveGrid';
 
 export default PerspectiveGrid;

@@ -32,9 +32,16 @@ I'll walk through a typical day to make this concrete, because the abstract vers
 
 I spend the first hour reviewing what happened overnight. If I kicked off a build session before bed, there are commits to review, PRs to check, and sometimes a completed feature branch waiting for my eyes. I check the task board, review agent output, and decide what to prioritize.
 
-This is still fully human work. Deciding *what* to build, *why* it matters, and *in what order* — that's the job. Agents don't have product instincts. They have execution capacity.
+This is still fully human work. Deciding _what_ to build, _why_ it matters, and _in what order_ — that's the job. Agents don't have product instincts. They have execution capacity.
 
-<ProductScreenshot src="/blog/screenshots/task-board.jpg" alt="Celune kanban task board showing Inbox, In Progress, and Done columns with agent-assigned tasks" width={1200} height={750} layout="full" caption="The morning starts here — reviewing overnight agent output on the shared task board." />
+<ProductScreenshot
+  src="/blog/screenshots/task-board.jpg"
+  alt="Celune kanban task board showing Inbox, In Progress, and Done columns with agent-assigned tasks"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="The morning starts here — reviewing overnight agent output on the shared task board."
+/>
 
 ### Midday: Building With Agents
 
@@ -61,16 +68,22 @@ This is where the "5-person team" comparison becomes literal. I have the output 
 
 Not all agents are equal, and treating them as interchangeable is a mistake I made early on. Here's what I've landed on:
 
-<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team configuration showing cards for RICK, SAGE, NOIR, SCAN, and DELV agents with their roles and model assignments" width={1200} height={750} layout="float-right" caption="Each agent has a defined role and model tier — the team that runs my one-person startup." />
+<ProductScreenshot
+  src="/blog/screenshots/agent-config.jpg"
+  alt="Celune agent team configuration showing cards for RICK, SAGE, NOIR, SCAN, and DELV agents with their roles and model assignments"
+  width={1200}
+  height={750}
+  layout="float-right"
+  caption="Each agent has a defined role and model tier — the team that runs my one-person startup."
+/>
 
-
-| Role | What It Does | Model Tier |
-|------|-------------|------------|
-| Lead / Coder | Writes implementation code, owns the codebase | Frontier (Opus-class) |
-| Code Reviewer | Reviews PRs, flags issues, enforces standards | Mid-tier (Sonnet-class) |
-| PM / Writer | Writes specs, PRDs, documentation | Mid-tier |
-| Designer | UI/UX feedback, design system consistency | Mid-tier |
-| Researcher | Background research, competitive analysis | Lightweight (Haiku-class) |
+| Role          | What It Does                                  | Model Tier                |
+| ------------- | --------------------------------------------- | ------------------------- |
+| Lead / Coder  | Writes implementation code, owns the codebase | Frontier (Opus-class)     |
+| Code Reviewer | Reviews PRs, flags issues, enforces standards | Mid-tier (Sonnet-class)   |
+| PM / Writer   | Writes specs, PRDs, documentation             | Mid-tier                  |
+| Designer      | UI/UX feedback, design system consistency     | Mid-tier                  |
+| Researcher    | Background research, competitive analysis     | Lightweight (Haiku-class) |
 
 The key insight: **use the cheapest model that can do the job well.** Your lead coder needs the best reasoning available. Your researcher doesn't. This keeps costs manageable and avoids the trap of throwing frontier models at everything.
 
@@ -84,9 +97,9 @@ At Celune, we built this structure into the platform — each agent has a define
 
 I'd be lying if I said agents handle everything. Here's where they consistently fall short:
 
-**Product decisions.** Agents can tell you *how* to build something. They can't tell you *what's worth building.* They don't understand your market, your users' frustrations, or the competitive landscape in a way that produces good strategy.
+**Product decisions.** Agents can tell you _how_ to build something. They can't tell you _what's worth building._ They don't understand your market, your users' frustrations, or the competitive landscape in a way that produces good strategy.
 
-**Taste.** Design agents can check for consistency — "this button doesn't match your design system" — but they can't tell you whether the page *feels* right. Aesthetic judgment, information hierarchy, the emotional weight of a layout. Still human.
+**Taste.** Design agents can check for consistency — "this button doesn't match your design system" — but they can't tell you whether the page _feels_ right. Aesthetic judgment, information hierarchy, the emotional weight of a layout. Still human.
 
 **Ambiguity.** Give an agent a well-scoped task with clear acceptance criteria and it performs well. Give it a vague directive like "make the onboarding feel better" and it'll produce something technically correct and completely wrong.
 
@@ -104,15 +117,15 @@ Let's talk numbers, because this only works if the math makes sense.
 
 A recent survey found that solopreneurs using AI agents saw an average revenue increase of 340% compared to those who didn't. Daily users of tools like Claude Code save an average of 4.1 hours per week — and that number is almost certainly higher now that agents can run autonomously overnight.
 
-| | AI Agent Team | 3-Person Human Team |
-|--|--------------|-------------------|
-| Monthly cost | $500-1,500 | $25,000-45,000 |
-| Available hours/day | 24 | 24 (across 3 people, 8hr each) |
-| Ramp-up time | Minutes | Weeks to months |
-| Consistency | High (same conventions every time) | Variable |
-| Product judgment | None (you provide it) | Some (if senior) |
+|                     | AI Agent Team                      | 3-Person Human Team            |
+| ------------------- | ---------------------------------- | ------------------------------ |
+| Monthly cost        | $500-1,500                         | $25,000-45,000                 |
+| Available hours/day | 24                                 | 24 (across 3 people, 8hr each) |
+| Ramp-up time        | Minutes                            | Weeks to months                |
+| Consistency         | High (same conventions every time) | Variable                       |
+| Product judgment    | None (you provide it)              | Some (if senior)               |
 
-The cost difference is staggering. But it's not just about saving money — it's about what becomes *possible.* At $500/month in AI costs, you can experiment. You can build three versions of a feature and pick the best one. You can afford to throw away work that isn't good enough.
+The cost difference is staggering. But it's not just about saving money — it's about what becomes _possible._ At $500/month in AI costs, you can experiment. You can build three versions of a feature and pick the best one. You can afford to throw away work that isn't good enough.
 
 That kind of optionality used to require either venture funding or years of savings. Now it requires a laptop and a credit card.
 

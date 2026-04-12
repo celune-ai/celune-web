@@ -64,23 +64,30 @@ That's it. No lengthy backstories. No personality quizzes. No "you're a creative
 
 ---
 
-<ProductScreenshot src="/blog/screenshots/agent-config.jpg" alt="Celune agent team cards showing RICK, SAGE, NOIR, SCAN, and DELV with their defined roles, model tiers, and responsibilities" width={1200} height={750} layout="full" caption="Every agent gets a structured job description — name, role, model tier, and clear boundaries. This is what it looks like in production." />
+<ProductScreenshot
+  src="/blog/screenshots/agent-config.jpg"
+  alt="Celune agent team cards showing RICK, SAGE, NOIR, SCAN, and DELV with their defined roles, model tiers, and responsibilities"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="Every agent gets a structured job description — name, role, model tier, and clear boundaries. This is what it looks like in production."
+/>
 
 ## The Nine-Agent Roster
 
 Here's what this looks like in practice. Our studio runs nine agents:
 
-| Agent | Role | Key constraint |
-| ----- | ---- | -------------- |
-| RICK | Lead engineer + coder | Codes directly, delegates only for parallelism |
-| SAGE | PM + writer | Strategy and content, never code |
-| NOIR | Designer | Visual and UX review, never code |
-| SCAN | Code reviewer | Finds problems, doesn't fix them |
-| DELV | Researcher | Fact-finding, no opinions on implementation |
-| TREK | Career strategist | External-facing, networking |
-| ECHO | Brand + content | Social presence, messaging |
-| BOND | CRM | Relationships, follow-ups |
-| VITA | Growth | Goals, habits, personal development |
+| Agent | Role                  | Key constraint                                 |
+| ----- | --------------------- | ---------------------------------------------- |
+| RICK  | Lead engineer + coder | Codes directly, delegates only for parallelism |
+| SAGE  | PM + writer           | Strategy and content, never code               |
+| NOIR  | Designer              | Visual and UX review, never code               |
+| SCAN  | Code reviewer         | Finds problems, doesn't fix them               |
+| DELV  | Researcher            | Fact-finding, no opinions on implementation    |
+| TREK  | Career strategist     | External-facing, networking                    |
+| ECHO  | Brand + content       | Social presence, messaging                     |
+| BOND  | CRM                   | Relationships, follow-ups                      |
+| VITA  | Growth                | Goals, habits, personal development            |
 
 The constraints column is the most important. SCAN finds problems but doesn't fix them — because a reviewer who also implements their own suggestions loses objectivity. DELV gathers facts but doesn't advocate for technical choices — because a researcher who has opinions on architecture is no longer neutral.
 
@@ -92,15 +99,22 @@ These constraints feel artificial. They're not. They're the same role boundaries
 
 Not every role needs the most expensive model. This is the part most people miss.
 
-| Tier | Model | Why |
-| ---- | ----- | --- |
-| 1 (reasoning) | Opus | Architecture, implementation, security analysis |
-| 2 (execution) | Sonnet | Code review, design review, content strategy |
-| 3 (bounded tasks) | Haiku | Research, data gathering, formulaic output |
+| Tier              | Model  | Why                                             |
+| ----------------- | ------ | ----------------------------------------------- |
+| 1 (reasoning)     | Opus   | Architecture, implementation, security analysis |
+| 2 (execution)     | Sonnet | Code review, design review, content strategy    |
+| 3 (bounded tasks) | Haiku  | Research, data gathering, formulaic output      |
 
 The model tier is in the job description because it prevents cost waste. A researcher running on Opus is burning premium tokens on work that Haiku handles equally well. A lead engineer running on Haiku will make architectural mistakes that cost more to fix than the token savings.
 
-<ProductScreenshot src="/blog/screenshots/cost-tracking.jpg" alt="Celune cost analytics showing per-agent token spend broken down by model tier, demonstrating how tiered model assignment controls costs" width={1200} height={750} layout="float-left" caption="Tiered model assignment in action — Opus handles architecture, Sonnet handles reviews, Haiku handles research. The cost difference is dramatic." />
+<ProductScreenshot
+  src="/blog/screenshots/cost-tracking.jpg"
+  alt="Celune cost analytics showing per-agent token spend broken down by model tier, demonstrating how tiered model assignment controls costs"
+  width={1200}
+  height={750}
+  layout="float-left"
+  caption="Tiered model assignment in action — Opus handles architecture, Sonnet handles reviews, Haiku handles research. The cost difference is dramatic."
+/>
 
 Model selection is a cost decision _and_ a quality decision. The job description is where both are documented.
 

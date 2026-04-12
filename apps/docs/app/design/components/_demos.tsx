@@ -1,6 +1,15 @@
 'use client';
 
-import { Mail, MoreVertical, Pencil, AlertCircle, Info, CheckCircle, AlertTriangle, ChevronDown } from 'lucide-react';
+import {
+  Mail,
+  MoreVertical,
+  Pencil,
+  AlertCircle,
+  Info,
+  CheckCircle,
+  AlertTriangle,
+  ChevronDown,
+} from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
 /*  Shared inline demo components (hand-crafted to match design tokens) */
@@ -15,7 +24,8 @@ export function DemoButton({
   variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'warning' | 'link';
   size?: 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm';
 }) {
-  const base = 'inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:pointer-events-none disabled:opacity-50';
+  const base =
+    'inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:pointer-events-none disabled:opacity-50';
 
   const variants: Record<string, string> = {
     default: 'bg-brand text-black hover:bg-brand/80',
@@ -35,11 +45,7 @@ export function DemoButton({
     'icon-sm': 'h-7 w-7',
   };
 
-  return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]}`}>
-      {children}
-    </button>
-  );
+  return <button className={`${base} ${variants[variant]} ${sizes[size]}`}>{children}</button>;
 }
 
 export function DemoBadge({
@@ -47,9 +53,18 @@ export function DemoBadge({
   variant = 'default',
 }: {
   children: React.ReactNode;
-  variant?: 'default' | 'secondary' | 'outline' | 'brand' | 'success' | 'warning' | 'destructive' | 'ghost';
+  variant?:
+    | 'default'
+    | 'secondary'
+    | 'outline'
+    | 'brand'
+    | 'success'
+    | 'warning'
+    | 'destructive'
+    | 'ghost';
 }) {
-  const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors';
+  const base =
+    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors';
 
   const variants: Record<string, string> = {
     default: 'bg-brand text-black',
@@ -88,9 +103,17 @@ export function DemoTextarea() {
 export function DemoCheckbox({ label, checked = false }: { label: string; checked?: boolean }) {
   return (
     <label className="flex items-center gap-2">
-      <span className={`flex h-4 w-4 items-center justify-center rounded border ${checked ? 'bg-brand border-brand' : 'border-border-control bg-surface-100'}`}>
+      <span
+        className={`flex h-4 w-4 items-center justify-center rounded border ${checked ? 'bg-brand border-brand' : 'border-border-control bg-surface-100'}`}
+      >
         {checked && (
-          <svg className="h-3 w-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <svg
+            className="h-3 w-3 text-black"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={3}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         )}
@@ -102,8 +125,12 @@ export function DemoCheckbox({ label, checked = false }: { label: string; checke
 
 export function DemoSwitch({ on = false }: { on?: boolean }) {
   return (
-    <span className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${on ? 'bg-brand' : 'bg-surface-400'}`}>
-      <span className={`inline-block h-4 w-4 rounded-full bg-white transition-transform ${on ? 'translate-x-4' : 'translate-x-0.5'}`} />
+    <span
+      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${on ? 'bg-brand' : 'bg-surface-400'}`}
+    >
+      <span
+        className={`inline-block h-4 w-4 rounded-full bg-white transition-transform ${on ? 'translate-x-4' : 'translate-x-0.5'}`}
+      />
     </span>
   );
 }
@@ -116,10 +143,14 @@ export function DemoCard() {
         <p className="text-foreground-lighter mt-1 text-xs">Card description text</p>
       </div>
       <div className="px-6 py-4">
-        <p className="text-foreground-light text-sm">Card content goes here. This is the main body of the card.</p>
+        <p className="text-foreground-light text-sm">
+          Card content goes here. This is the main body of the card.
+        </p>
       </div>
       <div className="border-border flex justify-end gap-2 border-t px-6 py-3">
-        <DemoButton variant="outline" size="sm">Cancel</DemoButton>
+        <DemoButton variant="outline" size="sm">
+          Cancel
+        </DemoButton>
         <DemoButton size="sm">Save</DemoButton>
       </div>
     </div>
@@ -139,8 +170,16 @@ export function DemoAlert({
     default: { bg: 'bg-surface-100 border-border', text: 'text-foreground', icon: Info },
     info: { bg: 'bg-brand-200/20 border-brand-200', text: 'text-brand-600', icon: Info },
     success: { bg: 'bg-brand-200/20 border-brand-200', text: 'text-brand-600', icon: CheckCircle },
-    warning: { bg: 'bg-warning-200/20 border-warning-200', text: 'text-warning-600', icon: AlertTriangle },
-    destructive: { bg: 'bg-destructive-200/20 border-destructive-200', text: 'text-destructive-600', icon: AlertCircle },
+    warning: {
+      bg: 'bg-warning-200/20 border-warning-200',
+      text: 'text-warning-600',
+      icon: AlertTriangle,
+    },
+    destructive: {
+      bg: 'bg-destructive-200/20 border-destructive-200',
+      text: 'text-destructive-600',
+      icon: AlertCircle,
+    },
   };
 
   const s = styles[variant];
@@ -197,7 +236,9 @@ export function DemoAvatar({ initials = 'ES' }: { initials?: string; src?: strin
 export function DemoTabs() {
   return (
     <div className="bg-surface-200 inline-flex gap-1 rounded-lg p-1">
-      <span className="bg-background text-foreground rounded-md px-3 py-1.5 text-sm font-medium shadow-sm">Overview</span>
+      <span className="bg-background text-foreground rounded-md px-3 py-1.5 text-sm font-medium shadow-sm">
+        Overview
+      </span>
       <span className="text-foreground-muted rounded-md px-3 py-1.5 text-sm">Settings</span>
       <span className="text-foreground-muted rounded-md px-3 py-1.5 text-sm">Activity</span>
     </div>
@@ -209,11 +250,18 @@ export function DemoDialog() {
     <div className="bg-surface-100 border-border w-96 rounded-lg border shadow-lg">
       <div className="px-6 pt-6 pb-2">
         <h4 className="text-foreground text-base font-medium">Delete project?</h4>
-        <p className="text-foreground-lighter mt-2 text-sm">This action cannot be undone. All tasks and data associated with this project will be permanently removed.</p>
+        <p className="text-foreground-lighter mt-2 text-sm">
+          This action cannot be undone. All tasks and data associated with this project will be
+          permanently removed.
+        </p>
       </div>
       <div className="flex justify-end gap-2 px-6 py-4">
-        <DemoButton variant="outline" size="sm">Cancel</DemoButton>
-        <DemoButton variant="destructive" size="sm">Delete</DemoButton>
+        <DemoButton variant="outline" size="sm">
+          Cancel
+        </DemoButton>
+        <DemoButton variant="destructive" size="sm">
+          Delete
+        </DemoButton>
       </div>
     </div>
   );
@@ -222,7 +270,9 @@ export function DemoDialog() {
 export function DemoTooltip() {
   return (
     <div className="flex items-center gap-3">
-      <DemoButton variant="ghost" size="icon-sm"><Pencil size={14} /></DemoButton>
+      <DemoButton variant="ghost" size="icon-sm">
+        <Pencil size={14} />
+      </DemoButton>
       <div className="bg-surface-400 rounded-md px-3 py-1.5 text-xs text-white shadow-md">
         Edit task
         <div className="bg-surface-400 absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45" />

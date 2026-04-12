@@ -11,7 +11,9 @@ export default function ProgressPage() {
   return (
     <>
       <h1>Progress</h1>
-      <p>Radix Progress with brand fill. Accepts a <code>value</code> prop (0-100).</p>
+      <p>
+        Radix Progress with brand fill. Accepts a <code>value</code> prop (0-100).
+      </p>
 
       <ComponentPreview className="flex-col gap-4">
         <DemoProgress value={25} />
@@ -19,9 +21,11 @@ export default function ProgressPage() {
         <DemoProgress value={100} />
       </ComponentPreview>
 
-      <CodeBlock code={`import { Progress } from '@repo/ui/components/progress'
+      <CodeBlock
+        code={`import { Progress } from '@repo/ui/components/progress'
 
-<Progress value={65} />`} />
+<Progress value={65} />`}
+      />
 
       <h2>Usage</h2>
 
@@ -36,7 +40,17 @@ export default function ProgressPage() {
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>value</code></td><td><code>number</code> (0-100)</td><td><code>0</code></td></tr>
+          <tr>
+            <td>
+              <code>value</code>
+            </td>
+            <td>
+              <code>number</code> (0-100)
+            </td>
+            <td>
+              <code>0</code>
+            </td>
+          </tr>
         </tbody>
       </table>
     </>

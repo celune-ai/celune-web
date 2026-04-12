@@ -73,11 +73,22 @@ export default function DocsHome() {
               <div className="bg-surface-200 text-foreground-lighter mb-4 flex h-10 w-10 items-center justify-center rounded-lg">
                 <Icon size={20} />
               </div>
-              <h2 className="text-foreground mb-1 text-base" style={{ fontFamily: 'var(--font-soehne-kraftig)' }}>{title}</h2>
-              <p className="mt-2 mb-4 flex-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              <h2
+                className="text-foreground mb-1 text-base"
+                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+              >
+                {title}
+              </h2>
+              <p
+                className="mt-2 mb-4 flex-1 text-sm leading-relaxed"
+                style={{ color: 'rgba(255,255,255,0.9)' }}
+              >
                 {description}
               </p>
-              <span className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors" style={{ fontFamily: 'var(--font-soehne-kraftig)' }}>
+              <span
+                className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
+                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+              >
                 Read more <ArrowRight size={14} />
               </span>
             </Link>

@@ -36,11 +36,19 @@ The build engine works through sprints:
 
 Between each sprint, the engine runs a gate check: `pnpm type-check && pnpm build && pnpm test`. If the gate fails, it stops and reports. No broken code makes it to the next sprint.
 
-<ProductScreenshot src="/blog/screenshots/task-board.jpg" alt="Celune kanban task board showing Inbox, In Progress, and Done columns with sprint-ordered tasks" width={1200} height={750} layout="full" caption="The overnight build works through sprint-ordered tasks on the Celune task board — each task scoped, assigned, and tracked." />
+<ProductScreenshot
+  src="/blog/screenshots/task-board.jpg"
+  alt="Celune kanban task board showing Inbox, In Progress, and Done columns with sprint-ordered tasks"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="The overnight build works through sprint-ordered tasks on the Celune task board — each task scoped, assigned, and tracked."
+/>
 
 ### Morning (~7 AM)
 
 You wake up to:
+
 - A PR with all changes
 - A code review document from the QA agent
 - A retrospective with pros, cons, and action items
@@ -94,22 +102,36 @@ The temptation is to queue up massive projects. In practice, the sweet spot is 1
 
 ---
 
-<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard showing uptime metrics, response charts, and recent activity feed" width={1200} height={750} layout="full" caption="The morning after — the system dashboard shows what happened overnight, with metrics, activity feed, and build health at a glance." />
+<ProductScreenshot
+  src="/blog/screenshots/dashboard.jpg"
+  alt="Celune system health dashboard showing uptime metrics, response charts, and recent activity feed"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="The morning after — the system dashboard shows what happened overnight, with metrics, activity feed, and build health at a glance."
+/>
 
 ## The Numbers
 
 From the past month of overnight builds:
 
-| Metric | Value |
-| ------ | ----- |
-| Total overnight sessions | 12 |
-| Average tasks per session | 18 |
-| Average test files created | 4 |
-| Morning review time | ~20 min |
+| Metric                           | Value   |
+| -------------------------------- | ------- |
+| Total overnight sessions         | 12      |
+| Average tasks per session        | 18      |
+| Average test files created       | 4       |
+| Morning review time              | ~20 min |
 | Sessions requiring morning fixes | 3 (25%) |
-| PR merge rate without changes | 75% |
+| PR merge rate without changes    | 75%     |
 
-<ProductScreenshot src="/blog/screenshots/cost-tracking.jpg" alt="Celune cost analytics showing per-agent token spend and model usage breakdown" width={1200} height={750} layout="float-right" caption="Every overnight session tracks per-agent costs so you know exactly what the build spent." />
+<ProductScreenshot
+  src="/blog/screenshots/cost-tracking.jpg"
+  alt="Celune cost analytics showing per-agent token spend and model usage breakdown"
+  width={1200}
+  height={750}
+  layout="float-right"
+  caption="Every overnight session tracks per-agent costs so you know exactly what the build spent."
+/>
 
 The 75% clean merge rate is the number that matters. Three out of four overnight builds produce code that's ready to merge as-is. The other 25% need minor fixes — usually mock adjustments or a test that was too tightly coupled to implementation details.
 

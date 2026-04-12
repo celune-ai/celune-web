@@ -20,9 +20,10 @@ export default function PrivacyPage() {
         <section>
           <h2 className="mb-3 text-lg font-semibold text-white">1. Information We Collect</h2>
           <p>
-            When you sign up for Celune, we collect your email address and any profile information you provide.
-            When you use the waitlist, we collect your email address and optional UTM tracking parameters.
-            We also collect usage data such as page views and feature interactions through our analytics provider (PostHog).
+            When you sign up for Celune, we collect your email address and any profile information
+            you provide. When you use the waitlist, we collect your email address and optional UTM
+            tracking parameters. We also collect usage data such as page views and feature
+            interactions through our analytics provider (PostHog).
           </p>
         </section>
 
@@ -40,18 +41,19 @@ export default function PrivacyPage() {
         <section>
           <h2 className="mb-3 text-lg font-semibold text-white">3. Data Storage & Security</h2>
           <p>
-            Your data is stored securely using Supabase (PostgreSQL) with row-level security policies.
-            All data is encrypted in transit (TLS) and at rest. We do not sell or share your personal data
-            with third parties except as required to operate the service (e.g., email delivery via Resend).
+            Your data is stored securely using Supabase (PostgreSQL) with row-level security
+            policies. All data is encrypted in transit (TLS) and at rest. We do not sell or share
+            your personal data with third parties except as required to operate the service (e.g.,
+            email delivery via Resend).
           </p>
         </section>
 
         <section>
           <h2 className="mb-3 text-lg font-semibold text-white">4. Cookies & Analytics</h2>
           <p>
-            We use PostHog for product analytics. PostHog may set cookies to track sessions.
-            We also use Vercel Analytics and Speed Insights for performance monitoring.
-            These tools collect anonymized usage data and do not track you across other websites.
+            We use PostHog for product analytics. PostHog may set cookies to track sessions. We also
+            use Vercel Analytics and Speed Insights for performance monitoring. These tools collect
+            anonymized usage data and do not track you across other websites.
           </p>
         </section>
 
@@ -60,7 +62,10 @@ export default function PrivacyPage() {
           <p>
             You can request access to, correction of, or deletion of your personal data at any time
             by contacting us at{' '}
-            <a href="mailto:hello@celune.ai" className="text-white underline">hello@celune.ai</a>.
+            <a href="mailto:hello@celune.ai" className="text-white underline">
+              hello@celune.ai
+            </a>
+            .
           </p>
         </section>
 
@@ -76,7 +81,10 @@ export default function PrivacyPage() {
           <h2 className="mb-3 text-lg font-semibold text-white">7. Contact</h2>
           <p>
             If you have questions about this privacy policy, contact us at{' '}
-            <a href="mailto:hello@celune.ai" className="text-white underline">hello@celune.ai</a>.
+            <a href="mailto:hello@celune.ai" className="text-white underline">
+              hello@celune.ai
+            </a>
+            .
           </p>
         </section>
       </div>

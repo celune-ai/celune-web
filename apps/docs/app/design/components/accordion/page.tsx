@@ -11,7 +11,8 @@ export default function AccordionPage() {
       <h1>Accordion</h1>
       <p>Radix Accordion for collapsible content sections with animated expand/collapse.</p>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
@@ -31,13 +32,17 @@ export default function AccordionPage() {
       Yes. It uses design tokens from theme.css.
     </AccordionContent>
   </AccordionItem>
-</Accordion>`} />
+</Accordion>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
-} from '@repo/ui/components/accordion'`} lang="tsx" />
+} from '@repo/ui/components/accordion'`}
+        lang="tsx"
+      />
     </>
   );
 }
