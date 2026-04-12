@@ -35,10 +35,10 @@ curl https://app.celune.ai/api/agents/configs \
 
 The key prefix indicates the environment:
 
-| Prefix       | Environment |
-| ------------ | ----------- |
-| clne_live_ | Production  |
-| clne_test_ | Development |
+| Prefix     | Environment |
+| ---------- | ----------- |
+| clne*live* | Production  |
+| clne*test* | Development |
 
 ---
 
@@ -46,8 +46,8 @@ The key prefix indicates the environment:
 
 API keys are issued with a scope that controls what they can access.
 
-| Scope   | Permissions                                                                   |
-| ------- | ----------------------------------------------------------------------------- |
+| Scope | Permissions                                                                   |
+| ----- | ----------------------------------------------------------------------------- |
 | read  | Read tasks, projects, agents, analytics                                       |
 | write | Read + create/update tasks, projects, and agents                              |
 | admin | Full access including webhooks, API keys, audit logs, and agent configuration |

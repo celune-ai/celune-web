@@ -19,7 +19,8 @@ export default function CardPage() {
         <DemoCard />
       </ComponentPreview>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Card,
   CardHeader,
   CardTitle,
@@ -40,13 +41,17 @@ export default function CardPage() {
     <Button variant="outline" size="sm">Cancel</Button>
     <Button size="sm">Save</Button>
   </CardFooter>
-</Card>`} />
+</Card>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import {
+      <CodeBlock
+        code={`import {
   Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
-} from '@repo/ui/components/card'`} lang="tsx" />
+} from '@repo/ui/components/card'`}
+        lang="tsx"
+      />
     </>
   );
 }

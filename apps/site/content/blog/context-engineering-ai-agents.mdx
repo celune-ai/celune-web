@@ -16,12 +16,12 @@ Think of it this way: prompt engineering is writing a good email to a contractor
 
 In practice, context engineering covers four areas:
 
-| Area | What it controls | Example |
-|------|-----------------|---------|
-| **Identity** | Who the agent is | Role definition, behavioral guidelines, personality constraints |
-| **Knowledge** | What the agent knows | Codebase conventions, architecture decisions, project history |
-| **State** | What's happening now | Current task, recent changes, active blockers |
-| **Boundaries** | What the agent shouldn't do | Scope limits, safety rails, approval requirements |
+| Area           | What it controls            | Example                                                         |
+| -------------- | --------------------------- | --------------------------------------------------------------- |
+| **Identity**   | Who the agent is            | Role definition, behavioral guidelines, personality constraints |
+| **Knowledge**  | What the agent knows        | Codebase conventions, architecture decisions, project history   |
+| **State**      | What's happening now        | Current task, recent changes, active blockers                   |
+| **Boundaries** | What the agent shouldn't do | Scope limits, safety rails, approval requirements               |
 
 Most teams nail identity and call it done. The teams getting real output from their agents are engineering all four.
 
@@ -37,7 +37,7 @@ When context windows were 4K tokens, you couldn't fit much in. Constraints force
 
 This doesn't work. Research from the Manus team and others has shown that as context length increases, recall accuracy decreases. More tokens doesn't mean more understanding — it often means more noise. The model starts missing critical details buried in a wall of text.
 
-The fix isn't smaller context. It's *structured* context. The right information, in the right order, at the right time.
+The fix isn't smaller context. It's _structured_ context. The right information, in the right order, at the right time.
 
 ### 2. Agents are running longer sessions
 
@@ -74,6 +74,7 @@ This layer contains everything the agent needs to know about the current state o
 The mistake teams make here is treating this like documentation. It's not. Documentation explains things to humans. Project knowledge tells agents where to look, what to avoid, and what conventions to follow. It should be terse, structured, and actionable.
 
 Good project knowledge:
+
 ```
 ## Database
 - ORM: Drizzle. Migrations in packages/db/drizzle/
@@ -82,6 +83,7 @@ Good project knowledge:
 ```
 
 Bad project knowledge:
+
 ```
 ## Database
 We use Drizzle ORM for our database layer. Drizzle is a TypeScript-first
@@ -106,12 +108,12 @@ This is the layer most teams skip entirely, and it's the one that compounds over
 
 We organize memory into typed categories:
 
-| Type | Purpose | Example |
-|------|---------|---------|
-| **Feedback** | Corrections from the user | "Don't mock the database — use real queries in tests" |
-| **Project** | Ongoing initiatives and context | "Auth rewrite driven by compliance, not tech debt" |
-| **User** | Who you're working with | "Senior Go engineer, new to React frontend" |
-| **Reference** | Where to find things | "Pipeline bugs tracked in Linear project INGEST" |
+| Type          | Purpose                         | Example                                               |
+| ------------- | ------------------------------- | ----------------------------------------------------- |
+| **Feedback**  | Corrections from the user       | "Don't mock the database — use real queries in tests" |
+| **Project**   | Ongoing initiatives and context | "Auth rewrite driven by compliance, not tech debt"    |
+| **User**      | Who you're working with         | "Senior Go engineer, new to React frontend"           |
+| **Reference** | Where to find things            | "Pipeline bugs tracked in Linear project INGEST"      |
 
 Each memory is a small file with metadata — name, description, type. An index file maps them all. The agent checks relevant memories at the start of each session, so it doesn't repeat mistakes or ask questions that were already answered.
 

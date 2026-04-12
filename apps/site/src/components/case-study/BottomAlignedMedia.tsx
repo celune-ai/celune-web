@@ -33,7 +33,7 @@ export default function BottomAlignedMedia({
       }}
       onClick={onClick}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-b-none rounded-t-lg">
+      <div className="relative h-full w-full overflow-hidden rounded-t-lg rounded-b-none">
         <img
           src={src}
           alt={alt}

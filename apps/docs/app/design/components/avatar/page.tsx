@@ -21,16 +21,21 @@ export default function AvatarPage() {
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`import { Avatar, AvatarImage, AvatarFallback } from '@repo/ui/components/avatar'
+      <CodeBlock
+        code={`import { Avatar, AvatarImage, AvatarFallback } from '@repo/ui/components/avatar'
 
 <Avatar>
   <AvatarImage src="/avatar.jpg" alt="Eric" />
   <AvatarFallback>ES</AvatarFallback>
-</Avatar>`} />
+</Avatar>`}
+      />
 
       <h2>Usage</h2>
 
-      <CodeBlock code={`import { Avatar, AvatarImage, AvatarFallback } from '@repo/ui/components/avatar'`} lang="tsx" />
+      <CodeBlock
+        code={`import { Avatar, AvatarImage, AvatarFallback } from '@repo/ui/components/avatar'`}
+        lang="tsx"
+      />
     </>
   );
 }

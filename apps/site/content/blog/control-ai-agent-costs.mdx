@@ -12,11 +12,11 @@ This post covers the cost levers that actually work. Not theory — these are th
 
 Before optimizing anything, you need to know what you're spending. Here's what production agent systems actually cost:
 
-| Scale | Monthly Cost Range | Primary Driver |
-|---|---|---|
-| Solo developer, 1-2 agents | $200–$800 | Model choice + session length |
-| Small team, 5-8 agents | $3,200–$8,000 | Context accumulation + model tier |
-| Production system, 10+ agents | $8,000–$13,000+ | Autonomy + concurrency |
+| Scale                         | Monthly Cost Range | Primary Driver                    |
+| ----------------------------- | ------------------ | --------------------------------- |
+| Solo developer, 1-2 agents    | $200–$800          | Model choice + session length     |
+| Small team, 5-8 agents        | $3,200–$8,000      | Context accumulation + model tier |
+| Production system, 10+ agents | $8,000–$13,000+    | Autonomy + concurrency            |
 
 Most of that cost comes from three things: which model you're using, how much context each request carries, and how many requests your agents make per day.
 
@@ -30,12 +30,12 @@ This is the single biggest cost lever. Not every task needs the most capable mod
 
 Here's the current pricing landscape:
 
-| Model | Input (per 1M tokens) | Output (per 1M tokens) | Best For |
-|---|---|---|---|
-| Claude Opus | $15.00 | $75.00 | Architecture, complex judgment, ambiguous problems |
-| Claude Sonnet | $3.00 | $15.00 | Product work, design, code generation, planning |
-| Claude Haiku | $0.25 | $1.25 | Research, data extraction, bounded tasks |
-| Gemini 2.0 Flash Lite | $0.08 | $0.30 | High-volume, low-complexity tasks |
+| Model                 | Input (per 1M tokens) | Output (per 1M tokens) | Best For                                           |
+| --------------------- | --------------------- | ---------------------- | -------------------------------------------------- |
+| Claude Opus           | $15.00                | $75.00                 | Architecture, complex judgment, ambiguous problems |
+| Claude Sonnet         | $3.00                 | $15.00                 | Product work, design, code generation, planning    |
+| Claude Haiku          | $0.25                 | $1.25                  | Research, data extraction, bounded tasks           |
+| Gemini 2.0 Flash Lite | $0.08                 | $0.30                  | High-volume, low-complexity tasks                  |
 
 The gap between Gemini Flash Lite at $0.08/M input and Claude Opus at $15/M input is 187x. That's not a marginal difference — it's a completely different cost structure.
 
@@ -68,11 +68,11 @@ Layers 1-3 are stable across sessions. They get cached once and read cheaply on 
 
 ### Before and After
 
-| Scenario | Input Tokens | Cost per Request (Sonnet) |
-|---|---|---|
-| No caching, 50K context | 50,000 | $0.15 |
-| With caching, 40K cached + 10K new | 50,000 | $0.042 |
-| **Savings** | — | **72%** |
+| Scenario                           | Input Tokens | Cost per Request (Sonnet) |
+| ---------------------------------- | ------------ | ------------------------- |
+| No caching, 50K context            | 50,000       | $0.15                     |
+| With caching, 40K cached + 10K new | 50,000       | $0.042                    |
+| **Savings**                        | —            | **72%**                   |
 
 Over thousands of requests per day, this adds up fast. My agents run with cache hit rates between 80-90% on their system context, which cuts input costs roughly in half across the board.
 
@@ -104,12 +104,12 @@ This is the silent cost killer. A naive conversation history — where you appen
 
 Here's the math on a 10-turn conversation:
 
-| Turn | Naive History (tokens) | Managed Context (tokens) |
-|---|---|---|
-| 1 | 5,000 | 5,000 |
-| 5 | 25,000 | 8,000 |
-| 10 | 50,000 | 12,000 |
-| **Total input tokens billed** | **275,000** | **85,000** |
+| Turn                          | Naive History (tokens) | Managed Context (tokens) |
+| ----------------------------- | ---------------------- | ------------------------ |
+| 1                             | 5,000                  | 5,000                    |
+| 5                             | 25,000                 | 8,000                    |
+| 10                            | 50,000                 | 12,000                   |
+| **Total input tokens billed** | **275,000**            | **85,000**               |
 
 The managed approach summarizes earlier turns, drops irrelevant context, and maintains only the state the agent actually needs. Same output quality, 3-5x less cost.
 
@@ -150,22 +150,36 @@ Spend on judgment. Save on labor.
 
 ## Putting It Together: A Real Cost Breakdown
 
-<ProductScreenshot src="/blog/screenshots/cost-tracking.jpg" alt="Celune cost analytics dashboard showing per-agent cost breakdown and model usage distribution" width={1200} height={750} layout="full" caption="Per-agent cost tracking in Celune — see exactly where your AI spend is going and which optimizations are working." />
+<ProductScreenshot
+  src="/blog/screenshots/cost-tracking.jpg"
+  alt="Celune cost analytics dashboard showing per-agent cost breakdown and model usage distribution"
+  width={1200}
+  height={750}
+  layout="full"
+  caption="Per-agent cost tracking in Celune — see exactly where your AI spend is going and which optimizations are working."
+/>
 
 Here's what a 5-agent team looks like with and without these optimizations:
 
-| Agent | Role | Model | Daily Tokens | Unoptimized Monthly | Optimized Monthly |
-|---|---|---|---|---|---|
-| Lead | Architecture + Code | Opus | 2M | $2,700 | $1,100 |
-| PM | Planning + Writing | Sonnet | 1.5M | $405 | $165 |
-| Reviewer | Code Review | Sonnet (batch) | 1M | $270 | $70 |
-| Researcher | Research + Analysis | Haiku | 3M | $68 | $30 |
-| Utility | Formatting + Data | Haiku | 2M | $45 | $20 |
-| **Total** | | | | **$3,488** | **$1,385** |
+| Agent      | Role                | Model          | Daily Tokens | Unoptimized Monthly | Optimized Monthly |
+| ---------- | ------------------- | -------------- | ------------ | ------------------- | ----------------- |
+| Lead       | Architecture + Code | Opus           | 2M           | $2,700              | $1,100            |
+| PM         | Planning + Writing  | Sonnet         | 1.5M         | $405                | $165              |
+| Reviewer   | Code Review         | Sonnet (batch) | 1M           | $270                | $70               |
+| Researcher | Research + Analysis | Haiku          | 3M           | $68                 | $30               |
+| Utility    | Formatting + Data   | Haiku          | 2M           | $45                 | $20               |
+| **Total**  |                     |                |              | **$3,488**          | **$1,385**        |
 
 That's a 60% reduction. The optimized column applies model tiering, prompt caching (80% hit rate), batch processing for the reviewer, and context management across all agents.
 
-<ProductScreenshot src="/blog/screenshots/dashboard.jpg" alt="Celune system health dashboard with real-time metrics, usage charts, and activity feed" width={1200} height={750} layout="float-right" caption="The usage dashboard surfaces cost-per-agent trends so you can catch bloat before it hits your invoice." />
+<ProductScreenshot
+  src="/blog/screenshots/dashboard.jpg"
+  alt="Celune system health dashboard with real-time metrics, usage charts, and activity feed"
+  width={1200}
+  height={750}
+  layout="float-right"
+  caption="The usage dashboard surfaces cost-per-agent trends so you can catch bloat before it hits your invoice."
+/>
 
 In Celune, I track these costs per agent on the usage dashboard — each agent has its own cost attribution, so I can see exactly where the spend is going and whether the optimization is actually working. If an agent's cost-per-task starts climbing, I know the context window is bloating or the cache hit rate dropped.
 

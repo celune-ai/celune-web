@@ -12,7 +12,7 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div>
-      <h2 className={`mb-8 font-heading text-foreground ${titleClassName}`}>{title}</h2>
+      <h2 className={`font-heading text-foreground mb-8 ${titleClassName}`}>{title}</h2>
     </div>
   );
 }

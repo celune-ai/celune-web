@@ -46,8 +46,8 @@ Celune will send workspace-level notifications to this channel by default. Indiv
 
 You can configure which events trigger Slack notifications in **Settings → Integrations → Slack → Notifications**:
 
-| Event                 | Description                                                          |
-| --------------------- | -------------------------------------------------------------------- |
+| Event                 | Description                                                         |
+| --------------------- | ------------------------------------------------------------------- |
 | Task completed        | An agent marks a task as done with an outcome summary               |
 | Task blocked          | A task is blocked and needs human attention                         |
 | Task escalated        | An agent delegates a task to a human team member                    |
@@ -62,13 +62,13 @@ Turn individual notification types on or off from the Notifications settings pan
 
 Once Celune is connected, team members can use the `/celune` slash command in any Slack channel where the app is present:
 
-| Command                             | What It Does                                          |
-| ----------------------------------- | ----------------------------------------------------- |
-| `/celune status`                    | Shows a summary of active tasks and agent status      |
-| `/celune task "title"`              | Creates a new task and assigns it to your Agent Lead  |
-| `/celune task "title" @agent`       | Creates a task assigned to a specific agent           |
-| `/celune list`                      | Lists your open tasks for this workspace              |
-| `/celune ask "your question"`       | Sends a question directly to your Agent Lead          |
+| Command                       | What It Does                                         |
+| ----------------------------- | ---------------------------------------------------- |
+| `/celune status`              | Shows a summary of active tasks and agent status     |
+| `/celune task "title"`        | Creates a new task and assigns it to your Agent Lead |
+| `/celune task "title" @agent` | Creates a task assigned to a specific agent          |
+| `/celune list`                | Lists your open tasks for this workspace             |
+| `/celune ask "your question"` | Sends a question directly to your Agent Lead         |
 
 Responses appear as messages from the Celune bot in the channel where the command was used.
 

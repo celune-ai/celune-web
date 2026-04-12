@@ -34,9 +34,7 @@ interface ReplicatePrediction {
 async function callReplicate(prompt: string): Promise<Buffer> {
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) {
-    throw new Error(
-      'REPLICATE_API_TOKEN not set. Add it to apps/site/.env.local',
-    );
+    throw new Error('REPLICATE_API_TOKEN not set. Add it to apps/site/.env.local');
   }
 
   console.log('  Creating prediction...');
@@ -75,10 +73,9 @@ async function callReplicate(prompt: string): Promise<Buffer> {
     console.log(`  Status: ${prediction.status}...`);
     await new Promise((r) => setTimeout(r, 2000));
 
-    const pollRes = await fetch(
-      `https://api.replicate.com/v1/predictions/${prediction.id}`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     prediction = await pollRes.json();
   }
 
@@ -86,9 +83,7 @@ async function callReplicate(prompt: string): Promise<Buffer> {
     throw new Error(`Prediction failed: ${prediction.error}`);
   }
 
-  const imageUrl = Array.isArray(prediction.output)
-    ? prediction.output[0]
-    : prediction.output;
+  const imageUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
 
   if (!imageUrl) {
     throw new Error('No image URL in prediction output');

@@ -30,7 +30,8 @@ export default function ButtonPage() {
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`import { Button } from '@repo/ui/components/button'
+      <CodeBlock
+        code={`import { Button } from '@repo/ui/components/button'
 
 export function ButtonDemo() {
   return (
@@ -44,7 +45,8 @@ export function ButtonDemo() {
       <Button variant="link">Link</Button>
     </div>
   )
-}`} />
+}`}
+      />
 
       <h2>Sizes</h2>
       <p>
@@ -57,18 +59,26 @@ export function ButtonDemo() {
           <DemoButton size="sm">Small</DemoButton>
           <DemoButton>Medium</DemoButton>
           <DemoButton size="lg">Large</DemoButton>
-          <DemoButton size="icon"><Mail size={16} /></DemoButton>
-          <DemoButton variant="outline" size="icon-sm"><Pencil size={14} /></DemoButton>
-          <DemoButton variant="ghost" size="icon"><MoreVertical size={16} /></DemoButton>
+          <DemoButton size="icon">
+            <Mail size={16} />
+          </DemoButton>
+          <DemoButton variant="outline" size="icon-sm">
+            <Pencil size={14} />
+          </DemoButton>
+          <DemoButton variant="ghost" size="icon">
+            <MoreVertical size={16} />
+          </DemoButton>
         </div>
       </ComponentPreview>
 
-      <CodeBlock code={`<Button size="sm">Small</Button>
+      <CodeBlock
+        code={`<Button size="sm">Small</Button>
 <Button>Medium</Button>              {/* md is default */}
 <Button size="lg">Large</Button>
 <Button size="icon"><Mail /></Button>
 <Button variant="outline" size="icon-sm"><Pencil /></Button>
-<Button variant="ghost" size="icon"><MoreVertical /></Button>`} />
+<Button variant="ghost" size="icon"><MoreVertical /></Button>`}
+      />
 
       <h2>Usage</h2>
 
@@ -83,8 +93,31 @@ export function ButtonDemo() {
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>variant</code></td><td><code>default</code> | <code>secondary</code> | <code>outline</code> | <code>ghost</code> | <code>destructive</code> | <code>warning</code> | <code>link</code></td><td><code>default</code></td></tr>
-          <tr><td><code>size</code></td><td><code>sm</code> | <code>md</code> | <code>lg</code> | <code>icon</code> | <code>icon-sm</code> | <code>icon-md</code></td><td><code>md</code></td></tr>
+          <tr>
+            <td>
+              <code>variant</code>
+            </td>
+            <td>
+              <code>default</code> | <code>secondary</code> | <code>outline</code> |{' '}
+              <code>ghost</code> | <code>destructive</code> | <code>warning</code> |{' '}
+              <code>link</code>
+            </td>
+            <td>
+              <code>default</code>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>size</code>
+            </td>
+            <td>
+              <code>sm</code> | <code>md</code> | <code>lg</code> | <code>icon</code> |{' '}
+              <code>icon-sm</code> | <code>icon-md</code>
+            </td>
+            <td>
+              <code>md</code>
+            </td>
+          </tr>
         </tbody>
       </table>
     </>

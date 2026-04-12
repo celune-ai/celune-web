@@ -4,7 +4,7 @@ AI coding assistants have gotten remarkably good. Claude Code writes entire feat
 
 But here's what nobody talks about: the code was never the bottleneck.
 
-A recent MIT Sloan study found that developers with AI tools cut project management time by 24.9%. Not coding time — *project management* time. The planning, tracking, prioritizing, and coordinating that wraps around every line of code. That's the actual time sink, and your coding assistant doesn't touch it.
+A recent MIT Sloan study found that developers with AI tools cut project management time by 24.9%. Not coding time — _project management_ time. The planning, tracking, prioritizing, and coordinating that wraps around every line of code. That's the actual time sink, and your coding assistant doesn't touch it.
 
 AI task management for developers isn't a nice-to-have. It's the missing layer in the entire AI dev tools stack.
 
@@ -14,17 +14,17 @@ AI task management for developers isn't a nice-to-have. It's the missing layer i
 
 Let's be precise about what tools like Copilot, Cursor, and Claude Code do well:
 
-| Task | AI coding assistant | Status |
-|------|-------------------|--------|
-| Write a function | Excellent | Solved |
-| Debug an error | Very good | Mostly solved |
-| Refactor code | Good | Improving fast |
-| Write tests | Good | Improving fast |
-| Generate boilerplate | Excellent | Solved |
+| Task                 | AI coding assistant | Status         |
+| -------------------- | ------------------- | -------------- |
+| Write a function     | Excellent           | Solved         |
+| Debug an error       | Very good           | Mostly solved  |
+| Refactor code        | Good                | Improving fast |
+| Write tests          | Good                | Improving fast |
+| Generate boilerplate | Excellent           | Solved         |
 
-These tools answer the question: *"How do I implement this?"*
+These tools answer the question: _"How do I implement this?"_
 
-They don't answer: *"What should I implement next?"*
+They don't answer: _"What should I implement next?"_
 
 And that's the question that actually determines whether you ship. A solo founder with a perfect coding assistant and no task system will still struggle to prioritize, track progress, and coordinate work across sessions. The code writes itself — but someone still needs to decide what gets built, in what order, and verify it was done correctly.
 
@@ -40,12 +40,14 @@ Here's how this plays out in practice:
 
 ### 1. Tasks as executable specifications
 
-In a human workflow, a task description is a reminder — enough context for a person who already understands the project. In an AI workflow, the task description *is* the specification. It needs to be complete enough for an agent to execute without follow-up questions.
+In a human workflow, a task description is a reminder — enough context for a person who already understands the project. In an AI workflow, the task description _is_ the specification. It needs to be complete enough for an agent to execute without follow-up questions.
 
 Bad task (human-style):
+
 > Fix the auth bug
 
 Good task (agent-executable):
+
 > Add authentication middleware check to POST /api/tasks and PUT /api/tasks/:id endpoints. Use the existing `requireAuth` middleware from `src/middleware/auth.ts`. Return 401 with `{ error: "Unauthorized" }` if no valid session. Add tests in `src/__tests__/api/tasks.test.ts` covering both authenticated and unauthenticated requests.
 
 The second version takes sixty seconds longer to write. It saves hours of back-and-forth and produces code that's right on the first attempt.
@@ -58,7 +60,7 @@ This matters because AI agents can work through tasks much faster than humans. I
 
 ### 3. Dependency-aware ordering
 
-Tasks aren't independent. The database migration needs to land before the API endpoint, which needs to land before the frontend integration. Traditional tools let you set dependencies, but they don't *enforce* them during execution.
+Tasks aren't independent. The database migration needs to land before the API endpoint, which needs to land before the frontend integration. Traditional tools let you set dependencies, but they don't _enforce_ them during execution.
 
 AI task management enforces execution order. Tasks are organized into sprints with explicit dependencies. The system won't start Sprint 2 until Sprint 1 passes a quality gate — type checking, tests, build. This prevents the classic failure mode of agents building on top of broken foundations.
 
@@ -74,17 +76,17 @@ The entire value of AI task management hinges on the task database being machine
 
 Here's why this matters especially for solo founders and small teams.
 
-A solo developer has roughly 6-8 productive hours per day. Before AI coding tools, most of that went to implementation. With AI coding tools, implementation is 3-5x faster — but the planning and coordination overhead stays constant. In some cases it *increases*, because you're now managing AI output in addition to your own.
+A solo developer has roughly 6-8 productive hours per day. Before AI coding tools, most of that went to implementation. With AI coding tools, implementation is 3-5x faster — but the planning and coordination overhead stays constant. In some cases it _increases_, because you're now managing AI output in addition to your own.
 
 The math:
 
-| Activity | Pre-AI | With AI coding tools | With AI task management |
-|----------|--------|---------------------|----------------------|
-| Planning & scoping | 2 hrs | 2 hrs | 1 hr |
-| Implementation | 4 hrs | 1.5 hrs | 1 hr |
-| Review & QA | 1.5 hrs | 2 hrs | 1 hr |
-| Context switching | 0.5 hrs | 0.5 hrs | 0.25 hrs |
-| **Effective output** | **1x** | **2-3x** | **5-8x** |
+| Activity             | Pre-AI  | With AI coding tools | With AI task management |
+| -------------------- | ------- | -------------------- | ----------------------- |
+| Planning & scoping   | 2 hrs   | 2 hrs                | 1 hr                    |
+| Implementation       | 4 hrs   | 1.5 hrs              | 1 hr                    |
+| Review & QA          | 1.5 hrs | 2 hrs                | 1 hr                    |
+| Context switching    | 0.5 hrs | 0.5 hrs              | 0.25 hrs                |
+| **Effective output** | **1x**  | **2-3x**             | **5-8x**                |
 
 The jump from "AI coding tools" to "AI task management" isn't incremental. It's the difference between AI that helps you type faster and AI that helps you ship faster. Typing was never the bottleneck.
 
@@ -93,6 +95,7 @@ The jump from "AI coding tools" to "AI task management" isn't incremental. It's 
 The real unlock is what happens outside working hours. With a proper task management layer, you can define a batch of tasks before bed and let agents execute overnight. You wake up to a pull request with all changes, a code review document, and a summary of what was built.
 
 This only works if:
+
 - Tasks are precise enough to execute unsupervised
 - Dependencies are wired so work happens in the right order
 - Quality gates catch problems between phases

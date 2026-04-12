@@ -48,7 +48,14 @@ export const metadata: Metadata = {
       'Deploy autonomous engineering agents that write code, open PRs, manage tasks, and run your development pipeline — 24/7.',
     url: 'https://celune.ai',
     siteName: 'Celune',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Celune — Agentic Engineering on Autopilot' }],
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Celune — Agentic Engineering on Autopilot',
+      },
+    ],
     locale: 'en_US',
     type: 'website',
   },

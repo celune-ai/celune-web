@@ -9,7 +9,13 @@ function flowField(px: number, py: number, t: number): number {
   return Math.sin(px + Math.sin(py + t * 0.1)) * Math.sin(py * px * 0.1 + t * 0.2);
 }
 
-function computeField(px: number, py: number, t: number, tension: number, twist: number): [number, number] {
+function computeField(
+  px: number,
+  py: number,
+  t: number,
+  tension: number,
+  twist: number,
+): [number, number] {
   const ep = 0.05;
   let x = px;
   let y = py;
@@ -81,7 +87,7 @@ const AsciiWaves: React.FC<AsciiWavesProps> = ({
       ctx.scale(dpr, dpr);
     }
 
-    const t = (performance.now() - startTime.current) / 1000 * speed;
+    const t = ((performance.now() - startTime.current) / 1000) * speed;
     const aspect = w > h ? w / h : h / w;
     const cols = Math.ceil(w / elementSize);
     const rows = Math.ceil(h / elementSize);
@@ -125,7 +131,17 @@ const AsciiWaves: React.FC<AsciiWavesProps> = ({
 
     ctx.globalAlpha = 1;
     animRef.current = requestAnimationFrame(render);
-  }, [characters, color, invert, noiseScale, elementSize, speed, intensity, waveTension, waveTwist]);
+  }, [
+    characters,
+    color,
+    invert,
+    noiseScale,
+    elementSize,
+    speed,
+    intensity,
+    waveTension,
+    waveTwist,
+  ]);
 
   useEffect(() => {
     startTime.current = performance.now();
@@ -135,11 +151,7 @@ const AsciiWaves: React.FC<AsciiWavesProps> = ({
 
   return (
     <div className={cn('relative h-full w-full overflow-hidden', className)}>
-      <canvas
-        ref={canvasRef}
-        className="h-full w-full"
-        style={{ display: 'block' }}
-      />
+      <canvas ref={canvasRef} className="h-full w-full" style={{ display: 'block' }} />
     </div>
   );
 };

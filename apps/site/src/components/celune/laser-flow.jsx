@@ -258,7 +258,7 @@ export const LaserFlow = ({
   decay = 1.1,
   falloffStart = 1.2,
   fogFallSpeed = 0.6,
-  color = '#FF79C6'
+  color = '#FF79C6',
 }) => {
   const mountRef = useRef(null);
   const rendererRef = useRef(null);
@@ -274,13 +274,13 @@ export const LaserFlow = ({
   const pausedRef = useRef(false);
   const inViewRef = useRef(true);
 
-  const hexToRGB = hex => {
+  const hexToRGB = (hex) => {
     let c = hex.trim();
     if (c[0] === '#') c = c.slice(1);
     if (c.length === 3)
       c = c
         .split('')
-        .map(x => x + x)
+        .map((x) => x + x)
         .join('');
     const n = parseInt(c, 16) || 0xffffff;
     return { r: ((n >> 16) & 255) / 255, g: ((n >> 8) & 255) / 255, b: (n & 255) / 255 };
@@ -297,7 +297,7 @@ export const LaserFlow = ({
       premultipliedAlpha: true,
       preserveDrawingBuffer: false,
       failIfMajorPerformanceCaveat: false,
-      logarithmicDepthBuffer: false
+      logarithmicDepthBuffer: false,
     });
     rendererRef.current = renderer;
 
@@ -318,7 +318,10 @@ export const LaserFlow = ({
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
+    geometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3),
+    );
 
     const uniforms = {
       iTime: { value: 0 },
@@ -342,7 +345,7 @@ export const LaserFlow = ({
       uFalloffStart: { value: falloffStart },
       uFogFallSpeed: { value: fogFallSpeed },
       uColor: { value: new THREE.Vector3(1, 1, 1) },
-      uFade: { value: hasFadedRef.current ? 1 : 0 }
+      uFade: { value: hasFadedRef.current ? 1 : 0 },
     };
     uniformsRef.current = uniforms;
 
@@ -353,7 +356,7 @@ export const LaserFlow = ({
       transparent: false,
       depthTest: false,
       depthWrite: false,
-      blending: THREE.NormalBlending
+      blending: THREE.NormalBlending,
     });
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -401,10 +404,10 @@ export const LaserFlow = ({
     ro.observe(mount);
 
     const io = new IntersectionObserver(
-      entries => {
+      (entries) => {
         inViewRef.current = entries[0]?.isIntersecting ?? true;
       },
-      { root: null, threshold: 0 }
+      { root: null, threshold: 0 },
     );
     io.observe(mount);
 
@@ -422,14 +425,14 @@ export const LaserFlow = ({
       const hb = rect.height * ratio;
       mouseTarget.set(x * ratio, hb - y * ratio);
     };
-    const onMove = ev => updateMouse(ev.clientX, ev.clientY);
+    const onMove = (ev) => updateMouse(ev.clientX, ev.clientY);
     const onLeave = () => mouseTarget.set(0, 0);
     canvas.addEventListener('pointermove', onMove, { passive: true });
     canvas.addEventListener('pointerdown', onMove, { passive: true });
     canvas.addEventListener('pointerenter', onMove, { passive: true });
     canvas.addEventListener('pointerleave', onLeave, { passive: true });
 
-    const onCtxLost = e => {
+    const onCtxLost = (e) => {
       e.preventDefault();
       pausedRef.current = true;
     };
@@ -449,7 +452,7 @@ export const LaserFlow = ({
     let lastDprChangeRef = 0;
     const dprChangeCooldown = 2000;
 
-    const adjustDprIfNeeded = now => {
+    const adjustDprIfNeeded = (now) => {
       const elapsed = now - lastFpsCheckRef.current;
       if (elapsed < 750) return;
 
@@ -469,7 +472,10 @@ export const LaserFlow = ({
         next = clamp(currentDprRef.current * 1.1, dprFloor, base);
       }
 
-      if (Math.abs(next - currentDprRef.current) > 0.01 && now - lastDprChangeRef > dprChangeCooldown) {
+      if (
+        Math.abs(next - currentDprRef.current) > 0.01 &&
+        now - lastDprChangeRef > dprChangeCooldown
+      ) {
         currentDprRef.current = next;
         lastDprChangeRef = now;
         setSizeNow();
@@ -575,7 +581,7 @@ export const LaserFlow = ({
     decay,
     falloffStart,
     fogFallSpeed,
-    color
+    color,
   ]);
 
   return <div ref={mountRef} className={`laser-flow-container ${className || ''}`} style={style} />;

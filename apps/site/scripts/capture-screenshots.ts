@@ -151,9 +151,7 @@ async function main() {
   }
   if (results.length > 0) {
     const totalKB = results.reduce((sum, r) => sum + r.sizeKB, 0);
-    console.log(
-      `Total size: ${totalKB}KB (avg ${Math.round(totalKB / results.length)}KB/image)`,
-    );
+    console.log(`Total size: ${totalKB}KB (avg ${Math.round(totalKB / results.length)}KB/image)`);
   }
 }
 

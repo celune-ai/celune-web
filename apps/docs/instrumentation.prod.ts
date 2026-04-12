@@ -10,9 +10,7 @@ export async function register() {
 }
 
 export const onRequestError = process.env.SENTRY_AUTH_TOKEN
-  ? async (
-      ...args: Parameters<typeof import('@sentry/nextjs').captureRequestError>
-    ) => {
+  ? async (...args: Parameters<typeof import('@sentry/nextjs').captureRequestError>) => {
       const { captureRequestError } = await import('@sentry/nextjs');
       return captureRequestError(...args);
     }

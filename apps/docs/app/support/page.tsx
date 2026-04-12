@@ -68,14 +68,12 @@ export default function SupportPage() {
     return (
       <div className="mx-auto w-full max-w-[40rem] px-6 py-16 sm:px-10 sm:py-24">
         <div className="border-border bg-surface-75 rounded-lg border p-8 text-center">
-          <div className="text-foreground mb-2 text-lg font-semibold">
-            Request submitted
-          </div>
+          <div className="text-foreground mb-2 text-lg font-semibold">Request submitted</div>
           <p className="text-foreground-light mb-6 text-sm">
             We will respond within 48 business hours.
           </p>
           <div className="mb-6">
-            <div className="text-foreground-lighter mb-1 text-xs uppercase tracking-wide">
+            <div className="text-foreground-lighter mb-1 text-xs tracking-wide uppercase">
               Ticket number
             </div>
             <button
@@ -179,9 +177,7 @@ export default function SupportPage() {
           />
         </div>
 
-        {error && (
-          <p className="text-red-400 text-sm">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
         <button
           type="submit"

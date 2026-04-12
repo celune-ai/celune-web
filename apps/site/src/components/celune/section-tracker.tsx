@@ -19,7 +19,7 @@ export function SectionTracker() {
           }
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     for (const id of SECTIONS) {

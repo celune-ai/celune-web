@@ -50,10 +50,10 @@ export function AgentNetwork() {
             </span>
           </h2>
           <p className="mt-6 text-lg text-neutral-400">
-            Specialized agents work in parallel — planning, building, reviewing, and deploying around the clock.
+            Specialized agents work in parallel — planning, building, reviewing, and deploying
+            around the clock.
           </p>
         </div>
-
       </div>
     </section>
   );

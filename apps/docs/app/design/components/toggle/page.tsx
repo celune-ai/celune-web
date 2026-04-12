@@ -9,14 +9,18 @@ export default function TogglePage() {
   return (
     <>
       <h1>Toggle</h1>
-      <p>Radix Toggle for binary on/off state. Pressed state uses <code>bg-surface-300</code>.</p>
+      <p>
+        Radix Toggle for binary on/off state. Pressed state uses <code>bg-surface-300</code>.
+      </p>
 
-      <CodeBlock code={`import { Toggle } from '@repo/ui/components/toggle'
+      <CodeBlock
+        code={`import { Toggle } from '@repo/ui/components/toggle'
 import { Bold } from 'lucide-react'
 
 <Toggle aria-label="Toggle bold">
   <Bold className="h-4 w-4" />
-</Toggle>`} />
+</Toggle>`}
+      />
 
       <h2>Usage</h2>
 
@@ -31,8 +35,28 @@ import { Bold } from 'lucide-react'
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>variant</code></td><td><code>default</code> | <code>outline</code></td><td><code>default</code></td></tr>
-          <tr><td><code>size</code></td><td><code>default</code> | <code>sm</code> | <code>lg</code></td><td><code>default</code></td></tr>
+          <tr>
+            <td>
+              <code>variant</code>
+            </td>
+            <td>
+              <code>default</code> | <code>outline</code>
+            </td>
+            <td>
+              <code>default</code>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code>size</code>
+            </td>
+            <td>
+              <code>default</code> | <code>sm</code> | <code>lg</code>
+            </td>
+            <td>
+              <code>default</code>
+            </td>
+          </tr>
         </tbody>
       </table>
     </>

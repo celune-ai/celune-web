@@ -17,17 +17,20 @@ Every blog post on celune.ai currently uses the same placeholder hero image (og-
 ## Research & Discovery
 
 ### User Insights
+
 - Blog hero images are the first visual touchpoint when sharing articles on Twitter/LinkedIn
 - Identical OG images across posts reduce click-through rates
 - Abstract imagery (vs. content-specific) creates a consistent, recognizable brand pattern while being faster to generate
 - Watercolor-style art conveys creativity and artistry, differentiating from typical tech blog stock imagery
 
 ### Competitive Landscape
+
 - fin.ai/research: Uses refined, professional imagery with blues/teals, minimal palette
 - Vercel blog: Uses branded illustrations with consistent design language
 - Littlebird.ai: Clean geometric UI mockups, gradient-based illustrations
 
 ### Technical Landscape
+
 - Anthropic Claude: Supports image generation via the Messages API
 - OpenAI DALL-E 3: Strong abstract/artistic output, REST API
 - Stability AI: Good for artistic styles via Replicate
@@ -61,6 +64,7 @@ Every blog post on celune.ai currently uses the same placeholder hero image (og-
 ## Requirements
 
 ### Functional
+
 1. Image generation script that produces watercolor-style abstract images with Celune branding
 2. Prompt engineering system with tested prompts that produce consistent results
 3. Per-post image storage in /public/blog/ with slug-based naming
@@ -69,12 +73,14 @@ Every blog post on celune.ai currently uses the same placeholder hero image (og-
 6. Image optimization pipeline (compress to web-appropriate sizes)
 
 ### Non-Functional
+
 1. Generated images must be under 200KB each after optimization
 2. Images must render correctly at 1200x630 (OG), 16:9 (hero), and 2.4:1 (featured card)
 3. Generation should complete in under 60 seconds per image
 4. Pipeline must be idempotent
 
 ### User Stories
+
 - As a blog reader, I see a unique, beautiful watercolor hero image on each post
 - As a social media user, I see a distinctive branded image when a Celune article is shared
 - As a content author, I can generate a hero image for a new post with a single CLI command
@@ -90,6 +96,7 @@ Consistency: Every image should feel like part of the same collection while bein
 ## Technical Approach
 
 ### Recommended Architecture
+
 1. Generator script (scripts/generate-hero-images.ts): CLI tool that takes a blog slug and generates an image
 2. Prompt template: Parameterized prompt with consistent style directives + per-image variation
 3. API integration: FLUX 1.1 Pro via Replicate (primary — best quality, LoRA fine-tune path), DALL-E 3 (fallback — easiest integration). Note: Anthropic Claude does NOT support image generation.
@@ -100,13 +107,13 @@ Consistency: Every image should feel like part of the same collection while bein
 
 ## Open Questions & Decisions
 
-| # | Question | Owner | Status |
-|---|----------|-------|--------|
-| 1 | Does Anthropic image gen produce high enough quality watercolor art? | RICK | Needs testing |
-| 2 | Should we generate at 1200x630 or higher and downscale? | RICK | Needs testing |
-| 3 | Seed/variation system for deterministic per-post images? | Eric | Open |
-| 4 | Store in repo or CDN (Vercel Blob)? | Eric | Leaning repo |
-| 5 | Budget cap per image generation? | Eric | Open |
+| #   | Question                                                             | Owner | Status        |
+| --- | -------------------------------------------------------------------- | ----- | ------------- |
+| 1   | Does Anthropic image gen produce high enough quality watercolor art? | RICK  | Needs testing |
+| 2   | Should we generate at 1200x630 or higher and downscale?              | RICK  | Needs testing |
+| 3   | Seed/variation system for deterministic per-post images?             | Eric  | Open          |
+| 4   | Store in repo or CDN (Vercel Blob)?                                  | Eric  | Leaning repo  |
+| 5   | Budget cap per image generation?                                     | Eric  | Open          |
 
 ## Success Metrics
 
@@ -116,23 +123,22 @@ Consistency: Every image should feel like part of the same collection while bein
 4. Image generation takes < 60s per image
 5. All generated images are < 200KB compressed
 
-
 ---
 
 ## Task Overview
 
-| # | Sprint | Task | Priority | Assignee | Status | ID |
-|---|--------|------|----------|----------|--------|----|
-| 0 | 0 | Create a PRD | high | sage | done | `f260e6e7` |
-| 1 | 1 | Research and test image generation APIs | high | rick | inbox | `a2426afb` |
-| 2 | 2 | Design prompt template system | high | rick | inbox | `89979e7d` |
-| 3 | 3 | Build image generation CLI script | high | rick | inbox | `41dafc9a` |
-| 4 | 3 | Add image post-processing pipeline | normal | rick | inbox | `6d75dd0c` |
-| 5 | 4 | Generate hero images for all existing blog posts | high | rick | inbox | `a2840f63` |
-| 6 | 4 | Update blog registry with generated image paths | high | rick | inbox | `833da054` |
-| 7 | 5 | Code review and QA | high | scan | inbox | `f9e06dd0` |
-| 8 | 5 | Design feedback | high | noir | inbox | `b6064122` |
-| 9 | 5 | Project retrospective | normal | sage | inbox | `f618dbaa` |
+| #   | Sprint | Task                                             | Priority | Assignee | Status | ID         |
+| --- | ------ | ------------------------------------------------ | -------- | -------- | ------ | ---------- |
+| 0   | 0      | Create a PRD                                     | high     | sage     | done   | `f260e6e7` |
+| 1   | 1      | Research and test image generation APIs          | high     | rick     | inbox  | `a2426afb` |
+| 2   | 2      | Design prompt template system                    | high     | rick     | inbox  | `89979e7d` |
+| 3   | 3      | Build image generation CLI script                | high     | rick     | inbox  | `41dafc9a` |
+| 4   | 3      | Add image post-processing pipeline               | normal   | rick     | inbox  | `6d75dd0c` |
+| 5   | 4      | Generate hero images for all existing blog posts | high     | rick     | inbox  | `a2840f63` |
+| 6   | 4      | Update blog registry with generated image paths  | high     | rick     | inbox  | `833da054` |
+| 7   | 5      | Code review and QA                               | high     | scan     | inbox  | `f9e06dd0` |
+| 8   | 5      | Design feedback                                  | high     | noir     | inbox  | `b6064122` |
+| 9   | 5      | Project retrospective                            | normal   | sage     | inbox  | `f618dbaa` |
 
 ---
 
@@ -148,14 +154,17 @@ Consistency: Every image should feel like part of the same collection while bein
 - **Outcome:** PRD was created during project setup with research from fin.ai, littlebird.ai, and user-provided watercolor inspiration images.
 
 ## What
+
 Produce a Product Requirements Document for the Blog Hero Image Generation project.
 
 ## Approach
+
 1. Research image generation APIs and inspiration sites
 2. Synthesize into structured PRD
 3. Upload to project
 
 ## Blockers
+
 None.
 
 ---
@@ -169,12 +178,15 @@ None.
 - **Status:** inbox
 
 ## What
+
 Spike to evaluate Anthropic Claude image generation, DALL-E 3, and Replicate for producing abstract watercolor-style images with Celune branding. Produce 3-5 test images from each viable API.
 
 ## Value
+
 Determines the best API before building the full pipeline. Avoids committing to an API that can't produce the right aesthetic.
 
 ## Approach
+
 1. Test Anthropic Claude Messages API with image generation — generate 3 watercolor test images with dark bg + emerald tones
 2. Test DALL-E 3 API with the same prompts for comparison
 3. Test 1-2 Replicate watercolor models (e.g., stable-diffusion with watercolor LoRA)
@@ -183,9 +195,11 @@ Determines the best API before building the full pipeline. Avoids committing to 
 6. Test prompt variations to find the sweet spot for abstract watercolor + Celune branding
 
 ## Sequence
+
 No dependencies — can start immediately.
 
 ## Blockers
+
 None — RICK has API keys for Anthropic and can test immediately.
 
 ---
@@ -199,12 +213,15 @@ None — RICK has API keys for Anthropic and can test immediately.
 - **Status:** inbox
 
 ## What
+
 Create a parameterized prompt template that produces consistent abstract watercolor hero images branded to Celune. Include a variation system so each post gets a unique image while maintaining collection cohesion.
 
 ## Value
+
 A well-engineered prompt template is the key to consistent, high-quality output. Without it, each generation is a gamble.
 
 ## Approach
+
 1. Based on API spike results, define the base prompt structure (style directives, color palette, composition rules)
 2. Create variation parameters: color emphasis (emerald/teal/sage), shape vocabulary (flowing/geometric/organic), texture intensity
 3. Build a prompt template function that takes a slug/seed and returns a unique but on-brand prompt
@@ -213,9 +230,11 @@ A well-engineered prompt template is the key to consistent, high-quality output.
 6. Store prompts in a config file for easy iteration
 
 ## Sequence
+
 Depends on: API research spike (Sprint 1) — need to know which API to optimize prompts for.
 
 ## Blockers
+
 None — ready after Sprint 1.
 
 ---
@@ -229,12 +248,15 @@ None — ready after Sprint 1.
 - **Status:** inbox
 
 ## What
+
 Create a TypeScript CLI script (`scripts/generate-hero-images.ts`) that generates watercolor hero images for blog posts using the chosen API and prompt template.
 
 ## Value
+
 The core pipeline — enables one-command image generation for any blog post, existing or new.
 
 ## Approach
+
 1. Create `scripts/generate-hero-images.ts` with commands:
    - `generate --slug <slug>` — generate image for a single post
    - `generate --all` — generate images for all posts missing hero images
@@ -246,9 +268,11 @@ The core pipeline — enables one-command image generation for any blog post, ex
 6. Support --dry-run to preview prompts without generating
 
 ## Sequence
+
 Depends on: Prompt template system (Sprint 2).
 
 ## Blockers
+
 None — ready after Sprint 2.
 
 ---
@@ -262,12 +286,15 @@ None — ready after Sprint 2.
 - **Status:** inbox
 
 ## What
+
 Add Sharp.js post-processing to the generation script: resize to multiple dimensions (OG 1200x630, hero 16:9), compress, convert to optimized JPEG/WebP, and save to `/public/blog/`.
 
 ## Value
+
 Ensures generated images are web-optimized, load fast, and work correctly in all contexts (hero, OG card, featured card).
 
 ## Approach
+
 1. Add sharp as a dev dependency
 2. After image generation, pipe through Sharp:
    - Resize to 1200x630 for OG cards
@@ -279,9 +306,11 @@ Ensures generated images are web-optimized, load fast, and work correctly in all
 5. Add size reporting to CLI output
 
 ## Sequence
+
 Depends on: CLI script (Sprint 3) — extends the generation pipeline.
 
 ## Blockers
+
 None — ready after Sprint 3.
 
 ---
@@ -295,12 +324,15 @@ None — ready after Sprint 3.
 - **Status:** inbox
 
 ## What
+
 Run the generation pipeline to produce unique watercolor hero images for all 10 existing blog posts. Curate output, regenerate any that don't meet quality bar.
 
 ## Value
+
 The visible payoff — transforms the blog from identical placeholder images to a visually stunning, branded collection.
 
 ## Approach
+
 1. Run `generate --all` to produce images for all 10 posts
 2. Review each generated image for quality, brand consistency, and aesthetic appeal
 3. Regenerate any that don't meet the bar (wrong colors, too busy, too plain)
@@ -309,9 +341,11 @@ The visible payoff — transforms the blog from identical placeholder images to 
 6. Commit generated images to the repo
 
 ## Sequence
+
 Depends on: Post-processing pipeline (Sprint 3).
 
 ## Blockers
+
 None — ready after Sprint 3 is complete.
 
 ---
@@ -325,12 +359,15 @@ None — ready after Sprint 3 is complete.
 - **Status:** inbox
 
 ## What
+
 Update `apps/site/src/lib/blog.ts` to replace all `/og-image.jpg` placeholder references with the actual per-post hero image paths. Update Next.js config if needed for image optimization.
 
 ## Value
+
 Connects the generated images to the blog pages — makes them visible to users and social media scrapers.
 
 ## Approach
+
 1. Update each post in the blog registry: `heroImage: '/blog/{slug}.jpg'`
 2. Verify Next.js Image component handles the new paths correctly
 3. Check `next.config.ts` — add image size configuration if needed
@@ -340,9 +377,11 @@ Connects the generated images to the blog pages — makes them visible to users 
 7. Verify blog post pages show correct hero images
 
 ## Sequence
+
 Depends on: Generated images (Sprint 4).
 
 ## Blockers
+
 None — ready after images are generated.
 
 ---
@@ -357,9 +396,11 @@ None — ready after images are generated.
 - **Depends on:** Research and test image generation APIs (`a2426afb`), Design prompt template system (`89979e7d`), Build image generation CLI script (`41dafc9a`), Add image post-processing pipeline (`6d75dd0c`), Generate hero images for all existing blog posts (`a2840f63`), Update blog registry with generated image paths (`833da054`)
 
 ## What
+
 Comprehensive code review and quality assurance pass across all changes in this project.
 
 ## Approach
+
 1. Review every PR/commit for correctness, security, and code quality.
 2. Run full test suite.
 3. Manual QA of image generation pipeline.
@@ -368,10 +409,12 @@ Comprehensive code review and quality assurance pass across all changes in this 
 6. Auto-create and execute fix tasks for issues found.
 
 ## Sequence
+
 - Blocked by: all implementation tasks
 - Must complete before: Design Feedback
 
 ## Blockers
+
 None.
 
 ---
@@ -386,9 +429,11 @@ None.
 - **Depends on:** Code review and QA (`f9e06dd0`)
 
 ## What
+
 UX quality assurance pass reviewing all generated hero images and their integration with the blog UI.
 
 ## Approach
+
 1. Review all generated images for visual quality, brand consistency, and aesthetic appeal.
 2. Check images render correctly across all contexts: blog index cards, post hero, OG/social cards.
 3. Verify responsive behavior — images scale properly on mobile/tablet/desktop.
@@ -396,10 +441,12 @@ UX quality assurance pass reviewing all generated hero images and their integrat
 5. Present suggestions to Eric.
 
 ## Sequence
+
 - Blocked by: Code Review
 - Must complete before: Project Retro
 
 ## Blockers
+
 None.
 
 ---
@@ -414,19 +461,23 @@ None.
 - **Depends on:** Design feedback (`b6064122`)
 
 ## What
+
 Retrospective reviewing PRD, code review findings, design feedback, and overall project execution.
 
 ## Approach
+
 1. Gather context: PRD, CR findings, DF findings, all task outcomes.
 2. Produce structured retro: Pros, Cons, Action Items.
 3. Create follow-up tasks for each action item.
 4. Post retro as comment and outcome.
 
 ## Sequence
+
 - Blocked by: Design Feedback
 - This is the last task.
 
 ## Blockers
+
 None.
 
 ---
@@ -435,13 +486,13 @@ None.
 
 Anthropic Claude does **NOT** support image generation (vision/analysis only).
 
-| Option | Price/image | Quality | API | Brand Consistency | Recommendation |
-|--------|------------|---------|-----|-------------------|----------------|
-| FLUX 1.1 Pro (Replicate) | $0.04 | Excellent | REST | Prompt + LoRA fine-tune | **Primary** |
-| DALL-E 3 (OpenAI) | $0.04-0.08 | Good | REST | Prompt-only | Fallback |
-| Nano Banana 2 (Google) | TBD (low) | Good | REST | Multi-reference images | Monitor |
-| FLUX Dev + LoRA | $0.025 | Excellent | REST | Custom fine-tune | Future |
-| Stable Diffusion 3.5 | $0.04 | Very good | REST | Prompt + LoRA | Alternative |
+| Option                   | Price/image | Quality   | API  | Brand Consistency       | Recommendation |
+| ------------------------ | ----------- | --------- | ---- | ----------------------- | -------------- |
+| FLUX 1.1 Pro (Replicate) | $0.04       | Excellent | REST | Prompt + LoRA fine-tune | **Primary**    |
+| DALL-E 3 (OpenAI)        | $0.04-0.08  | Good      | REST | Prompt-only             | Fallback       |
+| Nano Banana 2 (Google)   | TBD (low)   | Good      | REST | Multi-reference images  | Monitor        |
+| FLUX Dev + LoRA          | $0.025      | Excellent | REST | Custom fine-tune        | Future         |
+| Stable Diffusion 3.5     | $0.04       | Very good | REST | Prompt + LoRA           | Alternative    |
 
 ## Open Questions
 
