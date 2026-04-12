@@ -1,662 +1,801 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
-<title>Celune — Task Board</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Celune — Task Board</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  body {
-    background: #0a0a0f;
-    color: #e4e4e7;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    width: 1440px;
-    height: 900px;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+      body {
+        background: #0a0a0f;
+        color: #e4e4e7;
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        width: 1440px;
+        height: 900px;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-  /* ── Sidebar ── */
-  .sidebar {
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    width: 56px;
-    background: #08080c;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px 0;
-    z-index: 10;
-  }
-  .sidebar-logo {
-    width: 32px; height: 32px;
-    background: #22c55e;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 14px; color: #0a0a0f;
-    margin-bottom: 28px;
-  }
-  .sidebar-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 4px;
-    color: #52525b;
-    cursor: pointer;
-    transition: background .15s, color .15s;
-  }
-  .sidebar-icon:hover { background: rgba(255,255,255,0.06); color: #a1a1aa; }
-  .sidebar-icon.active { background: rgba(34,197,94,0.12); color: #22c55e; }
-  .sidebar-icon svg { width: 20px; height: 20px; }
-  .sidebar-spacer { flex: 1; }
-  .sidebar-avatar {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 12px; color: #fff;
-  }
+      /* ── Sidebar ── */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 56px;
+        background: #08080c;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 0;
+        z-index: 10;
+      }
+      .sidebar-logo {
+        width: 32px;
+        height: 32px;
+        background: #22c55e;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #0a0a0f;
+        margin-bottom: 28px;
+      }
+      .sidebar-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+        color: #52525b;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .sidebar-icon:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #a1a1aa;
+      }
+      .sidebar-icon.active {
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+      }
+      .sidebar-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      .sidebar-spacer {
+        flex: 1;
+      }
+      .sidebar-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 12px;
+        color: #fff;
+      }
 
-  /* ── Main area ── */
-  .main {
-    margin-left: 56px;
-    height: 900px;
-    display: flex;
-    flex-direction: column;
-  }
+      /* ── Main area ── */
+      .main {
+        margin-left: 56px;
+        height: 900px;
+        display: flex;
+        flex-direction: column;
+      }
 
-  /* ── Top header bar ── */
-  .top-bar {
-    height: 52px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    padding: 0 28px;
-    flex-shrink: 0;
-  }
-  .breadcrumb {
-    font-size: 13px;
-    color: #52525b;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .breadcrumb span { color: #a1a1aa; }
-  .breadcrumb svg { width: 14px; height: 14px; }
-  .top-bar-spacer { flex: 1; }
-  .top-bar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .search-box {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #52525b;
-    font-size: 13px;
-    min-width: 200px;
-  }
-  .search-box svg { width: 14px; height: 14px; flex-shrink: 0; }
-  .search-box kbd {
-    margin-left: auto;
-    background: rgba(255,255,255,0.06);
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 11px;
-    font-family: inherit;
-    color: #3f3f46;
-  }
+      /* ── Top header bar ── */
+      .top-bar {
+        height: 52px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        flex-shrink: 0;
+      }
+      .breadcrumb {
+        font-size: 13px;
+        color: #52525b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .breadcrumb span {
+        color: #a1a1aa;
+      }
+      .breadcrumb svg {
+        width: 14px;
+        height: 14px;
+      }
+      .top-bar-spacer {
+        flex: 1;
+      }
+      .top-bar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .search-box {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #52525b;
+        font-size: 13px;
+        min-width: 200px;
+      }
+      .search-box svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .search-box kbd {
+        margin-left: auto;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 11px;
+        font-family: inherit;
+        color: #3f3f46;
+      }
 
-  /* ── Board header ── */
-  .board-header {
-    padding: 20px 28px 0;
-    flex-shrink: 0;
-  }
-  .board-title-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .board-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fafafa;
-    letter-spacing: -0.3px;
-  }
-  .board-badge {
-    background: rgba(34,197,94,0.12);
-    color: #22c55e;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 9999px;
-  }
-  .filters-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 20px;
-  }
-  .filter-btn {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 7px;
-    padding: 5px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #71717a;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all .15s;
-  }
-  .filter-btn:hover { background: rgba(255,255,255,0.07); color: #a1a1aa; }
-  .filter-btn.active {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.14);
-    color: #fafafa;
-  }
-  .filter-sep {
-    width: 1px;
-    height: 20px;
-    background: rgba(255,255,255,0.08);
-    margin: 0 6px;
-  }
-  .filter-btn-icon {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .filter-btn-icon svg { width: 14px; height: 14px; }
+      /* ── Board header ── */
+      .board-header {
+        padding: 20px 28px 0;
+        flex-shrink: 0;
+      }
+      .board-title-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .board-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #fafafa;
+        letter-spacing: -0.3px;
+      }
+      .board-badge {
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 9999px;
+      }
+      .filters-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+      }
+      .filter-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 7px;
+        padding: 5px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #71717a;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+      .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #a1a1aa;
+      }
+      .filter-btn.active {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.14);
+        color: #fafafa;
+      }
+      .filter-sep {
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 0 6px;
+      }
+      .filter-btn-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .filter-btn-icon svg {
+        width: 14px;
+        height: 14px;
+      }
 
-  /* ── Board columns ── */
-  .board {
-    flex: 1;
-    display: flex;
-    gap: 16px;
-    padding: 0 28px 24px;
-    overflow: hidden;
-  }
-  .column {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .column-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 0 2px;
-  }
-  .column-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .column-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #a1a1aa;
-    letter-spacing: 0.02em;
-  }
-  .column-count {
-    font-size: 12px;
-    color: #3f3f46;
-    font-weight: 500;
-    margin-left: 2px;
-  }
-  .column-add {
-    margin-left: auto;
-    width: 24px; height: 24px;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    color: #3f3f46;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .column-add:hover { background: rgba(255,255,255,0.06); color: #71717a; }
-  .column-add svg { width: 16px; height: 16px; }
-  .column-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-  }
+      /* ── Board columns ── */
+      .board {
+        flex: 1;
+        display: flex;
+        gap: 16px;
+        padding: 0 28px 24px;
+        overflow: hidden;
+      }
+      .column {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .column-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 0 2px;
+      }
+      .column-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .column-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #a1a1aa;
+        letter-spacing: 0.02em;
+      }
+      .column-count {
+        font-size: 12px;
+        color: #3f3f46;
+        font-weight: 500;
+        margin-left: 2px;
+      }
+      .column-add {
+        margin-left: auto;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #3f3f46;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .column-add:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #71717a;
+      }
+      .column-add svg {
+        width: 16px;
+        height: 16px;
+      }
+      .column-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+      }
 
-  /* ── Task card ── */
-  .card {
-    background: #111116;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: border-color .15s, box-shadow .15s, transform .1s;
-  }
-  .card:hover {
-    border-color: rgba(255,255,255,0.14);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-    transform: translateY(-1px);
-  }
-  .card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-  .card-id {
-    font-size: 12px;
-    color: #3f3f46;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
-  .priority {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 9999px;
-    text-transform: capitalize;
-  }
-  .priority-high { background: rgba(239,68,68,0.14); color: #ef4444; }
-  .priority-normal { background: rgba(161,161,170,0.12); color: #71717a; }
-  .priority-low { background: rgba(59,130,246,0.14); color: #3b82f6; }
+      /* ── Task card ── */
+      .card {
+        background: #111116;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 14px 16px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          transform 0.1s;
+      }
+      .card:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        transform: translateY(-1px);
+      }
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .card-id {
+        font-size: 12px;
+        color: #3f3f46;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .priority {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        text-transform: capitalize;
+      }
+      .priority-high {
+        background: rgba(239, 68, 68, 0.14);
+        color: #ef4444;
+      }
+      .priority-normal {
+        background: rgba(161, 161, 170, 0.12);
+        color: #71717a;
+      }
+      .priority-low {
+        background: rgba(59, 130, 246, 0.14);
+        color: #3b82f6;
+      }
 
-  .card-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #e4e4e7;
-    line-height: 1.45;
-    margin-bottom: 12px;
-    letter-spacing: -0.1px;
-  }
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #e4e4e7;
+        line-height: 1.45;
+        margin-bottom: 12px;
+        letter-spacing: -0.1px;
+      }
 
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .card-agent {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .avatar {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-    letter-spacing: 0.02em;
-  }
-  .agent-name {
-    font-size: 12px;
-    color: #71717a;
-    font-weight: 500;
-  }
-  .sprint-label {
-    font-size: 11px;
-    font-weight: 500;
-    color: #3f3f46;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 2px 8px;
-    border-radius: 5px;
-  }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .card-agent {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+      }
+      .agent-name {
+        font-size: 12px;
+        color: #71717a;
+        font-weight: 500;
+      }
+      .sprint-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: #3f3f46;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
 
-  /* ── Subtle metadata icons ── */
-  .card-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: #3f3f46;
-  }
-  .meta-item svg { width: 13px; height: 13px; }
+      /* ── Subtle metadata icons ── */
+      .card-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #3f3f46;
+      }
+      .meta-item svg {
+        width: 13px;
+        height: 13px;
+      }
 
-  /* ── Done column strikethrough ── */
-  .card.done .card-title {
-    color: #52525b;
-    text-decoration: line-through;
-    text-decoration-color: #3f3f46;
-  }
+      /* ── Done column strikethrough ── */
+      .card.done .card-title {
+        color: #52525b;
+        text-decoration: line-through;
+        text-decoration-color: #3f3f46;
+      }
 
-  .card.done {
-    opacity: 0.7;
-  }
-</style>
-</head>
-<body>
+      .card.done {
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">C</div>
 
-<!-- Sidebar -->
-<nav class="sidebar">
-  <div class="sidebar-logo">C</div>
+      <!-- Board icon (active) -->
+      <div class="sidebar-icon active" title="Board">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="9" rx="1.5" />
+          <rect x="14" y="3" width="7" height="5" rx="1.5" />
+          <rect x="14" y="12" width="7" height="9" rx="1.5" />
+          <rect x="3" y="16" width="7" height="5" rx="1.5" />
+        </svg>
+      </div>
+      <!-- Inbox -->
+      <div class="sidebar-icon" title="Inbox">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M22 12h-6l-2 3H10l-2-3H2" />
+          <path
+            d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+          />
+        </svg>
+      </div>
+      <!-- Agents -->
+      <div class="sidebar-icon" title="Agents">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+          <path d="M16 14H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4z" />
+        </svg>
+      </div>
+      <!-- Settings -->
+      <div class="sidebar-icon" title="Settings">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1.08H21a2 2 0 0 1 0 4h-.09c-.658.083-1.25.476-1.51 1.08z"
+          />
+        </svg>
+      </div>
 
-  <!-- Board icon (active) -->
-  <div class="sidebar-icon active" title="Board">
-    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-  </div>
-  <!-- Inbox -->
-  <div class="sidebar-icon" title="Inbox">
-    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3H10l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-  </div>
-  <!-- Agents -->
-  <div class="sidebar-icon" title="Agents">
-    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M16 14H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4z"/></svg>
-  </div>
-  <!-- Settings -->
-  <div class="sidebar-icon" title="Settings">
-    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1.08H21a2 2 0 0 1 0 4h-.09c-.658.083-1.25.476-1.51 1.08z"/></svg>
-  </div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-avatar">RB</div>
+    </nav>
 
-  <div class="sidebar-spacer"></div>
-  <div class="sidebar-avatar">RB</div>
-</nav>
+    <!-- Main content -->
+    <div class="main">
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="breadcrumb">
+          Celune
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+          <span>Product</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+          <span>Task Board</span>
+        </div>
+        <div class="top-bar-spacer"></div>
+        <div class="top-bar-actions">
+          <div class="search-box">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            Search tasks...
+            <kbd>/</kbd>
+          </div>
+        </div>
+      </div>
 
-<!-- Main content -->
-<div class="main">
-  <!-- Top bar -->
-  <div class="top-bar">
-    <div class="breadcrumb">
-      Celune
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      <span>Product</span>
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      <span>Task Board</span>
-    </div>
-    <div class="top-bar-spacer"></div>
-    <div class="top-bar-actions">
-      <div class="search-box">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        Search tasks...
-        <kbd>/</kbd>
+      <!-- Board header -->
+      <div class="board-header">
+        <div class="board-title-row">
+          <h1 class="board-title">Task Board</h1>
+          <span class="board-badge">Sprint 2</span>
+        </div>
+        <div class="filters-row">
+          <button class="filter-btn active">All</button>
+          <button class="filter-btn">Mine</button>
+          <button class="filter-btn">Blocked</button>
+          <div class="filter-sep"></div>
+          <button class="filter-btn filter-btn-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+            </svg>
+            Filter
+          </button>
+          <button class="filter-btn filter-btn-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 6h18M6 12h12M9 18h6" />
+            </svg>
+            Group
+          </button>
+        </div>
+      </div>
+
+      <!-- Kanban board -->
+      <div class="board">
+        <!-- ─── Inbox Column ─── -->
+        <div class="column">
+          <div class="column-header">
+            <div class="column-dot" style="background: #71717a"></div>
+            <span class="column-name">Inbox</span>
+            <span class="column-count">3</span>
+            <div class="column-add">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </div>
+          </div>
+          <div class="column-cards">
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-42</span>
+                <span class="priority priority-high">high</span>
+              </div>
+              <div class="card-title">Implement auth middleware for API gateway</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  3
+                </span>
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                  2
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #22c55e">RI</div>
+                  <span class="agent-name">RICK</span>
+                </div>
+                <span class="sprint-label">Sprint 2</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-47</span>
+                <span class="priority priority-normal">normal</span>
+              </div>
+              <div class="card-title">Design onboarding flow for new workspaces</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  1
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #3b82f6">SA</div>
+                  <span class="agent-name">SAGE</span>
+                </div>
+                <span class="sprint-label">Sprint 2</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-51</span>
+                <span class="priority priority-low">low</span>
+              </div>
+              <div class="card-title">Add webhook retry logic with exponential backoff</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                  1
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #14b8a6">DL</div>
+                  <span class="agent-name">DELV</span>
+                </div>
+                <span class="sprint-label">Sprint 3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── In Progress Column ─── -->
+        <div class="column">
+          <div class="column-header">
+            <div class="column-dot" style="background: #22c55e"></div>
+            <span class="column-name">In Progress</span>
+            <span class="column-count">3</span>
+            <div class="column-add">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </div>
+          </div>
+          <div class="column-cards">
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-38</span>
+                <span class="priority priority-high">high</span>
+              </div>
+              <div class="card-title">Set up MCP server config for agent orchestration</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  7
+                </span>
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                  4
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #8b5cf6">NO</div>
+                  <span class="agent-name">NOIR</span>
+                </div>
+                <span class="sprint-label">Sprint 2</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-40</span>
+                <span class="priority priority-normal">normal</span>
+              </div>
+              <div class="card-title">Build real-time task sync via WebSocket channels</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  2
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #f59e0b">SC</div>
+                  <span class="agent-name">SCAN</span>
+                </div>
+                <span class="sprint-label">Sprint 2</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-top">
+                <span class="card-id">CEL-44</span>
+                <span class="priority priority-high">high</span>
+              </div>
+              <div class="card-title">Migrate database schema to support multi-tenant agents</div>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  5
+                </span>
+                <span class="meta-item">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                  3
+                </span>
+              </div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #22c55e">RI</div>
+                  <span class="agent-name">RICK</span>
+                </div>
+                <span class="sprint-label">Sprint 2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Done Column ─── -->
+        <div class="column">
+          <div class="column-header">
+            <div class="column-dot" style="background: #3f3f46"></div>
+            <span class="column-name">Done</span>
+            <span class="column-count">4</span>
+            <div class="column-add">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </div>
+          </div>
+          <div class="column-cards">
+            <div class="card done">
+              <div class="card-top">
+                <span class="card-id">CEL-31</span>
+                <span class="priority priority-high">high</span>
+              </div>
+              <div class="card-title">Configure CI/CD pipeline for staging deploys</div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #8b5cf6">NO</div>
+                  <span class="agent-name">NOIR</span>
+                </div>
+                <span class="sprint-label">Sprint 1</span>
+              </div>
+            </div>
+
+            <div class="card done">
+              <div class="card-top">
+                <span class="card-id">CEL-33</span>
+                <span class="priority priority-normal">normal</span>
+              </div>
+              <div class="card-title">Set up error tracking with Sentry integration</div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #f59e0b">SC</div>
+                  <span class="agent-name">SCAN</span>
+                </div>
+                <span class="sprint-label">Sprint 1</span>
+              </div>
+            </div>
+
+            <div class="card done">
+              <div class="card-top">
+                <span class="card-id">CEL-35</span>
+                <span class="priority priority-normal">normal</span>
+              </div>
+              <div class="card-title">Implement rate limiter for public API endpoints</div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #14b8a6">DL</div>
+                  <span class="agent-name">DELV</span>
+                </div>
+                <span class="sprint-label">Sprint 1</span>
+              </div>
+            </div>
+
+            <div class="card done">
+              <div class="card-top">
+                <span class="card-id">CEL-36</span>
+                <span class="priority priority-low">low</span>
+              </div>
+              <div class="card-title">Write OpenAPI spec for agent management routes</div>
+              <div class="card-footer">
+                <div class="card-agent">
+                  <div class="avatar" style="background: #3b82f6">SA</div>
+                  <span class="agent-name">SAGE</span>
+                </div>
+                <span class="sprint-label">Sprint 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Board header -->
-  <div class="board-header">
-    <div class="board-title-row">
-      <h1 class="board-title">Task Board</h1>
-      <span class="board-badge">Sprint 2</span>
-    </div>
-    <div class="filters-row">
-      <button class="filter-btn active">All</button>
-      <button class="filter-btn">Mine</button>
-      <button class="filter-btn">Blocked</button>
-      <div class="filter-sep"></div>
-      <button class="filter-btn filter-btn-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
-        Filter
-      </button>
-      <button class="filter-btn filter-btn-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M9 18h6"/></svg>
-        Group
-      </button>
-    </div>
-  </div>
-
-  <!-- Kanban board -->
-  <div class="board">
-
-    <!-- ─── Inbox Column ─── -->
-    <div class="column">
-      <div class="column-header">
-        <div class="column-dot" style="background:#71717a"></div>
-        <span class="column-name">Inbox</span>
-        <span class="column-count">3</span>
-        <div class="column-add"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
-      </div>
-      <div class="column-cards">
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-42</span>
-            <span class="priority priority-high">high</span>
-          </div>
-          <div class="card-title">Implement auth middleware for API gateway</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              3
-            </span>
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              2
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#22c55e">RI</div>
-              <span class="agent-name">RICK</span>
-            </div>
-            <span class="sprint-label">Sprint 2</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-47</span>
-            <span class="priority priority-normal">normal</span>
-          </div>
-          <div class="card-title">Design onboarding flow for new workspaces</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              1
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#3b82f6">SA</div>
-              <span class="agent-name">SAGE</span>
-            </div>
-            <span class="sprint-label">Sprint 2</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-51</span>
-            <span class="priority priority-low">low</span>
-          </div>
-          <div class="card-title">Add webhook retry logic with exponential backoff</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              1
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#14b8a6">DL</div>
-              <span class="agent-name">DELV</span>
-            </div>
-            <span class="sprint-label">Sprint 3</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ─── In Progress Column ─── -->
-    <div class="column">
-      <div class="column-header">
-        <div class="column-dot" style="background:#22c55e"></div>
-        <span class="column-name">In Progress</span>
-        <span class="column-count">3</span>
-        <div class="column-add"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
-      </div>
-      <div class="column-cards">
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-38</span>
-            <span class="priority priority-high">high</span>
-          </div>
-          <div class="card-title">Set up MCP server config for agent orchestration</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              7
-            </span>
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              4
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#8b5cf6">NO</div>
-              <span class="agent-name">NOIR</span>
-            </div>
-            <span class="sprint-label">Sprint 2</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-40</span>
-            <span class="priority priority-normal">normal</span>
-          </div>
-          <div class="card-title">Build real-time task sync via WebSocket channels</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              2
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#f59e0b">SC</div>
-              <span class="agent-name">SCAN</span>
-            </div>
-            <span class="sprint-label">Sprint 2</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <span class="card-id">CEL-44</span>
-            <span class="priority priority-high">high</span>
-          </div>
-          <div class="card-title">Migrate database schema to support multi-tenant agents</div>
-          <div class="card-meta">
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              5
-            </span>
-            <span class="meta-item">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              3
-            </span>
-          </div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#22c55e">RI</div>
-              <span class="agent-name">RICK</span>
-            </div>
-            <span class="sprint-label">Sprint 2</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ─── Done Column ─── -->
-    <div class="column">
-      <div class="column-header">
-        <div class="column-dot" style="background:#3f3f46"></div>
-        <span class="column-name">Done</span>
-        <span class="column-count">4</span>
-        <div class="column-add"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
-      </div>
-      <div class="column-cards">
-
-        <div class="card done">
-          <div class="card-top">
-            <span class="card-id">CEL-31</span>
-            <span class="priority priority-high">high</span>
-          </div>
-          <div class="card-title">Configure CI/CD pipeline for staging deploys</div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#8b5cf6">NO</div>
-              <span class="agent-name">NOIR</span>
-            </div>
-            <span class="sprint-label">Sprint 1</span>
-          </div>
-        </div>
-
-        <div class="card done">
-          <div class="card-top">
-            <span class="card-id">CEL-33</span>
-            <span class="priority priority-normal">normal</span>
-          </div>
-          <div class="card-title">Set up error tracking with Sentry integration</div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#f59e0b">SC</div>
-              <span class="agent-name">SCAN</span>
-            </div>
-            <span class="sprint-label">Sprint 1</span>
-          </div>
-        </div>
-
-        <div class="card done">
-          <div class="card-top">
-            <span class="card-id">CEL-35</span>
-            <span class="priority priority-normal">normal</span>
-          </div>
-          <div class="card-title">Implement rate limiter for public API endpoints</div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#14b8a6">DL</div>
-              <span class="agent-name">DELV</span>
-            </div>
-            <span class="sprint-label">Sprint 1</span>
-          </div>
-        </div>
-
-        <div class="card done">
-          <div class="card-top">
-            <span class="card-id">CEL-36</span>
-            <span class="priority priority-low">low</span>
-          </div>
-          <div class="card-title">Write OpenAPI spec for agent management routes</div>
-          <div class="card-footer">
-            <div class="card-agent">
-              <div class="avatar" style="background:#3b82f6">SA</div>
-              <span class="agent-name">SAGE</span>
-            </div>
-            <span class="sprint-label">Sprint 1</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

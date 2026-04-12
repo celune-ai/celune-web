@@ -1,930 +1,1033 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Celune — Code Review</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0a0a0f;
-    color: #e1e1e6;
-    width: 1440px;
-    height: 900px;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* ── Header ─────────────────────────────────────────────── */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-    padding: 0 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    background: #111116;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .logo {
-    font-weight: 700;
-    font-size: 16px;
-    letter-spacing: -0.02em;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .logo-icon {
-    width: 24px;
-    height: 24px;
-    background: #22c55e;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: #0a0a0f;
-  }
-
-  .header-sep {
-    width: 1px;
-    height: 20px;
-    background: rgba(255,255,255,0.12);
-  }
-
-  .pr-title-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .pr-number {
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.45);
-  }
-
-  .pr-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-  }
-
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #eab308;
-    background: rgba(234,179,8,0.1);
-    border: 1px solid rgba(234,179,8,0.2);
-    border-radius: 9999px;
-    padding: 3px 10px 3px 8px;
-  }
-
-  .status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #eab308;
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .branch-info {
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .branch-name {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 4px;
-    padding: 2px 7px;
-    color: rgba(255,255,255,0.7);
-  }
-
-  .branch-arrow {
-    color: rgba(255,255,255,0.3);
-  }
-
-  /* ── Layout ─────────────────────────────────────────────── */
-  .layout {
-    display: flex;
-    height: calc(900px - 56px - 52px); /* header + footer */
-  }
-
-  /* ── Sidebar ────────────────────────────────────────────── */
-  .sidebar {
-    width: 220px;
-    min-width: 220px;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    background: #0e0e13;
-    padding: 16px 0;
-    overflow-y: auto;
-  }
-
-  .sidebar-heading {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba(255,255,255,0.35);
-    padding: 0 16px;
-    margin-bottom: 8px;
-  }
-
-  .file-list {
-    list-style: none;
-  }
-
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 16px;
-    cursor: pointer;
-    transition: background 0.15s;
-    font-size: 13px;
-    position: relative;
-  }
-
-  .file-item:hover {
-    background: rgba(255,255,255,0.04);
-  }
-
-  .file-item.active {
-    background: rgba(34,197,94,0.08);
-  }
-
-  .file-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #22c55e;
-  }
-
-  .file-icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .file-icon.ts {
-    background: rgba(49,120,198,0.2);
-    color: #5b9bd5;
-  }
-
-  .file-icon.test {
-    background: rgba(168,85,247,0.2);
-    color: #a855f7;
-  }
-
-  .file-icon.new {
-    position: relative;
-  }
-
-  .file-icon.new::after {
-    content: '';
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 5px;
-    height: 5px;
-    background: #22c55e;
-    border-radius: 50%;
-  }
-
-  .file-name {
-    flex: 1;
-    min-width: 0;
-    color: rgba(255,255,255,0.8);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .file-stats {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-  }
-
-  .stat-add {
-    color: #22c55e;
-  }
-
-  .stat-del {
-    color: #f85149;
-  }
-
-  .new-badge {
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #22c55e;
-    background: rgba(34,197,94,0.1);
-    border-radius: 3px;
-    padding: 1px 4px;
-    margin-left: 2px;
-  }
-
-  /* ── Main diff area ─────────────────────────────────────── */
-  .main {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 24px;
-  }
-
-  .diff-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .diff-file-path {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .diff-file-path .folder {
-    color: rgba(255,255,255,0.35);
-  }
-
-  .diff-actions {
-    display: flex;
-    gap: 8px;
-  }
-
-  .diff-action-btn {
-    font-size: 11px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    padding: 4px 10px;
-    cursor: pointer;
-  }
-
-  /* ── Code block ─────────────────────────────────────────── */
-  .code-block {
-    background: #0d1117;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    line-height: 20px;
-  }
-
-  .code-line {
-    display: flex;
-    min-height: 20px;
-  }
-
-  .line-num {
-    width: 50px;
-    min-width: 50px;
-    text-align: right;
-    padding-right: 12px;
-    color: #484f58;
-    user-select: none;
-    font-size: 12px;
-  }
-
-  .line-content {
-    flex: 1;
-    padding-left: 12px;
-    padding-right: 16px;
-    white-space: pre;
-    color: #adbac7;
-  }
-
-  .code-line.added {
-    background: rgba(46,160,67,0.15);
-  }
-
-  .code-line.added .line-num {
-    color: rgba(87,196,106,0.5);
-  }
-
-  .code-line.added .line-content::before {
-    content: '+';
-    color: #3fb950;
-    margin-right: 4px;
-  }
-
-  .code-line.context {
-    background: transparent;
-  }
-
-  .code-line.context .line-content::before {
-    content: ' ';
-    margin-right: 4px;
-  }
-
-  .chunk-header {
-    background: rgba(56,139,253,0.1);
-    color: rgba(139,148,158,0.7);
-    font-size: 12px;
-    padding: 4px 12px 4px 62px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    border-top: 1px solid rgba(255,255,255,0.04);
-  }
-
-  /* ── Syntax highlighting ────────────────────────────────── */
-  .kw { color: #ff7b72; }
-  .fn { color: #d2a8ff; }
-  .str { color: #a5d6ff; }
-  .type { color: #79c0ff; }
-  .cm { color: #8b949e; }
-  .num { color: #79c0ff; }
-  .op { color: #adbac7; }
-  .const { color: #ffa657; }
-  .prop { color: #adbac7; }
-
-  /* ── Review comment ─────────────────────────────────────── */
-  .review-comment {
-    margin: 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    background: #161b22;
-    padding: 12px 16px 12px 62px;
-  }
-
-  .review-comment-inner {
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.08);
-    overflow: hidden;
-  }
-
-  .comment-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .agent-avatar {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    color: #0a0a0f;
-    flex-shrink: 0;
-  }
-
-  .agent-avatar.scan {
-    background: linear-gradient(135deg, #f97316, #fb923c);
-  }
-
-  .comment-agent-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-  }
-
-  .comment-agent-label {
-    font-size: 10px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.35);
-    background: rgba(255,255,255,0.06);
-    border-radius: 3px;
-    padding: 1px 5px;
-  }
-
-  .comment-time {
-    font-size: 11px;
-    color: rgba(255,255,255,0.25);
-    margin-left: auto;
-  }
-
-  .comment-body {
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.5;
-    color: rgba(255,255,255,0.7);
-  }
-
-  .comment-body code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 3px;
-    padding: 1px 5px;
-    color: rgba(255,255,255,0.85);
-  }
-
-  .review-comment.suggestion .review-comment-inner {
-    border-left: 3px solid #eab308;
-  }
-
-  .review-comment.approval .review-comment-inner {
-    border-left: 3px solid #22c55e;
-  }
-
-  .comment-status {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 500;
-    margin-top: 6px;
-  }
-
-  .comment-status.approved {
-    color: #22c55e;
-  }
-
-  .comment-status.suggestion-tag {
-    color: #eab308;
-  }
-
-  .checkmark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    font-size: 10px;
-  }
-
-  .checkmark.green {
-    background: rgba(34,197,94,0.15);
-    color: #22c55e;
-  }
-
-  .checkmark.yellow {
-    background: rgba(234,179,8,0.15);
-    color: #eab308;
-  }
-
-  /* ── Footer / Summary bar ───────────────────────────────── */
-  .footer {
-    height: 52px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    background: #111116;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-  }
-
-  .footer-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .footer-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: #0a0a0f;
-    background: linear-gradient(135deg, #f97316, #fb923c);
-  }
-
-  .footer-info {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .footer-agent {
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-  }
-
-  .footer-summary {
-    font-size: 12px;
-    color: rgba(255,255,255,0.4);
-  }
-
-  .footer-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .btn {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 8px;
-    padding: 7px 16px;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-  }
-
-  .btn-outline {
-    background: transparent;
-    color: rgba(255,255,255,0.6);
-    border: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .btn-outline:hover {
-    border-color: rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.8);
-  }
-
-  .btn-primary {
-    background: #22c55e;
-    color: #0a0a0f;
-  }
-
-  .btn-primary:hover {
-    background: #16a34a;
-  }
-
-  .btn-danger {
-    background: transparent;
-    color: #f85149;
-    border: 1px solid rgba(248,81,73,0.3);
-  }
-
-  .btn-danger:hover {
-    background: rgba(248,81,73,0.1);
-  }
-</style>
-</head>
-<body>
-
-<!-- ── Header ──────────────────────────────────────────────── -->
-<header class="header">
-  <div class="header-left">
-    <div class="logo">
-      <div class="logo-icon">C</div>
-      Celune
-    </div>
-    <div class="header-sep"></div>
-    <div class="pr-title-area">
-      <span class="pr-number">PR #47</span>
-      <span class="pr-title">Implement auth middleware</span>
-      <span class="status-badge">
-        <span class="status-dot"></span>
-        Review in progress
-      </span>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="branch-info">
-      <span class="branch-name">feat/auth</span>
-      <span class="branch-arrow">&rarr;</span>
-      <span class="branch-name">main</span>
-    </div>
-  </div>
-</header>
-
-<!-- ── Body ────────────────────────────────────────────────── -->
-<div class="layout">
-
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-heading">Changed files <span style="color:rgba(255,255,255,0.2);font-weight:400">&middot; 4</span></div>
-    <ul class="file-list">
-      <li class="file-item active">
-        <div class="file-icon ts new">TS</div>
-        <span class="file-name">auth.ts</span>
-        <span class="new-badge">new</span>
-        <span class="file-stats"><span class="stat-add">+142</span></span>
-      </li>
-      <li class="file-item">
-        <div class="file-icon ts">TS</div>
-        <span class="file-name">protected.ts</span>
-        <span class="file-stats"><span class="stat-add">+28</span> <span class="stat-del">-5</span></span>
-      </li>
-      <li class="file-item">
-        <div class="file-icon ts new">TS</div>
-        <span class="file-name">auth.ts</span>
-        <span class="new-badge">new</span>
-        <span class="file-stats"><span class="stat-add">+35</span></span>
-      </li>
-      <li class="file-item">
-        <div class="file-icon test new">TS</div>
-        <span class="file-name">auth.test.ts</span>
-        <span class="new-badge">new</span>
-        <span class="file-stats"><span class="stat-add">+89</span></span>
-      </li>
-    </ul>
-
-    <div class="sidebar-heading" style="margin-top:24px;">Review agents</div>
-    <ul class="file-list">
-      <li class="file-item" style="gap:10px;">
-        <div class="agent-avatar scan" style="width:20px;height:20px;font-size:9px;">S</div>
-        <span style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:500;">SCAN</span>
-        <span style="font-size:10px;color:#eab308;margin-left:auto;">reviewing</span>
-      </li>
-    </ul>
-  </aside>
-
-  <!-- Main diff view -->
-  <main class="main">
-    <div class="diff-header">
-      <div class="diff-file-path">
-        <span class="folder">src/middleware/</span>auth.ts
-        <span class="new-badge" style="font-size:10px;">NEW FILE</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Celune — Code Review</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #0a0a0f;
+        color: #e1e1e6;
+        width: 1440px;
+        height: 900px;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* ── Header ─────────────────────────────────────────────── */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+        padding: 0 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: #111116;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+        background: #22c55e;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #0a0a0f;
+      }
+
+      .header-sep {
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .pr-title-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pr-number {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      .pr-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #eab308;
+        background: rgba(234, 179, 8, 0.1);
+        border: 1px solid rgba(234, 179, 8, 0.2);
+        border-radius: 9999px;
+        padding: 3px 10px 3px 8px;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #eab308;
+        animation: pulse-dot 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .branch-info {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .branch-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+        padding: 2px 7px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .branch-arrow {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* ── Layout ─────────────────────────────────────────────── */
+      .layout {
+        display: flex;
+        height: calc(900px - 56px - 52px); /* header + footer */
+      }
+
+      /* ── Sidebar ────────────────────────────────────────────── */
+      .sidebar {
+        width: 220px;
+        min-width: 220px;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        background: #0e0e13;
+        padding: 16px 0;
+        overflow-y: auto;
+      }
+
+      .sidebar-heading {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.35);
+        padding: 0 16px;
+        margin-bottom: 8px;
+      }
+
+      .file-list {
+        list-style: none;
+      }
+
+      .file-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 16px;
+        cursor: pointer;
+        transition: background 0.15s;
+        font-size: 13px;
+        position: relative;
+      }
+
+      .file-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .file-item.active {
+        background: rgba(34, 197, 94, 0.08);
+      }
+
+      .file-item.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #22c55e;
+      }
+
+      .file-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .file-icon.ts {
+        background: rgba(49, 120, 198, 0.2);
+        color: #5b9bd5;
+      }
+
+      .file-icon.test {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+      }
+
+      .file-icon.new {
+        position: relative;
+      }
+
+      .file-icon.new::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        width: 5px;
+        height: 5px;
+        background: #22c55e;
+        border-radius: 50%;
+      }
+
+      .file-name {
+        flex: 1;
+        min-width: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .file-stats {
+        display: flex;
+        gap: 4px;
+        flex-shrink: 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+      }
+
+      .stat-add {
+        color: #22c55e;
+      }
+
+      .stat-del {
+        color: #f85149;
+      }
+
+      .new-badge {
+        font-size: 9px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #22c55e;
+        background: rgba(34, 197, 94, 0.1);
+        border-radius: 3px;
+        padding: 1px 4px;
+        margin-left: 2px;
+      }
+
+      /* ── Main diff area ─────────────────────────────────────── */
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 24px;
+      }
+
+      .diff-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .diff-file-path {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .diff-file-path .folder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      .diff-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .diff-action-btn {
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        padding: 4px 10px;
+        cursor: pointer;
+      }
+
+      /* ── Code block ─────────────────────────────────────────── */
+      .code-block {
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        overflow: hidden;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        line-height: 20px;
+      }
+
+      .code-line {
+        display: flex;
+        min-height: 20px;
+      }
+
+      .line-num {
+        width: 50px;
+        min-width: 50px;
+        text-align: right;
+        padding-right: 12px;
+        color: #484f58;
+        user-select: none;
+        font-size: 12px;
+      }
+
+      .line-content {
+        flex: 1;
+        padding-left: 12px;
+        padding-right: 16px;
+        white-space: pre;
+        color: #adbac7;
+      }
+
+      .code-line.added {
+        background: rgba(46, 160, 67, 0.15);
+      }
+
+      .code-line.added .line-num {
+        color: rgba(87, 196, 106, 0.5);
+      }
+
+      .code-line.added .line-content::before {
+        content: '+';
+        color: #3fb950;
+        margin-right: 4px;
+      }
+
+      .code-line.context {
+        background: transparent;
+      }
+
+      .code-line.context .line-content::before {
+        content: ' ';
+        margin-right: 4px;
+      }
+
+      .chunk-header {
+        background: rgba(56, 139, 253, 0.1);
+        color: rgba(139, 148, 158, 0.7);
+        font-size: 12px;
+        padding: 4px 12px 4px 62px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      /* ── Syntax highlighting ────────────────────────────────── */
+      .kw {
+        color: #ff7b72;
+      }
+      .fn {
+        color: #d2a8ff;
+      }
+      .str {
+        color: #a5d6ff;
+      }
+      .type {
+        color: #79c0ff;
+      }
+      .cm {
+        color: #8b949e;
+      }
+      .num {
+        color: #79c0ff;
+      }
+      .op {
+        color: #adbac7;
+      }
+      .const {
+        color: #ffa657;
+      }
+      .prop {
+        color: #adbac7;
+      }
+
+      /* ── Review comment ─────────────────────────────────────── */
+      .review-comment {
+        margin: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        background: #161b22;
+        padding: 12px 16px 12px 62px;
+      }
+
+      .review-comment-inner {
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .agent-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: #0a0a0f;
+        flex-shrink: 0;
+      }
+
+      .agent-avatar.scan {
+        background: linear-gradient(135deg, #f97316, #fb923c);
+      }
+
+      .comment-agent-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .comment-agent-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 3px;
+        padding: 1px 5px;
+      }
+
+      .comment-time {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.25);
+        margin-left: auto;
+      }
+
+      .comment-body {
+        padding: 10px 12px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .comment-body code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+        padding: 1px 5px;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .review-comment.suggestion .review-comment-inner {
+        border-left: 3px solid #eab308;
+      }
+
+      .review-comment.approval .review-comment-inner {
+        border-left: 3px solid #22c55e;
+      }
+
+      .comment-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 6px;
+      }
+
+      .comment-status.approved {
+        color: #22c55e;
+      }
+
+      .comment-status.suggestion-tag {
+        color: #eab308;
+      }
+
+      .checkmark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        font-size: 10px;
+      }
+
+      .checkmark.green {
+        background: rgba(34, 197, 94, 0.15);
+        color: #22c55e;
+      }
+
+      .checkmark.yellow {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+      }
+
+      /* ── Footer / Summary bar ───────────────────────────────── */
+      .footer {
+        height: 52px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background: #111116;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+      }
+
+      .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #0a0a0f;
+        background: linear-gradient(135deg, #f97316, #fb923c);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+
+      .footer-agent {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .footer-summary {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn {
+        font-family: 'Inter', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 7px 16px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.15s;
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .btn-outline:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .btn-primary {
+        background: #22c55e;
+        color: #0a0a0f;
+      }
+
+      .btn-primary:hover {
+        background: #16a34a;
+      }
+
+      .btn-danger {
+        background: transparent;
+        color: #f85149;
+        border: 1px solid rgba(248, 81, 73, 0.3);
+      }
+
+      .btn-danger:hover {
+        background: rgba(248, 81, 73, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Header ──────────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon">C</div>
+          Celune
+        </div>
+        <div class="header-sep"></div>
+        <div class="pr-title-area">
+          <span class="pr-number">PR #47</span>
+          <span class="pr-title">Implement auth middleware</span>
+          <span class="status-badge">
+            <span class="status-dot"></span>
+            Review in progress
+          </span>
+        </div>
       </div>
-      <div class="diff-actions">
-        <button class="diff-action-btn">Viewed</button>
-        <button class="diff-action-btn">Collapse</button>
+      <div class="header-right">
+        <div class="branch-info">
+          <span class="branch-name">feat/auth</span>
+          <span class="branch-arrow">&rarr;</span>
+          <span class="branch-name">main</span>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div class="code-block">
-      <div class="chunk-header">@@ +1,22 @@</div>
+    <!-- ── Body ────────────────────────────────────────────────── -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-heading">
+          Changed files
+          <span style="color: rgba(255, 255, 255, 0.2); font-weight: 400">&middot; 4</span>
+        </div>
+        <ul class="file-list">
+          <li class="file-item active">
+            <div class="file-icon ts new">TS</div>
+            <span class="file-name">auth.ts</span>
+            <span class="new-badge">new</span>
+            <span class="file-stats"><span class="stat-add">+142</span></span>
+          </li>
+          <li class="file-item">
+            <div class="file-icon ts">TS</div>
+            <span class="file-name">protected.ts</span>
+            <span class="file-stats"
+              ><span class="stat-add">+28</span> <span class="stat-del">-5</span></span
+            >
+          </li>
+          <li class="file-item">
+            <div class="file-icon ts new">TS</div>
+            <span class="file-name">auth.ts</span>
+            <span class="new-badge">new</span>
+            <span class="file-stats"><span class="stat-add">+35</span></span>
+          </li>
+          <li class="file-item">
+            <div class="file-icon test new">TS</div>
+            <span class="file-name">auth.test.ts</span>
+            <span class="new-badge">new</span>
+            <span class="file-stats"><span class="stat-add">+89</span></span>
+          </li>
+        </ul>
 
-      <!-- Line 1 -->
-      <div class="code-line added">
-        <span class="line-num">1</span>
-        <span class="line-content"><span class="kw">import</span> { <span class="type">NextRequest</span>, <span class="type">NextResponse</span> } <span class="kw">from</span> <span class="str">'next/server'</span></span>
-      </div>
-      <!-- Line 2 -->
-      <div class="code-line added">
-        <span class="line-num">2</span>
-        <span class="line-content"><span class="kw">import</span> { <span class="fn">createClient</span> } <span class="kw">from</span> <span class="str">'@supabase/supabase-js'</span></span>
-      </div>
-      <!-- Line 3 -->
-      <div class="code-line added">
-        <span class="line-num">3</span>
-        <span class="line-content"><span class="kw">import</span> { <span class="type">AuthConfig</span> } <span class="kw">from</span> <span class="str">'../types/auth'</span></span>
-      </div>
-      <!-- Line 4 (blank) -->
-      <div class="code-line added">
-        <span class="line-num">4</span>
-        <span class="line-content"></span>
-      </div>
-      <!-- Line 5 -->
-      <div class="code-line added">
-        <span class="line-num">5</span>
-        <span class="line-content"><span class="kw">const</span> <span class="const">supabase</span> <span class="op">=</span> <span class="fn">createClient</span>(</span>
-      </div>
-      <!-- Line 6 -->
-      <div class="code-line added">
-        <span class="line-num">6</span>
-        <span class="line-content">  process.env.<span class="const">SUPABASE_URL</span><span class="op">!</span>,</span>
-      </div>
-      <!-- Line 7 -->
-      <div class="code-line added">
-        <span class="line-num">7</span>
-        <span class="line-content">  process.env.<span class="const">SUPABASE_SERVICE_KEY</span><span class="op">!</span></span>
-      </div>
-      <!-- Line 8 -->
-      <div class="code-line added">
-        <span class="line-num">8</span>
-        <span class="line-content">)</span>
-      </div>
+        <div class="sidebar-heading" style="margin-top: 24px">Review agents</div>
+        <ul class="file-list">
+          <li class="file-item" style="gap: 10px">
+            <div class="agent-avatar scan" style="width: 20px; height: 20px; font-size: 9px">S</div>
+            <span style="font-size: 12px; color: rgba(255, 255, 255, 0.7); font-weight: 500"
+              >SCAN</span
+            >
+            <span style="font-size: 10px; color: #eab308; margin-left: auto">reviewing</span>
+          </li>
+        </ul>
+      </aside>
 
-      <!-- Review Comment 1 (suggestion) -->
-      <div class="review-comment suggestion">
-        <div class="review-comment-inner">
-          <div class="comment-header">
-            <div class="agent-avatar scan">S</div>
-            <span class="comment-agent-name">SCAN</span>
-            <span class="comment-agent-label">AI Agent</span>
-            <span class="comment-time">2 min ago</span>
+      <!-- Main diff view -->
+      <main class="main">
+        <div class="diff-header">
+          <div class="diff-file-path">
+            <span class="folder">src/middleware/</span>auth.ts
+            <span class="new-badge" style="font-size: 10px">NEW FILE</span>
           </div>
-          <div class="comment-body">
-            Consider using <code>createServiceClient()</code> here instead of direct key access &mdash; avoids exposing service keys client-side.
-            <div class="comment-status suggestion-tag">
-              <span class="checkmark yellow">!</span>
-              Suggestion
+          <div class="diff-actions">
+            <button class="diff-action-btn">Viewed</button>
+            <button class="diff-action-btn">Collapse</button>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="chunk-header">@@ +1,22 @@</div>
+
+          <!-- Line 1 -->
+          <div class="code-line added">
+            <span class="line-num">1</span>
+            <span class="line-content"
+              ><span class="kw">import</span> { <span class="type">NextRequest</span>,
+              <span class="type">NextResponse</span> } <span class="kw">from</span>
+              <span class="str">'next/server'</span></span
+            >
+          </div>
+          <!-- Line 2 -->
+          <div class="code-line added">
+            <span class="line-num">2</span>
+            <span class="line-content"
+              ><span class="kw">import</span> { <span class="fn">createClient</span> }
+              <span class="kw">from</span> <span class="str">'@supabase/supabase-js'</span></span
+            >
+          </div>
+          <!-- Line 3 -->
+          <div class="code-line added">
+            <span class="line-num">3</span>
+            <span class="line-content"
+              ><span class="kw">import</span> { <span class="type">AuthConfig</span> }
+              <span class="kw">from</span> <span class="str">'../types/auth'</span></span
+            >
+          </div>
+          <!-- Line 4 (blank) -->
+          <div class="code-line added">
+            <span class="line-num">4</span>
+            <span class="line-content"></span>
+          </div>
+          <!-- Line 5 -->
+          <div class="code-line added">
+            <span class="line-num">5</span>
+            <span class="line-content"
+              ><span class="kw">const</span> <span class="const">supabase</span>
+              <span class="op">=</span> <span class="fn">createClient</span>(</span
+            >
+          </div>
+          <!-- Line 6 -->
+          <div class="code-line added">
+            <span class="line-num">6</span>
+            <span class="line-content">
+              process.env.<span class="const">SUPABASE_URL</span><span class="op">!</span>,</span
+            >
+          </div>
+          <!-- Line 7 -->
+          <div class="code-line added">
+            <span class="line-num">7</span>
+            <span class="line-content">
+              process.env.<span class="const">SUPABASE_SERVICE_KEY</span
+              ><span class="op">!</span></span
+            >
+          </div>
+          <!-- Line 8 -->
+          <div class="code-line added">
+            <span class="line-num">8</span>
+            <span class="line-content">)</span>
+          </div>
+
+          <!-- Review Comment 1 (suggestion) -->
+          <div class="review-comment suggestion">
+            <div class="review-comment-inner">
+              <div class="comment-header">
+                <div class="agent-avatar scan">S</div>
+                <span class="comment-agent-name">SCAN</span>
+                <span class="comment-agent-label">AI Agent</span>
+                <span class="comment-time">2 min ago</span>
+              </div>
+              <div class="comment-body">
+                Consider using <code>createServiceClient()</code> here instead of direct key access
+                &mdash; avoids exposing service keys client-side.
+                <div class="comment-status suggestion-tag">
+                  <span class="checkmark yellow">!</span>
+                  Suggestion
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Line 9 (blank) -->
+          <div class="code-line added">
+            <span class="line-num">9</span>
+            <span class="line-content"></span>
+          </div>
+          <!-- Line 10 -->
+          <div class="code-line added">
+            <span class="line-num">10</span>
+            <span class="line-content"
+              ><span class="kw">export</span> <span class="kw">async function</span>
+              <span class="fn">authMiddleware</span>(</span
+            >
+          </div>
+          <!-- Line 11 -->
+          <div class="code-line added">
+            <span class="line-num">11</span>
+            <span class="line-content">
+              <span class="prop">req</span>: <span class="type">NextRequest</span>,</span
+            >
+          </div>
+          <!-- Line 12 -->
+          <div class="code-line added">
+            <span class="line-num">12</span>
+            <span class="line-content">
+              <span class="prop">config</span>: <span class="type">AuthConfig</span>
+              <span class="op">=</span> { <span class="prop">enableRLS</span>:
+              <span class="kw">true</span> }</span
+            >
+          </div>
+          <!-- Line 13 -->
+          <div class="code-line added">
+            <span class="line-num">13</span>
+            <span class="line-content">) {</span>
+          </div>
+          <!-- Line 14 -->
+          <div class="code-line added">
+            <span class="line-num">14</span>
+            <span class="line-content">
+              <span class="kw">const</span> <span class="const">token</span>
+              <span class="op">=</span> req.headers.<span class="fn">get</span>(<span class="str"
+                >'authorization'</span
+              >)<span class="op">?.</span><span class="fn">replace</span>(<span class="str"
+                >'Bearer '</span
+              >, <span class="str">''</span>)</span
+            >
+          </div>
+          <!-- Line 15 (blank) -->
+          <div class="code-line added">
+            <span class="line-num">15</span>
+            <span class="line-content"></span>
+          </div>
+          <!-- Line 16 -->
+          <div class="code-line added">
+            <span class="line-num">16</span>
+            <span class="line-content">
+              <span class="kw">if</span> (<span class="op">!</span>token) {</span
+            >
+          </div>
+          <!-- Line 17 -->
+          <div class="code-line added">
+            <span class="line-num">17</span>
+            <span class="line-content">
+              <span class="kw">return</span> <span class="type">NextResponse</span>.<span class="fn"
+                >json</span
+              >(</span
+            >
+          </div>
+          <!-- Line 18 -->
+          <div class="code-line added">
+            <span class="line-num">18</span>
+            <span class="line-content">
+              { <span class="prop">error</span>: <span class="str">'Unauthorized'</span> },</span
+            >
+          </div>
+          <!-- Line 19 -->
+          <div class="code-line added">
+            <span class="line-num">19</span>
+            <span class="line-content">
+              { <span class="prop">status</span>: <span class="num">401</span> }</span
+            >
+          </div>
+          <!-- Line 20 -->
+          <div class="code-line added">
+            <span class="line-num">20</span>
+            <span class="line-content"> )</span>
+          </div>
+          <!-- Line 21 -->
+          <div class="code-line added">
+            <span class="line-num">21</span>
+            <span class="line-content"> }</span>
+          </div>
+
+          <!-- Review Comment 2 (approval) -->
+          <div class="review-comment approval">
+            <div class="review-comment-inner">
+              <div class="comment-header">
+                <div class="agent-avatar scan">S</div>
+                <span class="comment-agent-name">SCAN</span>
+                <span class="comment-agent-label">AI Agent</span>
+                <span class="comment-time">2 min ago</span>
+              </div>
+              <div class="comment-body">
+                Good pattern &mdash; RLS policies will handle row-level access. Approved.
+                <div class="comment-status approved">
+                  <span class="checkmark green">&#10003;</span>
+                  Looks good
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Line 22 -->
+          <div class="code-line added">
+            <span class="line-num">22</span>
+            <span class="line-content"></span>
+          </div>
+          <!-- Line 23 -->
+          <div class="code-line added">
+            <span class="line-num">23</span>
+            <span class="line-content">
+              <span class="kw">const</span> { <span class="prop">data</span>: {
+              <span class="const">user</span> }, <span class="prop">error</span> }
+              <span class="op">=</span> <span class="kw">await</span> supabase.auth.<span class="fn"
+                >getUser</span
+              >(token)</span
+            >
+          </div>
+          <!-- Line 24 -->
+          <div class="code-line added">
+            <span class="line-num">24</span>
+            <span class="line-content"></span>
+          </div>
+          <!-- Line 25 -->
+          <div class="code-line added">
+            <span class="line-num">25</span>
+            <span class="line-content">
+              <span class="kw">if</span> (error <span class="op">||</span>
+              <span class="op">!</span>user) {</span
+            >
+          </div>
+          <!-- Line 26 -->
+          <div class="code-line added">
+            <span class="line-num">26</span>
+            <span class="line-content">
+              <span class="kw">return</span> <span class="type">NextResponse</span>.<span class="fn"
+                >json</span
+              >(</span
+            >
+          </div>
+          <!-- Line 27 -->
+          <div class="code-line added">
+            <span class="line-num">27</span>
+            <span class="line-content">
+              { <span class="prop">error</span>: <span class="str">'Invalid token'</span> },</span
+            >
+          </div>
+          <!-- Line 28 -->
+          <div class="code-line added">
+            <span class="line-num">28</span>
+            <span class="line-content">
+              { <span class="prop">status</span>: <span class="num">403</span> }</span
+            >
+          </div>
+          <!-- Line 29 -->
+          <div class="code-line added">
+            <span class="line-num">29</span>
+            <span class="line-content"> )</span>
+          </div>
+          <!-- Line 30 -->
+          <div class="code-line added">
+            <span class="line-num">30</span>
+            <span class="line-content"> }</span>
+          </div>
+
+          <!-- Review Comment 3 (suggestion) -->
+          <div class="review-comment suggestion">
+            <div class="review-comment-inner">
+              <div class="comment-header">
+                <div class="agent-avatar scan">S</div>
+                <span class="comment-agent-name">SCAN</span>
+                <span class="comment-agent-label">AI Agent</span>
+                <span class="comment-time">1 min ago</span>
+              </div>
+              <div class="comment-body">
+                Consider logging the <code>error</code> object for observability before returning
+                &mdash; helpful for debugging auth failures in production.
+                <div class="comment-status suggestion-tag">
+                  <span class="checkmark yellow">!</span>
+                  Suggestion
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Line 9 (blank) -->
-      <div class="code-line added">
-        <span class="line-num">9</span>
-        <span class="line-content"></span>
-      </div>
-      <!-- Line 10 -->
-      <div class="code-line added">
-        <span class="line-num">10</span>
-        <span class="line-content"><span class="kw">export</span> <span class="kw">async function</span> <span class="fn">authMiddleware</span>(</span>
-      </div>
-      <!-- Line 11 -->
-      <div class="code-line added">
-        <span class="line-num">11</span>
-        <span class="line-content">  <span class="prop">req</span>: <span class="type">NextRequest</span>,</span>
-      </div>
-      <!-- Line 12 -->
-      <div class="code-line added">
-        <span class="line-num">12</span>
-        <span class="line-content">  <span class="prop">config</span>: <span class="type">AuthConfig</span> <span class="op">=</span> { <span class="prop">enableRLS</span>: <span class="kw">true</span> }</span>
-      </div>
-      <!-- Line 13 -->
-      <div class="code-line added">
-        <span class="line-num">13</span>
-        <span class="line-content">) {</span>
-      </div>
-      <!-- Line 14 -->
-      <div class="code-line added">
-        <span class="line-num">14</span>
-        <span class="line-content">  <span class="kw">const</span> <span class="const">token</span> <span class="op">=</span> req.headers.<span class="fn">get</span>(<span class="str">'authorization'</span>)<span class="op">?.</span><span class="fn">replace</span>(<span class="str">'Bearer '</span>, <span class="str">''</span>)</span>
-      </div>
-      <!-- Line 15 (blank) -->
-      <div class="code-line added">
-        <span class="line-num">15</span>
-        <span class="line-content"></span>
-      </div>
-      <!-- Line 16 -->
-      <div class="code-line added">
-        <span class="line-num">16</span>
-        <span class="line-content">  <span class="kw">if</span> (<span class="op">!</span>token) {</span>
-      </div>
-      <!-- Line 17 -->
-      <div class="code-line added">
-        <span class="line-num">17</span>
-        <span class="line-content">    <span class="kw">return</span> <span class="type">NextResponse</span>.<span class="fn">json</span>(</span>
-      </div>
-      <!-- Line 18 -->
-      <div class="code-line added">
-        <span class="line-num">18</span>
-        <span class="line-content">      { <span class="prop">error</span>: <span class="str">'Unauthorized'</span> },</span>
-      </div>
-      <!-- Line 19 -->
-      <div class="code-line added">
-        <span class="line-num">19</span>
-        <span class="line-content">      { <span class="prop">status</span>: <span class="num">401</span> }</span>
-      </div>
-      <!-- Line 20 -->
-      <div class="code-line added">
-        <span class="line-num">20</span>
-        <span class="line-content">    )</span>
-      </div>
-      <!-- Line 21 -->
-      <div class="code-line added">
-        <span class="line-num">21</span>
-        <span class="line-content">  }</span>
-      </div>
-
-      <!-- Review Comment 2 (approval) -->
-      <div class="review-comment approval">
-        <div class="review-comment-inner">
-          <div class="comment-header">
-            <div class="agent-avatar scan">S</div>
-            <span class="comment-agent-name">SCAN</span>
-            <span class="comment-agent-label">AI Agent</span>
-            <span class="comment-time">2 min ago</span>
-          </div>
-          <div class="comment-body">
-            Good pattern &mdash; RLS policies will handle row-level access. Approved.
-            <div class="comment-status approved">
-              <span class="checkmark green">&#10003;</span>
-              Looks good
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Line 22 -->
-      <div class="code-line added">
-        <span class="line-num">22</span>
-        <span class="line-content"></span>
-      </div>
-      <!-- Line 23 -->
-      <div class="code-line added">
-        <span class="line-num">23</span>
-        <span class="line-content">  <span class="kw">const</span> { <span class="prop">data</span>: { <span class="const">user</span> }, <span class="prop">error</span> } <span class="op">=</span> <span class="kw">await</span> supabase.auth.<span class="fn">getUser</span>(token)</span>
-      </div>
-      <!-- Line 24 -->
-      <div class="code-line added">
-        <span class="line-num">24</span>
-        <span class="line-content"></span>
-      </div>
-      <!-- Line 25 -->
-      <div class="code-line added">
-        <span class="line-num">25</span>
-        <span class="line-content">  <span class="kw">if</span> (error <span class="op">||</span> <span class="op">!</span>user) {</span>
-      </div>
-      <!-- Line 26 -->
-      <div class="code-line added">
-        <span class="line-num">26</span>
-        <span class="line-content">    <span class="kw">return</span> <span class="type">NextResponse</span>.<span class="fn">json</span>(</span>
-      </div>
-      <!-- Line 27 -->
-      <div class="code-line added">
-        <span class="line-num">27</span>
-        <span class="line-content">      { <span class="prop">error</span>: <span class="str">'Invalid token'</span> },</span>
-      </div>
-      <!-- Line 28 -->
-      <div class="code-line added">
-        <span class="line-num">28</span>
-        <span class="line-content">      { <span class="prop">status</span>: <span class="num">403</span> }</span>
-      </div>
-      <!-- Line 29 -->
-      <div class="code-line added">
-        <span class="line-num">29</span>
-        <span class="line-content">    )</span>
-      </div>
-      <!-- Line 30 -->
-      <div class="code-line added">
-        <span class="line-num">30</span>
-        <span class="line-content">  }</span>
-      </div>
-
-      <!-- Review Comment 3 (suggestion) -->
-      <div class="review-comment suggestion">
-        <div class="review-comment-inner">
-          <div class="comment-header">
-            <div class="agent-avatar scan">S</div>
-            <span class="comment-agent-name">SCAN</span>
-            <span class="comment-agent-label">AI Agent</span>
-            <span class="comment-time">1 min ago</span>
-          </div>
-          <div class="comment-body">
-            Consider logging the <code>error</code> object for observability before returning &mdash; helpful for debugging auth failures in production.
-            <div class="comment-status suggestion-tag">
-              <span class="checkmark yellow">!</span>
-              Suggestion
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /code-block -->
-  </main>
-</div>
-
-<!-- ── Footer / Summary bar ────────────────────────────────── -->
-<footer class="footer">
-  <div class="footer-left">
-    <div class="footer-avatar">S</div>
-    <div class="footer-info">
-      <span class="footer-agent">SCAN</span>
-      <span class="footer-summary">2 comments, 1 suggestion</span>
+        <!-- /code-block -->
+      </main>
     </div>
-  </div>
-  <div class="footer-right">
-    <button class="btn btn-danger">Request Changes</button>
-    <button class="btn btn-primary">Approve</button>
-  </div>
-</footer>
 
-</body>
+    <!-- ── Footer / Summary bar ────────────────────────────────── -->
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="footer-avatar">S</div>
+        <div class="footer-info">
+          <span class="footer-agent">SCAN</span>
+          <span class="footer-summary">2 comments, 1 suggestion</span>
+        </div>
+      </div>
+      <div class="footer-right">
+        <button class="btn btn-danger">Request Changes</button>
+        <button class="btn btn-primary">Approve</button>
+      </div>
+    </footer>
+  </body>
 </html>
