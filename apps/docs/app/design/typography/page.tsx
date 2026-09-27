@@ -72,8 +72,8 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
-// Applied to <body>:
-// className={\`\${inter.variable} \${jetbrainsMono.variable} font-sans antialiased\`}`}
+// Applied to <html> so the :root font tokens can resolve them:
+// className={\`\${inter.variable} \${jetbrainsMono.variable} dark\`}`}
         lang="tsx"
       />
 

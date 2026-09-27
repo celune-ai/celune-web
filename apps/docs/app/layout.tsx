@@ -40,10 +40,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${inter.variable} ${jetbrainsMono.variable} bg-background font-sans antialiased`}
-      >
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} dark`}>
+      <body className="bg-background font-sans antialiased">
         <DocsLayout>{children}</DocsLayout>
         <CommandSearch />
         <Analytics />
