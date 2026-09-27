@@ -1,8 +1,8 @@
 # API Keys
 
-Celune API keys let you connect external tools to your workspace - including your IDE via MCP, CI/CD pipelines, and your own integrations. This guide covers creating, managing, and securing your API keys.
+Celune API keys let you connect external tools to your workspace, including your IDE via MCP, CI/CD pipelines, agent runners, and your own integrations. This guide covers creating, using, and securing keys.
 
-For information on bringing your own AI provider keys (Anthropic, OpenAI, etc.), see the [BYOK guide](/guides/byok).
+For AI provider keys (Anthropic, OpenAI, and others), see the [BYOK guide](/guides/byok). For short-lived tokens that your app mints for its users, see [Embed Celune](/guides/embed).
 
 ---
 
@@ -10,63 +10,73 @@ For information on bringing your own AI provider keys (Anthropic, OpenAI, etc.),
 
 1. Open the Celune dashboard and navigate to **Settings > API Keys**.
 2. Click **New API Key**.
-3. Enter a descriptive name - e.g., `claude-code-local`, `ci-pipeline`, `integration-test`.
-4. Click **Create Key**.
+3. Enter a descriptive name, such as `claude-code-local`, `ci-pipeline`, or `job-runner`.
+4. Choose a scope: `read`, `write`, or `admin`.
+5. Click **Create Key**.
 
-> The key is shown **once** at creation. Copy it immediately and store it somewhere safe - Celune only stores a hashed version and cannot retrieve the plaintext key after this point.
+> The key is shown **once** at creation. Copy it immediately and store it somewhere safe. Celune stores only a SHA-256 hash and cannot show the key again.
+
+Self-hosted installs create keys the same way, in the web app you run.
+
+---
+
+## Key Format
+
+Keys look like `celune_live_...` or `celune_test_...`. The middle part is the environment. Each key belongs to one workspace and one user.
+
+A self-hosted install can change the first part with `CELUNE_API_KEY_PREFIX`. See [Self-Hosting](/guides/self-host).
 
 ---
 
 ## Using an API Key
 
-Include your key in the `Authorization` header on every request:
+Send the key in the `Authorization` header on every request:
 
 ```
-Authorization: Bearer YOUR_API_KEY
+Authorization: Bearer celune_live_...
 ```
 
-For MCP connections, the key goes in your IDE's MCP configuration file. See the [MCP Setup Guide](/guides/mcp-setup) for details.
+The `X-API-Key` header is also accepted. Requests go to the [REST API v1](/api-reference/v1):
+
+```bash
+curl "https://app.celune.ai/api/v1/tasks?status=in_progress" -H "Authorization: Bearer $CELUNE_API_KEY"
+```
+
+For MCP connections, the key goes in your IDE's MCP configuration. See [MCP Setup](/guides/mcp-setup).
 
 ---
 
-## BYOK (Bring Your Own Key)
+## Scopes
 
-Celune also supports **Bring Your Own Key** for AI providers. This is separate from Celune API keys - BYOK keys are your own AI provider credentials that Celune uses for agent conversations.
+| Scope   | Allows                                                                  |
+| ------- | ----------------------------------------------------------------------- |
+| `read`  | Every `GET` route and read-only MCP tools                               |
+| `write` | Everything in `read`, plus creating, updating, claiming, and completing |
+| `admin` | Everything in `write`                                                   |
 
-Supported providers:
+A request without the needed scope answers `403` with `Insufficient scope. Required: write`. Keys that run the [job queue](/api-reference/agent-protocol) need `write`.
 
-| Provider          | Key Prefix | Default Model     |
-| ----------------- | ---------- | ----------------- |
-| **Anthropic**     | `sk-ant-`  | Claude Sonnet 4.6 |
-| **OpenAI**        | `sk-`      | GPT-4o            |
-| **Groq**          | `gsk_`     | Llama 3.1 70B     |
-| **xAI (Grok)**    | `xai-`     | Grok-2            |
-| **Google Gemini** | `AIza`     | Gemini 2.0 Flash  |
-| **OpenRouter**    | `sk-or-`   | Auto              |
+---
 
-To add a provider key:
+## Rate Limits and Expiry
 
-1. Go to **Settings > Provider Keys**.
-2. Click **Add Provider Key**.
-3. Paste your API key - Celune **auto-detects the provider** from the key prefix.
-4. The key is encrypted before storage and never displayed again in full.
-
-For full details, see the [BYOK Guide](/guides/byok).
+A key can carry a per-minute rate limit and an expiry date. Over the limit, requests answer `429` with `Retry-After` and `X-RateLimit-*` headers. Expired and revoked keys answer `401`.
 
 ---
 
 ## Security Best Practices
 
 - **Never commit keys to source control.** Use environment variables or a secrets manager.
-- **Never include keys in client-side code.** API keys are for server-side and CLI use only.
-- **Audit regularly.** Review your active keys in **Settings > API Keys** and revoke anything unused.
-- **Rotate keys periodically.** Create a new key, update your integration, then revoke the old one.
+- **Never include keys in client-side code.** API keys are for servers, CLIs, and agents. For browsers, mint a [host JWT](/guides/embed) instead.
+- **Use the smallest scope that works.** A dashboard that only reads tasks needs `read`.
+- **Audit regularly.** Review active keys in **Settings > API Keys** and revoke anything unused.
+- **Rotate keys periodically.** Create a new key, update your integration, then revoke the old one. Revoked keys stop working immediately.
 
 ---
 
 ## Related Pages
 
-- [BYOK: Bring Your Own Key](/guides/byok) - Use your own AI provider API keys.
+- [Authentication](/api-reference/authentication) - API keys, host JWTs, and permission keys in detail.
 - [MCP Setup](/guides/mcp-setup) - How to use your API key with your IDE.
-- [API Reference](/api-reference/overview) - Full endpoint catalog.
-- [Billing & Plans](/guides/billing) - Plan tiers and what's included at each level.
+- [BYOK: Bring Your Own Key](/guides/byok) - Use your own AI provider API keys.
+- [REST API v1](/api-reference/v1) - Every route an API key can call.

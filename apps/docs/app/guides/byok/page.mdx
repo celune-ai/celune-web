@@ -1,15 +1,15 @@
 # BYOK: Bring Your Own Key
 
-Celune supports **Bring Your Own Key (BYOK)** - use your own AI provider API keys for agent conversations. This is optional; Celune provides default AI access on all plans.
+Celune supports **Bring Your Own Key (BYOK)**: agents make AI calls with your own provider API keys. On Celune Cloud it is optional. On a self-hosted install it is how agents get model access.
 
 ---
 
 ## Why Use BYOK?
 
-- **Billing control** - Inference costs hit your provider account directly, separate from your Celune subscription.
+- **Billing control** - Inference costs go to your provider account directly, separate from your Celune subscription.
 - **Compliance** - Some organizations require all AI API calls to go through credentials they control.
-- **Usage caps** - Apply your own rate limits and spend caps at the provider level.
-- **Existing contracts** - Teams with enterprise agreements can route through those contracts.
+- **Usage caps** - Apply your own rate limits and spend caps, at the provider and in Celune.
+- **Existing contracts** - Teams with enterprise agreements can route calls through those contracts.
 
 ---
 
@@ -31,46 +31,64 @@ Celune supports **Bring Your Own Key (BYOK)** - use your own AI provider API key
 1. Go to **Settings > Provider Keys**.
 2. Click **Add Provider Key**.
 3. Paste your API key.
-4. Celune **auto-detects the provider** from the key prefix - no dropdown or manual selection needed.
-5. The key is encrypted before storage and never displayed again in full.
+4. Celune **detects the provider** from the key prefix. There is no provider menu to set.
+5. The key is encrypted with AES-256-GCM before storage and never displayed again in full.
+
+Keys can belong to one workspace or to the whole organization.
 
 ---
 
-## How It Works
+## Which Key an Agent Uses
 
-- When an agent makes an AI call, Celune checks if you have a matching provider key.
-- If found, your key is used instead of the platform default.
-- Provider detection is instant - it matches the first few characters of your key against known prefixes.
-- Keys are encrypted at rest using AES-256 and decrypted only at the moment of use.
+For each AI call, Celune looks for a key in this order:
+
+1. An active key for the **workspace**.
+2. An active key for the **organization**.
+3. **Celune Cloud only:** Celune's own key, while your plan or trial allows it.
+
+On a self-hosted install (the community edition) there is no third step. If neither the workspace nor the organization has a key for the provider, the call fails with an error that asks for a provider key.
 
 ---
 
-## How BYOK Affects Billing
+## AI Budgets
 
-BYOK does **not** change your Celune subscription. You are still billed by Celune for platform access (agents, tasks, workspaces, memory) at your plan rate.
+Each workspace can set two limits in **Settings > Provider Keys**:
 
-Model inference costs - the actual token usage for each agent response - are billed separately by the provider to your account there. Without BYOK, inference costs are included in Celune's managed access. With BYOK, those costs move to your provider account instead.
+| Limit               | Effect                                                                       |
+| ------------------- | ---------------------------------------------------------------------------- |
+| Monthly token limit | AI calls are refused for the rest of the month once the workspace reaches it |
+| Requests per minute | Calls above the rate are refused until the next minute                       |
+
+Leave a limit empty to turn it off. Both limits apply to every key the workspace uses.
 
 ---
 
 ## Managing Keys
 
 - View key status (active, invalid, expired) in **Settings > Provider Keys**.
-- Delete a key at any time to revert to the platform default.
-- You can have one key per provider. Adding a new key for the same provider replaces the old one.
+- **Rotate** a key to replace its value in place. Agents use the new value on their next call.
+- Delete a key at any time. On Celune Cloud, agents fall back to Celune's key within your plan. On a self-hosted install, agents stop calling that provider until you add a key again.
+- Each workspace or organization has one key per provider. Adding a new key for the same provider replaces the old one.
+
+---
+
+## How BYOK Affects Billing
+
+BYOK does **not** change your Celune Cloud subscription. You are still billed for platform access (agents, tasks, workspaces, memory) at your plan rate.
+
+Model inference costs, which are the token usage for each agent response, are billed by the provider to your account there. Without BYOK, inference is included in Celune's managed access up to your plan's limits. Self-hosted installs have no Celune billing.
 
 ---
 
 ## All Plans Include BYOK
 
-BYOK support is available on all plans, including the free Builder tier. It gives you full control over your AI spend and model selection.
-
-BYOK is the recommended setup during beta.
+BYOK is available on every Celune Cloud plan, including the free Builder tier, and on every self-hosted install.
 
 ---
 
 ## Related Pages
 
-- [API Keys](/guides/api-keys) - Celune platform API keys for MCP, CI/CD, and integrations.
+- [API Keys](/guides/api-keys) - Celune API keys for MCP, CI/CD, and integrations.
+- [Self-Hosting](/guides/self-host) - The community edition runs on provider keys only.
 - [Billing & Plans](/guides/billing) - Plan tiers and what's included at each level.
 - [Integrations](/concepts/integrations) - Overview of all Celune integrations.

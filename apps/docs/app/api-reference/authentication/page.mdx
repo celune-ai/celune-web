@@ -1,133 +1,122 @@
 # Authentication
 
-How to authenticate with the Celune API using API keys or JWT tokens.
+The [REST API v1](/api-reference/v1) and the [MCP server](/api-reference/mcp-tools) accept two kinds of credentials:
+
+| Credential   | Who uses it                                 | Lifetime                 | Workspace                                   |
+| ------------ | ------------------------------------------- | ------------------------ | ------------------------------------------- |
+| **API key**  | Agents, IDEs, CI jobs, server integrations  | Until revoked or expired | One default workspace; others by membership |
+| **Host JWT** | Apps that embed Celune, on behalf of a user | Minutes (default 10)     | Exactly one                                 |
+
+Send either one as a bearer token:
+
+```
+Authorization: Bearer <credential>
+```
+
+The server tells them apart by shape. A value that starts with the key prefix (`celune_` by default) is an API key. A value with three dot-separated parts is a JWT. `X-API-Key: <key>` is also accepted.
 
 ---
 
 ## API Keys
 
-API keys are the primary authentication method for programmatic access - including MCP connections, CI/CD pipelines, and third-party integrations.
+Create keys in **Settings > API Keys**. The key is shown once; Celune stores only its SHA-256 hash. See the [API Keys guide](/guides/api-keys) for the walkthrough.
 
-### Creating an API Key
-
-1. Open the Celune dashboard and navigate to **Settings → API Keys**.
-2. Click **New API Key**.
-3. Give the key a descriptive name (e.g., `claude-code-mcp`, `ci-pipeline`).
-4. Select an environment: `development` or `production`.
-5. Choose a scope (see [Scopes](#scopes) below).
-6. Optionally set an expiration date and a custom rate limit.
-7. Click **Create Key**.
-
-> The plaintext API key is shown **once** at creation time. Copy it immediately - it cannot be retrieved again. Only a hashed version is stored.
-
----
-
-### Using an API Key
-
-Include your API key in the `Authorization` header on every request:
+**Format.** `celune_live_<random>` or `celune_test_<random>`. The middle part records the environment. Self-hosted installs can change the first part with `CELUNE_API_KEY_PREFIX`.
 
 ```bash
-curl https://app.celune.ai/api/agents/configs \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
-  -G \
-  --data-urlencode "workspace_id=your-workspace-uuid"
+curl https://app.celune.ai/api/v1/projects -H "Authorization: Bearer celune_live_..."
 ```
 
-The key prefix indicates the environment:
+**Workspace.** A key acts on the workspace it was created in. Add `?workspace_id=<id>` to act on another workspace. Celune Cloud allows this when the key's user is a member of that workspace. The self-hosted API server does not grant other workspaces and answers `403`.
 
-| Prefix     | Environment |
-| ---------- | ----------- |
-| clne*live* | Production  |
-| clne*test* | Development |
+**Jobs.** Only API keys can claim and run jobs, because each claim is recorded against the key.
 
 ---
 
-### Scopes
+## Scopes
 
-API keys are issued with a scope that controls what they can access.
+Both credential types carry scopes.
 
-| Scope | Permissions                                                                   |
-| ----- | ----------------------------------------------------------------------------- |
-| read  | Read tasks, projects, agents, analytics                                       |
-| write | Read + create/update tasks, projects, and agents                              |
-| admin | Full access including webhooks, API keys, audit logs, and agent configuration |
+| Scope   | Allows                                                                |
+| ------- | --------------------------------------------------------------------- |
+| `read`  | `GET` routes and `read` MCP tools                                     |
+| `write` | Everything in `read`, plus every `POST`, `PUT`, `PATCH`, and `DELETE` |
+| `admin` | Everything in `write`                                                 |
 
-Scopes map to granular permission keys internally. An `admin`-scoped key grants:
-
-```
-tasks:create  tasks:read  tasks:update  tasks:delete
-projects:create  projects:read  projects:update  projects:delete
-agents:configure  agents:read
-users:read  settings:read  analytics:read
-webhooks:manage  webhooks:read
-api_keys:read  audit_log:read
-```
-
-A `write`-scoped key grants a subset focused on core task and project operations. A `read`-scoped key is read-only.
+A request without the needed scope answers `403` with `Insufficient scope. Required: write`. MCP filters its tool list by scope, so a `read` credential sees only `public` and `read` tools.
 
 ---
 
-### Rotating and Revoking Keys
+## Host JWTs
 
-To rotate a key:
+A host JWT lets your server hand a browser a short-lived credential for one user in one workspace. Mint it with `mintHostJwt` from `@celuneai/api`, or with any JWT library. See [Embed Celune](/guides/embed) for complete examples.
 
-1. Create a new key in **Settings → API Keys**.
-2. Update your integration with the new key.
-3. Revoke the old key by clicking the trash icon.
+### Claims
 
-Revoked keys immediately stop working. There is no grace period.
+| Claim          | Required        | Meaning                                                                                       |
+| -------------- | --------------- | --------------------------------------------------------------------------------------------- |
+| `sub`          | Yes             | User id. Recorded as the actor on every write.                                                |
+| `workspace_id` | Yes             | The only workspace the token can reach                                                        |
+| `scopes`       | Yes             | Array with at least one of `read`, `write`, `admin`. An empty or missing array answers `403`. |
+| `exp`          | Yes             | Expiry time                                                                                   |
+| `org_id`       | No              | Organization id                                                                               |
+| `permissions`  | No              | Permission keys, described below                                                              |
+| `iss`, `aud`   | When configured | Must match `CELUNE_HOST_JWT_ISSUER` and `CELUNE_HOST_JWT_AUDIENCE` if those are set           |
+
+### Signing
+
+The API server verifies host JWTs with one of:
+
+| Setting                  | Algorithm                                  |
+| ------------------------ | ------------------------------------------ |
+| `CELUNE_HOST_JWT_SECRET` | HS256 with a shared secret                 |
+| `CELUNE_HOST_JWKS_URL`   | Any algorithm your JWKS endpoint publishes |
+
+With neither set, the server accepts API keys only and answers host JWTs with `401 Host tokens are not enabled on this host`.
+
+### Permission keys
+
+A host JWT can carry a `permissions` array to mirror your app's roles. When it is present, each write route also requires its key:
+
+| Key               | Required by                                                                                                    |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| `tasks:create`    | `POST /tasks`                                                                                                  |
+| `tasks:update`    | Task updates, reorder, initiate, claim, complete, block, unblock, comments, attachments, cancelling executions |
+| `tasks:delete`    | `DELETE /tasks/:id`                                                                                            |
+| `projects:create` | `POST /projects`                                                                                               |
+| `projects:update` | Project updates and reorder                                                                                    |
+| `projects:delete` | `DELETE /projects/:id`                                                                                         |
+
+A missing key answers `403` with `{ "error": "Forbidden", "required": "<key>" }`. When `permissions` is absent, scopes alone decide.
+
+A host JWT that carries `permissions` is an embed token. Embed tokens cannot call MCP, and no host JWT can claim jobs.
 
 ---
 
-## Supabase JWT (Web App)
+## Authentication Errors
 
-The Celune web application uses Supabase authentication. If you're building on top of the platform's internal API with a session context, use the JWT from `supabase.auth.getSession()`.
+| Status | Message                                                              | Cause                                                      |
+| ------ | -------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `401`  | `Authentication required`                                            | No credential was sent                                     |
+| `401`  | `Invalid credentials format`                                         | The value is neither a key nor a JWT                       |
+| `401`  | `Invalid API key`, `API key has been revoked`, `API key has expired` | The key failed its check                                   |
+| `401`  | `Token expired`, `Invalid token`                                     | The JWT failed verification                                |
+| `403`  | `Token grants no scopes`                                             | The JWT has no valid scope                                 |
+| `403`  | `Token is scoped to another workspace`                               | A JWT named a different `workspace_id`                     |
+| `403`  | `Insufficient scope. Required: write`                                | The credential lacks the scope                             |
+| `429`  | `API key rate limit exceeded`                                        | The key's per-minute limit was reached. See `Retry-After`. |
 
-### Getting a Session Token
+---
 
-```typescript
-import { createBrowserClient } from '@supabase/ssr';
+## Web App Session Routes
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
-
-const {
-  data: { session },
-} = await supabase.auth.getSession();
-const token = session?.access_token;
-```
-
-Pass the token as a Bearer token:
-
-```bash
-curl https://app.celune.ai/api/agents/configs \
-  -H "Authorization: Bearer <jwt_token>" \
-  -G \
-  --data-urlencode "workspace_id=your-workspace-uuid"
-```
-
-### Token Refresh
-
-Supabase JWTs expire after 1 hour. The Supabase client handles refresh automatically when using `onAuthStateChange` or the `@supabase/ssr` package with proper cookie handling.
-
-```typescript
-supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'TOKEN_REFRESHED') {
-    // session.access_token is the new JWT
-  }
-});
-```
-
-For server-side requests, use `supabase.auth.getUser()` which validates the token with the Supabase Auth server on each call.
+The Celune web app also serves routes under `/api` (outside `/api/v1`) for its own pages. Those routes use the signed-in session cookie and are listed in the [API overview](/api-reference/overview). Integrations should use v1 with an API key or host JWT.
 
 ---
 
 ## Security Notes
 
-- Never expose API keys in client-side code or public repositories.
-- Use environment variables to store keys in your applications.
-- Prefer scoped keys with the minimum permissions required for your use case.
-- Set expiration dates on keys used in automated pipelines.
-- The service-role Supabase key is **never** exposed through the public API - all requests are validated against workspace membership and role permissions.
+- Never expose API keys or your host JWT signing secret in client-side code or public repositories.
+- Keep host JWTs short-lived and renew them before they expire.
+- Prefer the smallest scope that works, and set expiry dates on keys used in automated pipelines.
+- The Supabase service role key is never exposed through the API. Every request is checked against its workspace.
