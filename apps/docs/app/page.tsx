@@ -75,7 +75,7 @@ export default function DocsHome() {
               </div>
               <h2
                 className="text-foreground mb-1 text-base"
-                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+                style={{ fontFamily: 'var(--font-inter-medium)' }}
               >
                 {title}
               </h2>
@@ -87,7 +87,7 @@ export default function DocsHome() {
               </p>
               <span
                 className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
-                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+                style={{ fontFamily: 'var(--font-inter-medium)' }}
               >
                 Read more <ArrowRight size={14} />
               </span>
