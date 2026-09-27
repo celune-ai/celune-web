@@ -299,11 +299,9 @@
   --color-celune-400: #4ade80;
   --color-celune-500: #22c55e;
 
-  /* Typography: Inter for text and display, JetBrains Mono for code */
+  /* Typography: Inter for text, JetBrains Mono for code */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
-  --font-display: var(--font-inter);
-  --font-display-bold: var(--font-inter);
 
   /* Radius */
   --radius-sm: var(--radius-sm);
