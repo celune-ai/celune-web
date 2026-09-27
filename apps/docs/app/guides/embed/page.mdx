@@ -1,0 +1,373 @@
+# Embed Celune in Your App
+
+`@celuneai/react` renders Celune's task board, task drawer, and project views inside your own React app. Your server mints a short-lived token for the signed-in user, and the components read and write through the Celune REST API with that token.
+
+This guide covers installation, the provider, token minting, a Next.js example, a React Router example, realtime updates, and what users see when a token cannot be renewed.
+
+---
+
+## How It Fits Together
+
+1. Your server knows who the user is and which Celune workspace they belong to.
+2. Your server signs a host JWT for that user with a secret the Celune API trusts.
+3. The browser passes the token to `CeluneProvider`, which sends it as `Authorization: Bearer <token>` on every request to the [REST API v1](/api-reference/v1).
+4. When the token expires, the provider calls your `refreshToken` function, retries the request once, and continues.
+
+The Celune API server must trust your signing key. On a [self-hosted install](/guides/self-host) you set `CELUNE_HOST_JWT_SECRET` (HS256) or `CELUNE_HOST_JWKS_URL` (a JWKS endpoint you publish) on the API server. You can also mount `@celuneai/api` inside your own server, which is covered at the end of this page.
+
+---
+
+## Install
+
+```bash
+npm install @celuneai/react @celuneai/api
+```
+
+`@celuneai/react` needs React 19. `@celuneai/api` is only used on your server, to mint tokens.
+
+Import one stylesheet. For a page that has no design system of its own, the all-in-one file includes a CSS reset, the component styles, and default tokens:
+
+```ts
+import '@celuneai/react/styles.css';
+```
+
+If your app already has a design system, import the component styles and map the tokens to your own. See the [Theming guide](/guides/theming).
+
+---
+
+## Entry Points
+
+| Import path                  | Contents                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------- |
+| `@celuneai/react`            | `CeluneProvider`, `ReconnectBanner`, `createRestTransport`, appearance helpers, transport types     |
+| `@celuneai/react/tasks`      | `TaskBoard`, `TaskListView`, `TaskCard`, `TaskRow`, `TaskDrawer`, `TaskDialog`, `AddTaskRow`        |
+| `@celuneai/react/projects`   | `ProjectCard`, `ProjectTable`, `ProjectProgressLog`                                                 |
+| `@celuneai/react/hooks`      | Headless data hooks: `useTasksQuery`, `useCreateTask`, `useUpdateTask`, `useTaskComments`, and more |
+| `@celuneai/react/utils`      | Formatting and sorting helpers                                                                      |
+| `@celuneai/react/testing`    | `createMockTransport` and `makeTask` for tests and demos                                            |
+| `@celuneai/react/styles.css` | All-in-one stylesheet                                                                               |
+
+The hooks work without the prebuilt components. Use them when you want to render tasks with your own markup.
+
+---
+
+## CeluneProvider
+
+Wrap every Celune component in one `CeluneProvider`.
+
+| Prop              | Type                            | Purpose                                                                                                         |
+| ----------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `apiUrl`          | `string`                        | Base URL of the Celune API mount, for example `http://localhost:3010/v1`.                                       |
+| `token`           | `string \| null`                | The current host JWT or API key.                                                                                |
+| `refreshToken`    | `() => Promise<string \| null>` | Returns a new token. Returning `null` or throwing switches the UI to read-only.                                 |
+| `workspaceId`     | `string`                        | The workspace the token is scoped to. Data hooks stay idle while it is an empty string.                         |
+| `subscribe`       | `SubscribeFn`                   | Realtime adapter. Without it, data hooks poll.                                                                  |
+| `pollInterval`    | `number`                        | Polling interval in milliseconds when `subscribe` is not set. Default `15000`.                                  |
+| `Link`            | component                       | Link component for in-app links, such as `next/link`. Defaults to a plain anchor.                               |
+| `href`            | `(path: string) => string`      | Builds an in-app URL from a module path such as `/tasks?task=<id>`.                                             |
+| `canEdit`         | `boolean`                       | `false` renders every module read-only, for example for a viewer role.                                          |
+| `currentUser`     | `{ displayName, assignee? }`    | Name shown in the UI and the handle written when the user claims a task. Claiming is hidden without `assignee`. |
+| `queryClient`     | `QueryClient`                   | Share your TanStack Query cache. A private client is created when omitted.                                      |
+| `transport`       | `CeluneTransport`               | Replaces the default REST transport. Token retry and read-only handling still apply.                            |
+| `renderReconnect` | `(reconnect) => ReactNode`      | Replaces the default reconnect prompt.                                                                          |
+| `appearance`      | `CeluneAppearance`              | Theme, token values, and class overrides. See [Theming](/guides/theming).                                       |
+
+---
+
+## Mint a Host JWT on Your Server
+
+Mint tokens on the server only. The signing secret must never reach the browser.
+
+```ts
+import { mintHostJwt } from '@celuneai/api';
+
+const token = await mintHostJwt(
+  {
+    sub: user.id, // your user id, recorded as the actor on every write
+    workspace_id: celuneWorkspaceId, // the only workspace this token can reach
+    org_id: celuneOrgId, // optional
+    scopes: ['write'], // 'read', 'write', or 'admin'
+    permissions: ['tasks:create', 'tasks:update'], // optional, see below
+  },
+  {
+    secret: process.env.CELUNE_HOST_JWT_SECRET!,
+    expiresInSeconds: 600, // default 600
+  },
+);
+```
+
+**Claims**
+
+| Claim          | Required | Meaning                                                                                                       |
+| -------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `sub`          | Yes      | The user id. Written as the actor on tasks, comments, and activity.                                           |
+| `workspace_id` | Yes      | The workspace the token is pinned to. A request for any other workspace answers `403`.                        |
+| `scopes`       | Yes      | At least one of `read`, `write`, `admin`. `admin` includes `write`, and `write` includes `read`.              |
+| `exp`          | Yes      | Expiry. `mintHostJwt` sets it from `expiresInSeconds`.                                                        |
+| `org_id`       | No       | The organization id, when you have one.                                                                       |
+| `permissions`  | No       | Role keys such as `tasks:delete`. When present, each write also requires its key. When absent, scopes decide. |
+
+Write routes check these permission keys: `tasks:create`, `tasks:update`, `tasks:delete`, `projects:create`, `projects:update`, `projects:delete`. Use them to mirror your own roles, for example to let a member edit tasks without deleting them.
+
+A token that carries `permissions` is treated as an embed token and cannot call [MCP](/api-reference/mcp-tools). Agents and IDEs use API keys.
+
+To sign with your own key pair, publish a JWKS endpoint and set `CELUNE_HOST_JWKS_URL` on the API server. Set `CELUNE_HOST_JWT_ISSUER` and `CELUNE_HOST_JWT_AUDIENCE` to require matching `iss` and `aud` claims.
+
+---
+
+## Next.js Example
+
+**1. Token route** (`app/api/celune-token/route.ts`). Replace `getSession` with your own auth.
+
+```ts
+import { NextResponse } from 'next/server';
+import { mintHostJwt } from '@celuneai/api';
+import { getSession } from '@/lib/auth';
+
+const TTL_SECONDS = 600;
+
+export async function POST() {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const token = await mintHostJwt(
+    {
+      sub: session.userId,
+      workspace_id: session.celuneWorkspaceId,
+      scopes: session.canEdit ? ['write'] : ['read'],
+    },
+    { secret: process.env.CELUNE_HOST_JWT_SECRET!, expiresInSeconds: TTL_SECONDS },
+  );
+
+  return NextResponse.json(
+    { token, expires_in: TTL_SECONDS },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
+}
+```
+
+**2. Provider** (`components/celune-board.tsx`)
+
+```tsx
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { CeluneProvider } from '@celuneai/react';
+import { TaskBoard } from '@celuneai/react/tasks';
+import { useTasksQuery } from '@celuneai/react/hooks';
+import '@celuneai/react/styles.css';
+
+async function fetchToken(): Promise<string | null> {
+  const res = await fetch('/api/celune-token', { method: 'POST' });
+  if (!res.ok) return null;
+  const body = (await res.json()) as { token?: string };
+  return body.token ?? null;
+}
+
+function Board() {
+  const { data, isLoading } = useTasksQuery();
+  if (isLoading || !data) return <p>Loading tasks...</p>;
+  return <TaskBoard initialTasks={data} />;
+}
+
+export function CeluneBoard({ workspaceId }: { workspaceId: string }) {
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    void fetchToken().then(setToken);
+  }, []);
+
+  const refreshToken = useCallback(async () => {
+    const next = await fetchToken();
+    setToken(next);
+    return next;
+  }, []);
+
+  return (
+    <CeluneProvider
+      apiUrl={process.env.NEXT_PUBLIC_CELUNE_API_URL!}
+      token={token}
+      refreshToken={refreshToken}
+      workspaceId={token ? workspaceId : ''}
+      Link={Link}
+    >
+      <Board />
+    </CeluneProvider>
+  );
+}
+```
+
+Passing an empty `workspaceId` until the first token arrives keeps the hooks from sending unauthenticated requests.
+
+---
+
+## React Router Example
+
+The token endpoint is the same idea on any server. This example assumes an Express server next to a React Router app.
+
+**1. Token endpoint** (`server/celune-token.ts`)
+
+```ts
+import type { Request, Response } from 'express';
+import { mintHostJwt } from '@celuneai/api';
+
+export async function celuneToken(req: Request, res: Response) {
+  const user = req.user; // set by your auth middleware
+  if (!user) return res.status(401).json({ error: 'Unauthorized' });
+
+  const token = await mintHostJwt(
+    { sub: user.id, workspace_id: user.celuneWorkspaceId, scopes: ['write'] },
+    { secret: process.env.CELUNE_HOST_JWT_SECRET!, expiresInSeconds: 600 },
+  );
+  res.set('Cache-Control', 'no-store').json({ token, expires_in: 600 });
+}
+```
+
+**2. Route component** (`src/routes/tasks.tsx`)
+
+```tsx
+import { useCallback, useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router';
+import { CeluneProvider, type LinkProps } from '@celuneai/react';
+import { TaskBoard } from '@celuneai/react/tasks';
+import { useTasksQuery } from '@celuneai/react/hooks';
+
+function Link({ href, ...rest }: LinkProps) {
+  return <RouterLink to={href} {...rest} />;
+}
+
+async function fetchToken(): Promise<string | null> {
+  const res = await fetch('/api/celune-token', { method: 'POST', credentials: 'include' });
+  if (!res.ok) return null;
+  return ((await res.json()) as { token?: string }).token ?? null;
+}
+
+function Board() {
+  const { data } = useTasksQuery();
+  return data ? <TaskBoard initialTasks={data} /> : null;
+}
+
+export default function TasksRoute({ workspaceId }: { workspaceId: string }) {
+  const [token, setToken] = useState<string | null>(null);
+  useEffect(() => {
+    void fetchToken().then(setToken);
+  }, []);
+  const refreshToken = useCallback(async () => {
+    const next = await fetchToken();
+    setToken(next);
+    return next;
+  }, []);
+
+  return (
+    <CeluneProvider
+      apiUrl={import.meta.env.VITE_CELUNE_API_URL}
+      token={token}
+      refreshToken={refreshToken}
+      workspaceId={token ? workspaceId : ''}
+      Link={Link}
+      href={(path) => `/workspace${path}`}
+    >
+      <Board />
+    </CeluneProvider>
+  );
+}
+```
+
+`href` turns module paths such as `/tasks?task=<id>` into URLs inside your router. Leave it out when the board lives at your app root.
+
+---
+
+## Realtime or Polling
+
+Without a `subscribe` prop, every data hook polls the API every `pollInterval` milliseconds (15 seconds by default). Task changes, run starts, and run completions all show up on the next poll. This works with any backend and needs no extra setup.
+
+To get updates as they happen, pass a `subscribe` adapter. It receives a channel description and a callback, and returns an unsubscribe function:
+
+```ts
+import type { SubscribeFn } from '@celuneai/react';
+
+// channel.table + channel.filter: row changes, for example
+//   { table: 'tasks', filter: { column: 'workspace_id', value: workspaceId } }
+// channel.broadcast: named events, for example
+//   { broadcast: { channel: `execution:${taskId}`, event: 'execution_event' } }
+const subscribe: SubscribeFn = (channel, onChange) => {
+  const source = openYourRealtimeSource(channel);
+  source.on('change', (row) => onChange({ type: 'UPDATE', new: row, old: null }));
+  return () => source.close();
+};
+```
+
+Change events have `type` set to `INSERT`, `UPDATE`, `DELETE`, or `BROADCAST`, with the new row in `new` and the previous values in `old`. If your stack uses Supabase, map `postgres_changes` to table channels and Supabase broadcast to broadcast channels.
+
+---
+
+## When a Token Cannot Be Renewed
+
+The provider handles expired tokens in this order:
+
+1. A request answers `401`.
+2. The provider calls `refreshToken` once. Concurrent requests share the same refresh call.
+3. If a new token comes back, the request is retried with it and the UI stays editable.
+4. If `refreshToken` returns `null`, throws, or is not provided, the UI switches to **read-only**. Data stays on screen, edit controls are hidden, and a reconnect prompt appears above the content.
+
+The prompt calls `refreshToken` again when the user clicks it. Pass `renderReconnect` to replace it, for example to send the user to your sign-in page when reconnecting fails:
+
+```tsx
+<CeluneProvider
+  // ...other props
+  renderReconnect={(reconnect) => (
+    <button
+      onClick={async () => {
+        if (!(await reconnect())) window.location.href = '/login';
+      }}
+    >
+      Session expired. Reconnect
+    </button>
+  )}
+>
+```
+
+To avoid most `401` responses, renew the token a minute before it expires.
+
+---
+
+## Mount the API in Your Own Server
+
+If you do not run a separate Celune API server, mount `@celuneai/api` in your own Node server. `createApi` returns a Hono app that serves the same [v1 routes](/api-reference/v1) and MCP. The standalone self-host server is built this way:
+
+```ts
+import { createApi, createAuthenticator, jwtConfigFromEnv } from '@celuneai/api';
+import { createServices } from '@celuneai/core';
+import { SupabaseAttachmentBlobs, SupabaseStore } from '@celuneai/core/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+
+const api = createApi({
+  services: createServices(new SupabaseStore(supabase), {
+    attachmentBlobs: new SupabaseAttachmentBlobs(supabase),
+  }),
+  authenticate: createAuthenticator({
+    apiKeyPrefix: 'celune',
+    jwt: jwtConfigFromEnv(process.env),
+  }),
+  basePath: '/celune/v1',
+});
+
+// Any fetch-based server works, for example:
+// export const GET = (req: Request) => api.fetch(req);
+```
+
+Every hook on the optional `host` option can be left out. The hooks let you grant API keys access to other workspaces (`resolveWorkspace`), check which agents are enabled (`agents`), react to task changes and resolve task context (`tasks`), queue server runs (`executions`), encrypt job payloads (`jobs`), and log MCP tool calls (`onToolCall`).
+
+---
+
+## Related Pages
+
+- [Theming](/guides/theming) - Map `--celune-*` tokens to your design system.
+- [REST API v1](/api-reference/v1) - Every route the components call.
+- [Authentication](/api-reference/authentication) - API keys, host JWTs, and permission keys.
+- [Self-Hosting](/guides/self-host) - Run the API server that your tokens talk to.

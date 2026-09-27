@@ -1,0 +1,265 @@
+# Theming Embedded Components
+
+Every color, radius, shadow, font, and weight in `@celuneai/react` comes from a `--celune-*` CSS variable. The components contain no color values of their own, so pointing those variables at your design tokens makes the board use your palette, type, and dark mode.
+
+This page lists every token, the three ways to set them, the precedence between those ways, dark mode, ready-made mappings, and the shadcn registry blocks.
+
+---
+
+## Choose a Stylesheet
+
+| Your app                               | Import                                                                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| No design system, or a standalone page | `@celuneai/react/styles.css` (reset, component styles, and default tokens)                                                      |
+| Has its own design tokens              | `@celuneai/react/components.css` plus your mapping. Add `@celuneai/react/defaults.css` only if your mapping leaves tokens unset |
+| Compiles Tailwind v4 itself            | `@celuneai/react/tokens.css`, your mapping, and an `@source` entry for the package so Tailwind generates its classes            |
+
+The prebuilt CSS contains no `@font-face` rules. Your page loads its own font files, and `--celune-font` names the family to use.
+
+---
+
+## Token Reference
+
+### Base tokens
+
+Defaults come from `defaults.css`. Where a dark value is listed, it applies when dark mode is on.
+
+| Token                     | Light default                                                      | Dark default                  | Used for                                     |
+| ------------------------- | ------------------------------------------------------------------ | ----------------------------- | -------------------------------------------- |
+| `--celune-bg`             | `#ffffff`                                                          | `#09090b`                     | Page and board background                    |
+| `--celune-surface`        | `#fafafa`                                                          | `#18181b`                     | Cards, rows, and columns                     |
+| `--celune-surface-raised` | `#ffffff`                                                          | `#27272a`                     | Drawers, dialogs, and popovers               |
+| `--celune-surface-muted`  | `#f4f4f5`                                                          | `#1f1f23`                     | Inputs, empty states, and secondary panels   |
+| `--celune-fg`             | `#18181b`                                                          | `#fafafa`                     | Primary text and icons                       |
+| `--celune-fg-muted`       | `#71717a`                                                          | `#a1a1aa`                     | Secondary text, metadata, and placeholders   |
+| `--celune-primary`        | `#18181b`                                                          | `#fafafa`                     | Primary buttons and selected states          |
+| `--celune-primary-fg`     | `#ffffff`                                                          | `#18181b`                     | Text on primary backgrounds                  |
+| `--celune-danger`         | `#dc2626`                                                          | `#ef4444`                     | Destructive actions and errors               |
+| `--celune-border`         | `#e4e4e7`                                                          | `#27272a`                     | Default borders and dividers                 |
+| `--celune-border-strong`  | `#d4d4d8`                                                          | `#3f3f46`                     | Input borders and emphasized dividers        |
+| `--celune-ring`           | `#18181b`                                                          | `#d4d4d8`                     | Focus rings                                  |
+| `--celune-radius`         | `6px`                                                              | same                          | Corner radius for cards, inputs, and buttons |
+| `--celune-shadow`         | `0 1px 3px rgb(0 0 0 / 0.08)`                                      | `0 1px 3px rgb(0 0 0 / 0.4)`  | Cards and rows                               |
+| `--celune-shadow-raised`  | `0 4px 16px rgb(0 0 0 / 0.1)`                                      | `0 4px 16px rgb(0 0 0 / 0.5)` | Drawers, dialogs, and dragged cards          |
+| `--celune-space`          | `4px`                                                              | same                          | Base spacing unit                            |
+| `--celune-font`           | `'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif`  | same                          | Body text                                    |
+| `--celune-font-mono`      | `'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace` | same                          | Ids, code, and numbers                       |
+| `--celune-duration`       | `150ms`                                                            | same                          | Transition length                            |
+| `--celune-ease`           | `cubic-bezier(0.4, 0, 0.2, 1)`                                     | same                          | Transition curve                             |
+
+### Status and priority tokens
+
+| Token                         | Light     | Dark      | Used for                  |
+| ----------------------------- | --------- | --------- | ------------------------- |
+| `--celune-status-backlog`     | `#a1a1aa` | `#71717a` | Backlog column and badges |
+| `--celune-status-inbox`       | `#71717a` | `#a1a1aa` | Inbox                     |
+| `--celune-status-scoping`     | `#0ea5e9` | `#38bdf8` | Scoping                   |
+| `--celune-status-planning`    | `#2563eb` | `#60a5fa` | Planning                  |
+| `--celune-status-in-progress` | `#16a34a` | `#4ade80` | In progress               |
+| `--celune-status-review`      | `#d97706` | `#fbbf24` | Review                    |
+| `--celune-status-done`        | `#15803d` | `#22c55e` | Done                      |
+| `--celune-status-archived`    | `#d4d4d8` | `#3f3f46` | Archived                  |
+| `--celune-priority-urgent`    | `#dc2626` | `#f87171` | Urgent priority           |
+| `--celune-priority-high`      | `#d97706` | `#fbbf24` | High priority             |
+| `--celune-priority-normal`    | `#0ea5e9` | `#38bdf8` | Normal priority           |
+| `--celune-priority-low`       | `#71717a` | `#a1a1aa` | Low priority              |
+
+### Agent tokens
+
+`--celune-agent-1` through `--celune-agent-11` color agent avatars and assignee chips. Each agent gets one slot. The defaults are the same in light and dark mode:
+
+| Slot | Default   | Slot | Default   | Slot | Default   |
+| ---- | --------- | ---- | --------- | ---- | --------- |
+| 1    | `#56ccf2` | 5    | `#6ee7a0` | 9    | `#76b4fc` |
+| 2    | `#3dd68c` | 6    | `#9b8afb` | 10   | `#f08cf6` |
+| 3    | `#4dd4ac` | 7    | `#bbe44d` | 11   | `#f87171` |
+| 4    | `#f2a0c4` | 8    | `#c89bfc` |      |           |
+
+### Derived tokens
+
+These are computed from the base tokens. You can override them too.
+
+| Token                                     | Default                                                              | Used for                                    |
+| ----------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------- |
+| `--celune-surface-hover`                  | `color-mix(in srgb, var(--celune-fg) 6%, var(--celune-surface))`     | Hovered rows and cards                      |
+| `--celune-on-status`                      | `var(--celune-primary-fg)`                                           | Text on solid status badges                 |
+| `--celune-text-3xs` to `--celune-text-xl` | `10px`, `11px`, `0.75rem`, `0.875rem`, `1rem`, `1.125rem`, `1.25rem` | Type scale (3xs, 2xs, xs, sm, base, lg, xl) |
+| `--celune-font-weight-light`              | `300`                                                                | Light text                                  |
+| `--celune-font-weight-regular`            | `400`                                                                | Body text                                   |
+| `--celune-font-weight-medium`             | `500`                                                                | Labels                                      |
+| `--celune-font-weight-strong`             | `500`                                                                | Titles and emphasis                         |
+
+---
+
+## Three Ways to Set Tokens
+
+### 1. A CSS mapping file
+
+Point each token at a variable your app already defines. This is the recommended approach because it follows your theme changes automatically.
+
+```css
+@import '@celuneai/react/components.css';
+
+:root {
+  --celune-bg: var(--background);
+  --celune-fg: var(--foreground);
+  --celune-primary: var(--brand-600);
+  --celune-radius: var(--radius-md);
+  /* ...every token you want to control */
+}
+```
+
+Write the mapping outside any `@layer`. Unlayered rules take precedence over everything the package sets.
+
+### 2. The `appearance` prop
+
+Set values from JavaScript, for example when each customer of your app picks a brand color:
+
+```tsx
+<CeluneProvider
+  // ...other props
+  appearance={{
+    theme: 'auto',
+    variables: {
+      primary: '#4f46e5',
+      primaryFg: '#ffffff',
+      radius: '10px',
+      fontFamily: 'Geist, sans-serif',
+    },
+    elements: {
+      taskCard: 'shadow-none border-dashed',
+      taskDrawer: 'w-[560px]',
+    },
+  }}
+>
+```
+
+| Field       | Values                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `theme`     | `'auto'` (default) follows the page. `'light'` or `'dark'` forces the default palette for that mode.                                                                                                                                                                                                                                                                                     |
+| `variables` | camelCase token names: `bg`, `surface`, `surfaceRaised`, `surfaceMuted`, `surfaceHover`, `fg`, `fgMuted`, `primary`, `primaryFg`, `onStatus`, `danger`, `border`, `borderStrong`, `ring`, `radius`, `shadow`, `shadowRaised`, `space`, `fontFamily`, `fontFamilyMono`, `duration`, `ease`, `statusBacklog` to `statusArchived`, `priorityUrgent` to `priorityLow`, `agent1` to `agent11` |
+| `elements`  | Extra class names for these parts: `taskBoard`, `boardColumn`, `taskCard`, `taskDrawer`, `drawerHeader`, `taskList`, `taskRow`, `addTaskRow`, `projectCard`                                                                                                                                                                                                                              |
+
+Values that contain `;`, braces, angle brackets, or comment markers are dropped.
+
+### 3. The defaults
+
+`defaults.css` sets every base, status, priority, and agent token for light and dark mode. `styles.css` includes it. Skip it when your mapping covers every token.
+
+---
+
+## Precedence
+
+From lowest to highest:
+
+1. **Derived values** from `tokens.css`
+2. **Defaults** from `defaults.css`
+3. **`appearance.variables`** from the provider
+4. **Your unlayered CSS**, such as a mapping file
+
+The package uses CSS cascade layers (`celune-derived`, `celune-defaults`, `celune-appearance`) to enforce this order. A token your CSS sets always takes precedence, including over the `appearance` prop. The `appearance` variables are written on `:root`, so drawers and dialogs rendered outside the provider's DOM tree still receive them.
+
+---
+
+## Dark Mode
+
+The defaults switch to their dark values when `<html>` has the class `dark` or the attribute `data-theme="dark"`. Most apps already toggle one of these, so no extra setup is needed.
+
+If your mapping points tokens at your own variables, dark mode follows whatever your variables do. You do not need a separate dark block for Celune.
+
+To force one mode for the embedded area only, set `appearance.theme` to `'light'` or `'dark'`.
+
+---
+
+## shadcn/ui Mapping
+
+Apps built on shadcn/ui can use the included mapping:
+
+```css
+@import '@celuneai/react/components.css';
+@import '@celuneai/react/mappings/shadcn.css';
+```
+
+It maps the base tokens to `--background`, `--card`, `--popover`, `--muted`, `--accent`, `--foreground`, `--muted-foreground`, `--primary`, `--primary-foreground`, `--destructive`, `--border`, `--input`, `--ring`, and `--radius`. Status, priority, and agent tokens use `--chart-1` through `--chart-5`. Fonts read `--font-sans` and `--font-mono`. Dark mode follows shadcn's `.dark` class.
+
+---
+
+## Mapping a Host With Its Own Tokens
+
+A design system with its own names maps the same way. This example is a host whose tokens include a stronger border, named shadows, motion tokens, semantic status colors, a type scale, and a two-weight rule:
+
+```css
+@import '@celuneai/react/components.css';
+
+:root {
+  --celune-bg: var(--background);
+  --celune-surface: var(--card);
+  --celune-surface-raised: var(--popover);
+  --celune-surface-muted: var(--muted);
+  --celune-surface-hover: var(--accent);
+  --celune-fg: var(--foreground);
+  --celune-fg-muted: var(--muted-foreground);
+  --celune-primary: var(--primary);
+  --celune-primary-fg: var(--primary-foreground);
+  --celune-danger: var(--destructive);
+  --celune-border: var(--border);
+  --celune-border-strong: var(--border-strong);
+  --celune-ring: var(--ring);
+  --celune-radius: var(--radius);
+  --celune-shadow: var(--shadow-sm);
+  --celune-shadow-raised: var(--shadow-md);
+  --celune-space: var(--spacing-xs);
+  --celune-font: var(--font-sans);
+  --celune-font-mono: var(--font-mono);
+  --celune-duration: var(--duration-fast);
+  --celune-ease: var(--ease-default);
+
+  /* Two weights only: medium and strong share one value */
+  --celune-font-weight-medium: var(--font-weight-strong);
+  --celune-font-weight-strong: var(--font-weight-strong);
+  --celune-text-sm: var(--text-sm);
+
+  --celune-status-scoping: var(--info-default);
+  --celune-status-in-progress: var(--primary);
+  --celune-status-review: var(--warning-default);
+  --celune-status-done: var(--success-foreground);
+  --celune-priority-urgent: var(--destructive);
+  --celune-priority-high: var(--warning-default);
+  /* ...remaining status, priority, and agent tokens */
+}
+```
+
+Because every value is a reference to a host variable, the mapping contains no color values, and it follows the host's dark mode without extra rules.
+
+---
+
+## shadcn Registry Blocks
+
+If you would rather own the markup, the package includes three shadcn registry blocks. They are built on your own `Button`, `Input`, `Card`, and `Badge` components and read data through `@celuneai/react/hooks`.
+
+| Block                 | What it renders                                                      | Uses                       |
+| --------------------- | -------------------------------------------------------------------- | -------------------------- |
+| `celune-tasks-board`  | Status columns with quick add and drag between columns               | `button`, `input`, `badge` |
+| `celune-task-drawer`  | Side panel to rename a task, change status, and read the description | `button`, `input`, `badge` |
+| `celune-project-card` | Project name, status, and task progress                              | `card`, `badge`            |
+
+Build the registry JSON from the package source:
+
+```bash
+pnpm --filter @celuneai/react build:registry   # writes dist/r/<block>.json
+```
+
+Serve `dist/r` from any static host, then add a block to your app with the shadcn CLI:
+
+```bash
+npx shadcn@latest add https://your-registry-host/r/celune-tasks-board.json
+```
+
+The CLI writes the block files to `components/celune/`. They still need a `CeluneProvider` above them.
+
+---
+
+## Related Pages
+
+- [Embed Celune](/guides/embed) - Install the package and connect it to your API.
+- [Design Tokens](/design/tokens) - Celune's own design system.
