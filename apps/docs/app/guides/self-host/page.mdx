@@ -9,7 +9,7 @@ There are two ways to run it:
 | **Link Supabase**  | Your existing Supabase project holds the data. You run the web app and API with Node. | Teams already on Supabase, local development |
 | **Docker Compose** | One compose file runs Postgres, the Supabase services, the API, and the web app.      | A single server you control end to end       |
 
-`npx celune init` sets up either mode.
+`npx @celuneai/cli init` sets up either mode. The CLI installs the command as `celune`, so after `npm install -g @celuneai/cli` you can run `celune init` instead.
 
 ---
 
@@ -28,7 +28,7 @@ From the repository root:
 
 ```bash
 pnpm install
-npx celune init
+npx @celuneai/cli init
 ```
 
 The command asks which mode you want. Pass `--mode supabase` or `--mode docker` to skip the question.
@@ -48,7 +48,7 @@ Run it again at any time. Values that are already set are kept, so encryption ke
 ### Mode A: link an existing Supabase project
 
 ```bash
-npx celune init --mode supabase --supabase-url https://<project-ref>.supabase.co --db-url "postgresql://postgres:<password>@<host>:5432/postgres"
+npx @celuneai/cli init --mode supabase --supabase-url https://<project-ref>.supabase.co --db-url "postgresql://postgres:<password>@<host>:5432/postgres"
 ```
 
 The anon key and service role key are read from `--anon-key` and `--service-role-key`, from the environment variables `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`, or from a hidden prompt. After writing the env files, `init` applies every migration with `packages/db/scripts/boot-local.sh`. Applied migrations are recorded, so an interrupted run resumes where it stopped.
@@ -63,11 +63,11 @@ pnpm --filter api dev     # API at http://localhost:3010
 ### Mode B: Docker Compose
 
 ```bash
-npx celune init --mode docker
+npx @celuneai/cli init --mode docker
 docker compose -f docker/docker-compose.yml up -d --build
 ```
 
-Open `http://localhost:3000`, sign up, and create your workspace. The first account is confirmed without email so you can sign in right away.
+Open `http://localhost:3000`, sign up, and create your workspace. New accounts are confirmed without email by default, so anyone who can reach the page can sign up. Once your team has signed up, set `DISABLE_SIGNUP=true` in `docker/.env` and run `docker compose -f docker/docker-compose.yml up -d` again.
 
 ---
 
@@ -129,21 +129,21 @@ curl http://localhost:3010/health
 | Variable                                                                                   | Default                              | Purpose                                                                                     |
 | ------------------------------------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------------- |
 | `ENABLE_EMAIL_AUTOCONFIRM`                                                                 | `true`                               | Confirms new accounts without email. Set `false` and fill `SMTP_*` to require confirmation. |
-| `DISABLE_SIGNUP`                                                                           | `false`                              | Set `true` after your team has signed up                                                    |
+| `DISABLE_SIGNUP`                                                                           | `false`                              | Recommended: set `true` after your team has signed up                                       |
 | `AUTH_PROVIDERS`                                                                           | `email`                              | Sign-in methods shown on the login page                                                     |
 | `ADDITIONAL_REDIRECT_URLS`                                                                 | (empty)                              | Extra allowed redirect URLs                                                                 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_ADMIN_EMAIL`, `SMTP_SENDER_NAME` | (empty), except `SMTP_PORT` is `587` | Outgoing mail for confirmations and password resets                                         |
 
 ### Celune secrets
 
-| Variable                      | Purpose                                                                                        |
-| ----------------------------- | ---------------------------------------------------------------------------------------------- |
-| `PROVIDER_KEY_ENCRYPTION_KEY` | AES-256-GCM key for workspace AI provider keys. The job queue derives its signing key from it. |
-| `CREDENTIAL_ENCRYPTION_KEY`   | AES-256-GCM key for stored integration credentials                                             |
-| `CELUNE_HOST_JWT_SECRET`      | HS256 secret for host JWTs accepted by `/v1` and `/v1/mcp`. See [Embed](/guides/embed).        |
-| `WEBHOOK_ENCRYPTION_KEY`      | AES-256-GCM key for bot token encryption                                                       |
-| `CRON_SECRET`, `HOOK_SECRET`  | Shared secrets for scheduled jobs and hook endpoints                                           |
-| `CELUNE_API_KEY_PREFIX`       | Prefix for new API keys. Default `celune`, which gives keys like `celune_live_...`.            |
+| Variable                      | Purpose                                                                                                                                                    |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PROVIDER_KEY_ENCRYPTION_KEY` | AES-256-GCM key for workspace AI provider keys. The job queue derives its signing key from it.                                                             |
+| `CREDENTIAL_ENCRYPTION_KEY`   | AES-256-GCM key for stored integration credentials                                                                                                         |
+| `CELUNE_HOST_JWT_SECRET`      | HS256 secret for host JWTs accepted by `/v1` and `/v1/mcp`. At least 32 bytes; the server refuses to start with a shorter one. See [Embed](/guides/embed). |
+| `WEBHOOK_ENCRYPTION_KEY`      | AES-256-GCM key for bot token encryption                                                                                                                   |
+| `CRON_SECRET`, `HOOK_SECRET`  | Shared secrets for scheduled jobs and hook endpoints                                                                                                       |
+| `CELUNE_API_KEY_PREFIX`       | Prefix for new API keys. Default `celune`, which gives keys like `celune_live_...`.                                                                        |
 
 Changing `PROVIDER_KEY_ENCRYPTION_KEY` or `CREDENTIAL_ENCRYPTION_KEY` after data is stored makes the stored keys unreadable. Back them up with your database backups.
 
@@ -199,9 +199,9 @@ Most of the time is the one-time migration run. Later upgrades apply only the ne
 
 ## Troubleshooting
 
-- **Compose stops with a `celune init` hint.** A required secret is missing from `docker/.env`. Run `npx celune init --mode docker`.
+- **Compose stops with a `celune init` hint.** A required secret is missing from `docker/.env`. Run `npx @celuneai/cli init --mode docker`.
 - **`psql was not found`.** Install the PostgreSQL client (`brew install libpq` or `apt install postgresql-client`), or rerun with `--skip-migrations` and apply migrations later.
-- **Migrations stopped partway.** Run `npx celune init` again. Finished migrations are skipped.
+- **Migrations stopped partway.** Run `npx @celuneai/cli init` again. Finished migrations are skipped.
 - **Agents do not answer.** Add a provider key in **Settings > Provider Keys**. The community edition has no fallback key.
 
 ---
