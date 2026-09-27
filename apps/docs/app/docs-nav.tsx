@@ -188,6 +188,9 @@ const PUBLIC_NAV_SECTIONS = [
     label: 'Guides',
     items: [
       { href: '/guides/mcp-setup', label: 'MCP Setup' },
+      { href: '/guides/embed', label: 'Embed Celune' },
+      { href: '/guides/theming', label: 'Theming' },
+      { href: '/guides/self-host', label: 'Self-Hosting' },
       { href: '/guides/agent-lead', label: 'Agent Lead' },
       { href: '/guides/memory', label: 'Memory (Second Brain)' },
       { href: '/guides/voice-setup', label: 'Voice Setup' },
@@ -205,8 +208,11 @@ const PUBLIC_NAV_SECTIONS = [
   {
     label: 'API Reference',
     items: [
-      { href: '/api-reference/overview', label: 'Quick Start' },
+      { href: '/api-reference/overview', label: 'Overview' },
+      { href: '/api-reference/v1', label: 'REST API v1' },
       { href: '/api-reference/authentication', label: 'Authentication' },
+      { href: '/api-reference/mcp-tools', label: 'MCP Tools' },
+      { href: '/api-reference/agent-protocol', label: 'Agent Protocol' },
       { href: '/api-reference/agents', label: 'Agents' },
     ],
   },
