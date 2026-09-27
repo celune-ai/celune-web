@@ -303,7 +303,7 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
   --font-display: var(--font-inter);
-  --font-display-bold: var(--font-inter-medium), var(--font-inter);
+  --font-display-bold: var(--font-inter);
 
   /* Radius */
   --radius-sm: var(--radius-sm);

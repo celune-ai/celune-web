@@ -39,7 +39,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-foreground px-2 pt-2 pb-3 text-[12px] tracking-[0.08em] uppercase"
-      style={{ fontFamily: 'var(--font-inter-medium)' }}
+      style={{ fontWeight: 500 }}
     >
       {children}
     </p>

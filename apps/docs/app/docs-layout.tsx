@@ -104,21 +104,21 @@ export function DocsLayout({ children }: { children: ReactNode }) {
             <a
               href="/support"
               className="text-foreground-light hover:text-foreground rounded-md px-4 py-1.5 text-[13px] transition-colors"
-              style={{ fontFamily: 'var(--font-inter-medium)' }}
+              style={{ fontWeight: 500 }}
             >
               Support
             </a>
             <a
               href={`${URL_APP}/login`}
               className="rounded-md border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-[13px] text-white transition-all hover:bg-white/[0.08]"
-              style={{ fontFamily: 'var(--font-inter-medium)' }}
+              style={{ fontWeight: 500 }}
             >
               Log in
             </a>
             <a
               href={`${URL_APP}/signup`}
               className="bg-celune-500 hover:bg-celune-400 ml-2 rounded-md px-4 py-1.5 text-[13px] text-black transition-colors"
-              style={{ fontFamily: 'var(--font-inter-medium)' }}
+              style={{ fontWeight: 500 }}
             >
               Get Started
             </a>

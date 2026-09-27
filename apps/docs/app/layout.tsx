@@ -9,14 +9,7 @@ import { CommandSearch } from '../components/command-search';
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
-  weight: ['300', '400', '600'],
-  display: 'swap',
-});
-
-const interMedium = Inter({
-  variable: '--font-inter-medium',
-  subsets: ['latin'],
-  weight: '500',
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
 });
 
@@ -49,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${interMedium.variable} ${jetbrainsMono.variable} bg-background font-sans antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} bg-background font-sans antialiased`}
       >
         <DocsLayout>{children}</DocsLayout>
         <CommandSearch />
