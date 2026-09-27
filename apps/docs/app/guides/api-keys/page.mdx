@@ -60,7 +60,7 @@ A request without the needed scope answers `403` with `Insufficient scope. Requi
 
 ## Rate Limits and Expiry
 
-A key can carry a per-minute rate limit and an expiry date. Over the limit, requests answer `429` with `Retry-After` and `X-RateLimit-*` headers. Expired and revoked keys answer `401`.
+A key can carry a per-minute rate limit and an expiry date. On Celune Cloud and the self-hosted web app, requests over the limit answer `429` with `Retry-After` and `X-RateLimit-*` headers. Expired and revoked keys answer `401`.
 
 ---
 

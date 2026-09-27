@@ -105,7 +105,7 @@ GET  /agents/status
 
 ## Job Queue
 
-The job queue sends AI work, such as a chat reply or a task run, to an external runner that holds the model access. A developer's IDE agent is a typical runner. Job routes and tools require an **API key**, because each claim is recorded against the key that made it.
+The job queue sends AI work, such as a chat reply or a task run, to an external runner that holds the model access. A developer's IDE agent is a typical runner. Claiming a job, sending job heartbeats, and submitting results require an **API key**, because each claim is recorded against the key that made it. Listing and cancelling jobs also accept host JWTs.
 
 ### Job statuses
 

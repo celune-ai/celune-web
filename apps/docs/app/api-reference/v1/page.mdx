@@ -15,7 +15,7 @@ Every path below is relative to the base URL.
 
 - **Authentication.** Every route except `GET /health` needs `Authorization: Bearer <credential>`, where the credential is an API key or a host JWT. `X-API-Key: <key>` is also accepted. See [Authentication](/api-reference/authentication).
 - **Scopes.** `GET` routes need the `read` scope. Every other method needs `write`. `admin` includes `write`, and `write` includes `read`.
-- **Permission keys.** When a host JWT carries a `permissions` claim, write routes also require the key listed in the tables below.
+- **Permission keys.** When a host JWT carries a `permissions` claim, write routes also require the key listed in the tables below, and reads require a read key: `tasks:read` for tasks, jobs, and executions, `projects:read` for projects, `agents:read` for agents, and `analytics:read` for the workspace-wide activity feed. See [Authentication](/api-reference/authentication).
 - **Workspace.** Requests act on the credential's workspace. Add `?workspace_id=<id>` to act on another workspace. This works only for API keys, and only when the server grants access (Celune Cloud checks workspace membership). Host JWTs are pinned to one workspace, and naming another answers `403`.
 - **Bodies.** Request and response bodies are JSON, except attachment uploads, which use `multipart/form-data`. Field names use `snake_case`.
 - **Task statuses.** `backlog`, `inbox`, `scoping`, `planning`, `in_progress`, `review`, `done`, `archived`. Blocked is a flag in task metadata and never appears as a status. See [Agent Protocol](/api-reference/agent-protocol) for allowed moves.
@@ -75,26 +75,26 @@ Every path below is relative to the base URL.
 
 `POST /tasks` requires `title`. `PATCH /tasks/:id` accepts any subset of these fields.
 
-| Field                   | Type                               | Notes                                                                                           |
-| ----------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `title`                 | string                             | Required on create                                                                              |
-| `status`                | task status                        | Checked against the allowed transitions                                                         |
-| `description`           | string or null                     | Markdown                                                                                        |
-| `outcome`               | string or null                     | What the work produced                                                                          |
-| `priority`              | `urgent`, `high`, `normal`, `low`  |                                                                                                 |
-| `assignee`              | string                             | Must be an enabled agent when the host checks this; otherwise `422`                             |
-| `project_id`            | uuid or null                       |                                                                                                 |
-| `parent_id`             | uuid or null                       | Makes this a subtask                                                                            |
-| `depends_on`            | uuid array                         | Each id must exist in this workspace, differ from the task, and not already depend on this task |
-| `category`              | string array                       | Tags                                                                                            |
-| `due_date`              | string or null                     | ISO date                                                                                        |
-| `effort`                | `S`, `M`, `L`, or null             |                                                                                                 |
-| `time_estimate_minutes` | integer or null                    |                                                                                                 |
-| `source_ref`            | string or null                     | External reference, such as an issue URL                                                        |
-| `metadata`              | object or null                     | Merged into existing metadata on update                                                         |
-| `subtasks`              | array of `{ title, done }` or null | Checklist items                                                                                 |
-| `success_criteria`      | object or null                     |                                                                                                 |
-| `sort_order`            | number                             | Position within the column                                                                      |
+| Field                   | Type                               | Notes                                                                                                              |
+| ----------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `title`                 | string                             | Required on create                                                                                                 |
+| `status`                | task status                        | Checked against the allowed transitions                                                                            |
+| `description`           | string or null                     | Markdown                                                                                                           |
+| `outcome`               | string or null                     | What the work produced                                                                                             |
+| `priority`              | `urgent`, `high`, `normal`, `low`  |                                                                                                                    |
+| `assignee`              | string                             | Must be an enabled agent when the host checks this; otherwise `422`                                                |
+| `project_id`            | uuid or null                       | Must be a project in this workspace; otherwise `404`                                                               |
+| `parent_id`             | uuid or null                       | Makes this a subtask. Must be a top-level task in this workspace other than this one; subtasks nest one level only |
+| `depends_on`            | uuid array                         | Each id must exist in this workspace, differ from the task, and not already depend on this task                    |
+| `category`              | string array                       | Tags                                                                                                               |
+| `due_date`              | string or null                     | ISO date                                                                                                           |
+| `effort`                | `S`, `M`, `L`, or null             |                                                                                                                    |
+| `time_estimate_minutes` | integer or null                    |                                                                                                                    |
+| `source_ref`            | string or null                     | External reference, such as an issue URL                                                                           |
+| `metadata`              | object or null                     | Merged into existing metadata on update                                                                            |
+| `subtasks`              | array of `{ title, done }` or null | Checklist items                                                                                                    |
+| `success_criteria`      | object or null                     |                                                                                                                    |
+| `sort_order`            | number                             | Position within the column                                                                                         |
 
 Create also accepts `source` (default `api`), `spawned_by`, `vault_path`, `time_spent_minutes`, and `context_keys`. Update also accepts `completed_at`.
 
@@ -142,17 +142,17 @@ Project fields: `name` (required on create), `description`, `project_type` (`fea
 
 ## Agents
 
-| Method | Path                   | Description                                                                                                              |
-| ------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| GET    | `/agents/status`       | Current status of every agent in the workspace.                                                                          |
-| PUT    | `/agents/:name/status` | Set status. Body: `{ "status": "online" \| "offline" \| "working" \| "idle", "current_task_id"?: uuid }`. Returns `204`. |
-| POST   | `/agents/heartbeat`    | Record a heartbeat event. Body: `{ "agent_id", "event_type", "metadata"? }`. Returns `202`.                              |
+| Method | Path                   | Permission key     | Description                                                                                                              |
+| ------ | ---------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| GET    | `/agents/status`       | `agents:read`      | Current status of every agent in the workspace.                                                                          |
+| PUT    | `/agents/:name/status` | `agents:configure` | Set status. Body: `{ "status": "online" \| "offline" \| "working" \| "idle", "current_task_id"?: uuid }`. Returns `204`. |
+| POST   | `/agents/heartbeat`    | `agents:configure` | Record a heartbeat event. Body: `{ "agent_id", "event_type", "metadata"? }`. Returns `202`.                              |
 
 ---
 
 ## Jobs
 
-The job queue hands AI work to external runners, such as a developer's IDE agent. Jobs need an **API key**: host JWTs answer `403` on claim, heartbeat, and result. See [Agent Protocol](/api-reference/agent-protocol) for the full flow.
+The job queue hands AI work to external runners, such as a developer's IDE agent. Claiming, heartbeats, and results need an **API key**: host JWTs answer `403` on those three routes. Reads need `tasks:read` and cancel needs `tasks:update` when a host JWT carries permission keys. See [Agent Protocol](/api-reference/agent-protocol) for the full flow.
 
 | Method | Path                  | Description                                                                                                                                             |
 | ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -191,7 +191,7 @@ Errors return JSON with an `error` message. Some add a `code`, an `issues` list,
 
 | Status | When                                                                                           | Body                                                                                                         |
 | ------ | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `400`  | Body or query failed validation                                                                | `{ "error": "Invalid request body", "issues": [...] }`                                                       |
+| `400`  | Body or query failed validation                                                                | `{ "error": "Invalid request body", "issues": [...] }` or `{ "error": "Invalid query", "issues": [...] }`    |
 | `400`  | Invalid value in the service layer, or an invalid dependency (missing, self, or circular)      | `{ "error", "code": "validation" }` or `"dependency"`                                                        |
 | `401`  | Missing, malformed, invalid, revoked, or expired credential                                    | `{ "error": "Authentication required" }` and similar                                                         |
 | `402`  | A plan limit was reached (Celune Cloud only)                                                   | Gate details, including the feature and reason                                                               |

@@ -67,44 +67,55 @@ A host JWT lets your server hand a browser a short-lived credential for one user
 
 The API server verifies host JWTs with one of:
 
-| Setting                  | Algorithm                                  |
-| ------------------------ | ------------------------------------------ |
-| `CELUNE_HOST_JWT_SECRET` | HS256 with a shared secret                 |
-| `CELUNE_HOST_JWKS_URL`   | Any algorithm your JWKS endpoint publishes |
+| Setting                  | Algorithm                                           |
+| ------------------------ | --------------------------------------------------- |
+| `CELUNE_HOST_JWT_SECRET` | HS256 with a shared secret of at least 32 bytes     |
+| `CELUNE_HOST_JWKS_URL`   | RS256, ES256, or EdDSA keys from your JWKS endpoint |
 
-With neither set, the server accepts API keys only and answers host JWTs with `401 Host tokens are not enabled on this host`.
+With neither set, the server accepts API keys only and answers host JWTs with `401 Host tokens are not enabled on this host`. A secret shorter than 32 bytes stops the server at startup, and `mintHostJwt` refuses it too.
 
 ### Permission keys
 
-A host JWT can carry a `permissions` array to mirror your app's roles. When it is present, each write route also requires its key:
+A host JWT can carry a `permissions` array to mirror your app's roles. When it is present, every read and write route also requires its key:
 
-| Key               | Required by                                                                                                    |
-| ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| `tasks:create`    | `POST /tasks`                                                                                                  |
-| `tasks:update`    | Task updates, reorder, initiate, claim, complete, block, unblock, comments, attachments, cancelling executions |
-| `tasks:delete`    | `DELETE /tasks/:id`                                                                                            |
-| `projects:create` | `POST /projects`                                                                                               |
-| `projects:update` | Project updates and reorder                                                                                    |
-| `projects:delete` | `DELETE /projects/:id`                                                                                         |
+| Key                | Required by                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tasks:read`       | `GET` on `/tasks`, `/jobs`, and `/executions`, and `GET /activity?task_id=...`                                                              |
+| `projects:read`    | `GET` on `/projects`                                                                                                                        |
+| `agents:read`      | `GET /agents/status`                                                                                                                        |
+| `analytics:read`   | `GET /activity` without `task_id` (the workspace-wide feed)                                                                                 |
+| `tasks:create`     | `POST /tasks`                                                                                                                               |
+| `tasks:update`     | Task updates, reorder, initiate, claim, complete, block, unblock, comments, attachments, `POST /executions/cancel`, `POST /jobs/:id/cancel` |
+| `tasks:delete`     | `DELETE /tasks/:id`                                                                                                                         |
+| `projects:create`  | `POST /projects`                                                                                                                            |
+| `projects:update`  | Project updates and reorder                                                                                                                 |
+| `projects:delete`  | `DELETE /projects/:id`                                                                                                                      |
+| `agents:configure` | `PUT /agents/:name/status`, `POST /agents/heartbeat`                                                                                        |
 
-A missing key answers `403` with `{ "error": "Forbidden", "required": "<key>" }`. When `permissions` is absent, scopes alone decide.
+A missing key answers `403` with `{ "error": "Forbidden", "required": "<key>" }`. When `permissions` is absent, scopes alone decide. API keys carry no permission keys, so only their scope applies.
 
-A host JWT that carries `permissions` is an embed token. Embed tokens cannot call MCP, and no host JWT can claim jobs.
+A host JWT that carries `permissions` is an embed token. Embed tokens cannot call MCP. No host JWT can claim jobs, send job heartbeats, or submit job results.
 
 ---
 
 ## Authentication Errors
 
-| Status | Message                                                              | Cause                                                      |
-| ------ | -------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `401`  | `Authentication required`                                            | No credential was sent                                     |
-| `401`  | `Invalid credentials format`                                         | The value is neither a key nor a JWT                       |
-| `401`  | `Invalid API key`, `API key has been revoked`, `API key has expired` | The key failed its check                                   |
-| `401`  | `Token expired`, `Invalid token`                                     | The JWT failed verification                                |
-| `403`  | `Token grants no scopes`                                             | The JWT has no valid scope                                 |
-| `403`  | `Token is scoped to another workspace`                               | A JWT named a different `workspace_id`                     |
-| `403`  | `Insufficient scope. Required: write`                                | The credential lacks the scope                             |
-| `429`  | `API key rate limit exceeded`                                        | The key's per-minute limit was reached. See `Retry-After`. |
+| Status | Message                                                              | Cause                                                                                     |
+| ------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `401`  | `Authentication required`                                            | No credential was sent                                                                    |
+| `401`  | `Invalid credentials format`                                         | The value is neither a key nor a JWT                                                      |
+| `401`  | `Invalid API key format`                                             | The key has the prefix but no `live` or `test` part                                       |
+| `401`  | `Invalid API key`, `API key has been revoked`, `API key has expired` | The key failed its check                                                                  |
+| `401`  | `API keys are not enabled on this host`                              | The server was built without an API key lookup                                            |
+| `401`  | `Host tokens are not enabled on this host`                           | The server has no JWT secret or JWKS URL                                                  |
+| `401`  | `Token expired`, `Invalid token`                                     | The JWT failed verification                                                               |
+| `401`  | `Token is missing sub or workspace_id`                               | A required claim is empty                                                                 |
+| `403`  | `Token grants no scopes`                                             | The JWT has no valid scope                                                                |
+| `403`  | `Token is scoped to another workspace`                               | A JWT named a different `workspace_id`                                                    |
+| `403`  | `You do not have access to this workspace`                           | An API key named a workspace the server does not grant                                    |
+| `403`  | `Insufficient scope. Required: write`                                | The credential lacks the scope                                                            |
+| `403`  | `Forbidden` with `required`                                          | A host JWT lacks a permission key                                                         |
+| `429`  | `API key rate limit exceeded`                                        | The key's per-minute limit was reached (Celune Cloud and the web app). See `Retry-After`. |
 
 ---
 
