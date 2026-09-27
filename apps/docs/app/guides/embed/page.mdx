@@ -23,6 +23,8 @@ The Celune API server must trust your signing key. On a [self-hosted install](/g
 npm install @celuneai/react @celuneai/api
 ```
 
+Both packages publish to npm with the public open-source release.
+
 `@celuneai/react` needs React 19. `@celuneai/api` is only used on your server, to mint tokens.
 
 Import one stylesheet. For a page that has no design system of its own, the all-in-one file includes a CSS reset, the component styles, and default tokens:
@@ -55,22 +57,22 @@ The hooks work without the prebuilt components. Use them when you want to render
 
 Wrap every Celune component in one `CeluneProvider`.
 
-| Prop              | Type                            | Purpose                                                                                                         |
-| ----------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `apiUrl`          | `string`                        | Base URL of the Celune API mount, for example `http://localhost:3010/v1`.                                       |
-| `token`           | `string \| null`                | The current host JWT or API key.                                                                                |
-| `refreshToken`    | `() => Promise<string \| null>` | Returns a new token. Returning `null` or throwing switches the UI to read-only.                                 |
-| `workspaceId`     | `string`                        | The workspace the token is scoped to. Data hooks stay idle while it is an empty string.                         |
-| `subscribe`       | `SubscribeFn`                   | Realtime adapter. Without it, data hooks poll.                                                                  |
-| `pollInterval`    | `number`                        | Polling interval in milliseconds when `subscribe` is not set. Default `15000`.                                  |
-| `Link`            | component                       | Link component for in-app links, such as `next/link`. Defaults to a plain anchor.                               |
-| `href`            | `(path: string) => string`      | Builds an in-app URL from a module path such as `/tasks?task=<id>`.                                             |
-| `canEdit`         | `boolean`                       | `false` renders every module read-only, for example for a viewer role.                                          |
-| `currentUser`     | `{ displayName, assignee? }`    | Name shown in the UI and the handle written when the user claims a task. Claiming is hidden without `assignee`. |
-| `queryClient`     | `QueryClient`                   | Share your TanStack Query cache. A private client is created when omitted.                                      |
-| `transport`       | `CeluneTransport`               | Replaces the default REST transport. Token retry and read-only handling still apply.                            |
-| `renderReconnect` | `(reconnect) => ReactNode`      | Replaces the default reconnect prompt.                                                                          |
-| `appearance`      | `CeluneAppearance`              | Theme, token values, and class overrides. See [Theming](/guides/theming).                                       |
+| Prop              | Type                            | Purpose                                                                                                                         |
+| ----------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `apiUrl`          | `string`                        | Base URL of the Celune API mount, for example `http://localhost:3010/v1`.                                                       |
+| `token`           | `string \| null`                | The current host JWT. Never pass an API key to a provider that runs in the browser; use API keys only on servers and in agents. |
+| `refreshToken`    | `() => Promise<string \| null>` | Returns a new token. Returning `null` or throwing switches the UI to read-only.                                                 |
+| `workspaceId`     | `string`                        | The workspace the token is scoped to. Data hooks stay idle while it is an empty string.                                         |
+| `subscribe`       | `SubscribeFn`                   | Realtime adapter. Without it, the task board and run views poll.                                                                |
+| `pollInterval`    | `number`                        | Polling interval in milliseconds when `subscribe` is not set. Default `15000`.                                                  |
+| `Link`            | component                       | Link component for in-app links, such as `next/link`. Defaults to a plain anchor.                                               |
+| `href`            | `(path: string) => string`      | Builds an in-app URL from a module path such as `/tasks?task=<id>`.                                                             |
+| `canEdit`         | `boolean`                       | `false` renders every module read-only, for example for a viewer role.                                                          |
+| `currentUser`     | `{ displayName, assignee? }`    | Name shown in the UI and the handle written when the user claims a task. Claiming is hidden without `assignee`.                 |
+| `queryClient`     | `QueryClient`                   | Share your TanStack Query cache. A private client is created when omitted.                                                      |
+| `transport`       | `CeluneTransport`               | Replaces the default REST transport. Token retry and read-only handling still apply.                                            |
+| `renderReconnect` | `(reconnect) => ReactNode`      | Replaces the default reconnect prompt.                                                                                          |
+| `appearance`      | `CeluneAppearance`              | Theme, token values, and class overrides. See [Theming](/guides/theming).                                                       |
 
 ---
 
@@ -87,7 +89,7 @@ const token = await mintHostJwt(
     workspace_id: celuneWorkspaceId, // the only workspace this token can reach
     org_id: celuneOrgId, // optional
     scopes: ['write'], // 'read', 'write', or 'admin'
-    permissions: ['tasks:create', 'tasks:update'], // optional, see below
+    permissions: ['tasks:read', 'projects:read', 'tasks:create', 'tasks:update'], // optional, see below
   },
   {
     secret: process.env.CELUNE_HOST_JWT_SECRET!,
@@ -98,20 +100,36 @@ const token = await mintHostJwt(
 
 **Claims**
 
-| Claim          | Required | Meaning                                                                                                       |
-| -------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
-| `sub`          | Yes      | The user id. Written as the actor on tasks, comments, and activity.                                           |
-| `workspace_id` | Yes      | The workspace the token is pinned to. A request for any other workspace answers `403`.                        |
-| `scopes`       | Yes      | At least one of `read`, `write`, `admin`. `admin` includes `write`, and `write` includes `read`.              |
-| `exp`          | Yes      | Expiry. `mintHostJwt` sets it from `expiresInSeconds`.                                                        |
-| `org_id`       | No       | The organization id, when you have one.                                                                       |
-| `permissions`  | No       | Role keys such as `tasks:delete`. When present, each write also requires its key. When absent, scopes decide. |
+| Claim          | Required | Meaning                                                                                                                 |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `sub`          | Yes      | The user id. Written as the actor on tasks, comments, and activity.                                                     |
+| `workspace_id` | Yes      | The workspace the token is pinned to. A request for any other workspace answers `403`.                                  |
+| `scopes`       | Yes      | At least one of `read`, `write`, `admin`. `admin` includes `write`, and `write` includes `read`.                        |
+| `exp`          | Yes      | Expiry. `mintHostJwt` sets it from `expiresInSeconds`.                                                                  |
+| `org_id`       | No       | The organization id, when you have one.                                                                                 |
+| `permissions`  | No       | Role keys such as `tasks:delete`. When present, every read and write also requires its key. When absent, scopes decide. |
 
-Write routes check these permission keys: `tasks:create`, `tasks:update`, `tasks:delete`, `projects:create`, `projects:update`, `projects:delete`. Use them to mirror your own roles, for example to let a member edit tasks without deleting them.
+When a token carries `permissions`, list every key the user needs, including the read keys. A token with `tasks:update` and no `tasks:read` cannot load the board.
+
+| Key                                                     | Needed for                                                                                         |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `tasks:read`                                            | Reading tasks, comments, attachments, jobs, executions, and one task's activity                    |
+| `projects:read`                                         | Reading projects                                                                                   |
+| `agents:read`                                           | Reading agent status                                                                               |
+| `analytics:read`                                        | Reading the workspace-wide activity feed                                                           |
+| `tasks:create`                                          | Creating tasks                                                                                     |
+| `tasks:update`                                          | Editing, moving, claiming, completing, blocking, commenting, attachments, cancelling runs and jobs |
+| `tasks:delete`                                          | Deleting tasks                                                                                     |
+| `projects:create`, `projects:update`, `projects:delete` | Creating, editing, and deleting projects                                                           |
+| `agents:configure`                                      | Setting agent status and recording agent heartbeats                                                |
+
+Use them to mirror your own roles, for example to let a member edit tasks without deleting them.
 
 A token that carries `permissions` is treated as an embed token and cannot call [MCP](/api-reference/mcp-tools). Agents and IDEs use API keys.
 
-To sign with your own key pair, publish a JWKS endpoint and set `CELUNE_HOST_JWKS_URL` on the API server. Set `CELUNE_HOST_JWT_ISSUER` and `CELUNE_HOST_JWT_AUDIENCE` to require matching `iss` and `aud` claims.
+The HS256 secret must be at least 32 bytes. `mintHostJwt` and the API server both refuse a shorter one. Generate one with `openssl rand -hex 32`.
+
+To sign with your own key pair, publish a JWKS endpoint with RS256, ES256, or EdDSA keys and set `CELUNE_HOST_JWKS_URL` on the API server. Set `CELUNE_HOST_JWT_ISSUER` and `CELUNE_HOST_JWT_AUDIENCE` to require matching `iss` and `aud` claims.
 
 ---
 
@@ -282,7 +300,7 @@ export default function TasksRoute({ workspaceId }: { workspaceId: string }) {
 
 ## Realtime or Polling
 
-Without a `subscribe` prop, every data hook polls the API every `pollInterval` milliseconds (15 seconds by default). Task changes, run starts, and run completions all show up on the next poll. This works with any backend and needs no extra setup.
+Without a `subscribe` prop, the task board and the run views in the task drawer poll the API every `pollInterval` milliseconds (15 seconds by default). Task changes, run starts, and run completions all show up on the next poll. Headless hooks such as `useTasksQuery` do not poll by themselves. Call `useTasksRealtime` next to them to get the same polling or realtime updates. This works with any backend and needs no extra setup.
 
 To get updates as they happen, pass a `subscribe` adapter. It receives a channel description and a callback, and returns an unsubscribe function:
 
@@ -336,7 +354,7 @@ To avoid most `401` responses, renew the token a minute before it expires.
 
 ## Mount the API in Your Own Server
 
-If you do not run a separate Celune API server, mount `@celuneai/api` in your own Node server. `createApi` returns a Hono app that serves the same [v1 routes](/api-reference/v1) and MCP. The standalone self-host server is built this way:
+If you do not run a separate Celune API server, mount `@celuneai/api` in your own Node server. `createApi` returns a Hono app that serves the same [v1 routes](/api-reference/v1) and MCP. The standalone self-host server in `apps/api` is built the same way. This minimal example accepts host JWTs only:
 
 ```ts
 import { createApi, createAuthenticator, jwtConfigFromEnv } from '@celuneai/api';
@@ -361,7 +379,12 @@ const api = createApi({
 // export const GET = (req: Request) => api.fetch(req);
 ```
 
-Every hook on the optional `host` option can be left out. The hooks let you grant API keys access to other workspaces (`resolveWorkspace`), check which agents are enabled (`agents`), react to task changes and resolve task context (`tasks`), queue server runs (`executions`), encrypt job payloads (`jobs`), and log MCP tool calls (`onToolCall`).
+Two additions turn this into a full server:
+
+- **API keys.** Pass `apiKeys` to `createAuthenticator`: an object with `findByPrefix(prefix)` that returns the matching `api_keys` row. Without it, API keys answer `401 API keys are not enabled on this host`.
+- **Job queue.** Pass `host.jobs.crypto` with the job encryption functions. Without it, claiming a job answers `501`.
+
+`apps/api/src/host.ts` in the Celune repository implements both against Supabase. Every hook on the optional `host` option can be left out. The hooks let you grant API keys access to other workspaces (`resolveWorkspace`), check which agents are enabled (`agents`), react to task changes and resolve task context (`tasks`), queue server runs (`executions`), encrypt job payloads (`jobs`), and log MCP tool calls (`onToolCall`).
 
 ---
 
