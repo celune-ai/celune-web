@@ -141,8 +141,8 @@ export function CelunePricing() {
           <div>
             <p className="text-sm font-medium text-neutral-300">Enterprise</p>
             <p className="mt-1 text-sm text-neutral-500">
-              Need SSO, custom terms, or dedicated support? Talk to us about Enterprise. Custom
-              pricing.
+              Need custom terms or a dedicated contract? Enterprise pricing is set with you
+              directly.
             </p>
           </div>
           <a
