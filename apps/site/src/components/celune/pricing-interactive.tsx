@@ -100,7 +100,7 @@ function IntervalToggle({
 
 function EnterpriseCallout() {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 rounded-xl border border-white/[0.04] bg-white/[0.015] p-6 text-center sm:flex-row sm:justify-between sm:text-left">
+    <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-xl border border-white/[0.04] bg-white/[0.015] p-6 text-center sm:flex-row sm:justify-between sm:text-left">
       <div>
         <p className="text-sm font-medium text-neutral-300">Enterprise</p>
         <p className="mt-1 text-sm text-neutral-500">
