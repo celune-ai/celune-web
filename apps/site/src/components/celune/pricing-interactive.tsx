@@ -16,6 +16,7 @@ const CLOUD_PRICE: Record<Interval, { price: string; period: string; note: strin
 };
 
 // ─── Pricing data (single source of truth for the tier cards and the table) ───
+// Open source and Cloud only — Enterprise is a separate callout, not a plan column.
 
 const PLANS = [
   {
@@ -31,7 +32,6 @@ const PLANS = [
     ],
     cta: 'View on GitHub',
     ctaHref: SOCIAL_GITHUB,
-    highlighted: false,
   },
   {
     key: 'cloud',
@@ -46,16 +46,6 @@ const PLANS = [
     ],
     cta: 'Get Started',
     ctaHref: `${URL_APP}/signup`,
-    highlighted: true,
-  },
-  {
-    key: 'enterprise',
-    name: 'Enterprise',
-    description: 'Contact sales for pricing built around your team.',
-    features: [] as string[],
-    cta: 'Contact Sales',
-    ctaHref: 'mailto:sales@celune.ai',
-    highlighted: false,
   },
 ] as const;
 
@@ -67,30 +57,12 @@ const COMPARISON_ROWS: {
   label: string;
   values: Record<(typeof PLANS)[number]['key'], CellValue>;
 }[] = [
-  {
-    label: 'License',
-    values: { 'open-source': 'Apache-2.0', cloud: 'Commercial', enterprise: 'Custom' },
-  },
-  {
-    label: 'Deployment',
-    values: { 'open-source': 'Self-hosted', cloud: 'Managed cloud', enterprise: 'Managed cloud' },
-  },
-  {
-    label: 'Agents',
-    values: { 'open-source': 'Unlimited', cloud: 'Unlimited', enterprise: 'Unlimited' },
-  },
-  {
-    label: 'Workspaces',
-    values: { 'open-source': 'Unlimited', cloud: 'Unlimited', enterprise: 'Unlimited' },
-  },
-  {
-    label: 'Memories',
-    values: { 'open-source': 'Unlimited', cloud: 'Unlimited', enterprise: 'Unlimited' },
-  },
-  {
-    label: 'Model keys',
-    values: { 'open-source': 'BYOK', cloud: 'BYOK', enterprise: 'BYOK' },
-  },
+  { label: 'License', values: { 'open-source': 'Apache-2.0', cloud: 'Commercial' } },
+  { label: 'Deployment', values: { 'open-source': 'Self-hosted', cloud: 'Managed cloud' } },
+  { label: 'Agents', values: { 'open-source': 'Unlimited', cloud: 'Unlimited' } },
+  { label: 'Workspaces', values: { 'open-source': 'Unlimited', cloud: 'Unlimited' } },
+  { label: 'Memories', values: { 'open-source': 'Unlimited', cloud: 'Unlimited' } },
+  { label: 'Model keys', values: { 'open-source': 'BYOK', cloud: 'BYOK' } },
 ];
 
 function IntervalToggle({
@@ -126,6 +98,25 @@ function IntervalToggle({
   );
 }
 
+function EnterpriseCallout() {
+  return (
+    <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 rounded-xl border border-white/[0.04] bg-white/[0.015] p-6 text-center sm:flex-row sm:justify-between sm:text-left">
+      <div>
+        <p className="text-sm font-medium text-neutral-300">Enterprise</p>
+        <p className="mt-1 text-sm text-neutral-500">
+          Need SSO, custom terms, or dedicated support? Talk to us about Enterprise. Custom pricing.
+        </p>
+      </div>
+      <a
+        href="mailto:sales@celune.ai"
+        className="shrink-0 rounded-lg border border-white/[0.08] px-5 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
+      >
+        Contact Sales
+      </a>
+    </div>
+  );
+}
+
 export function PricingInteractive() {
   const [billingInterval, setBillingInterval] = useState<Interval>('monthly');
   const cloudPrice = CLOUD_PRICE[billingInterval];
@@ -139,22 +130,12 @@ export function PricingInteractive() {
             <IntervalToggle billingInterval={billingInterval} onChange={setBillingInterval} />
           </div>
 
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mb-8 grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2">
             {PLANS.map((plan) => (
               <div
                 key={plan.key}
-                className={cn(
-                  'relative flex flex-col rounded-xl border p-8',
-                  plan.highlighted
-                    ? 'border-celune-500/30 bg-celune-500/[0.04]'
-                    : 'border-white/[0.06] bg-white/[0.02]',
-                )}
+                className="relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] p-8"
               >
-                {plan.highlighted && (
-                  <div className="bg-celune-500 absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-semibold text-black">
-                    Most Popular
-                  </div>
-                )}
                 <div className="mb-6">
                   <h2 className="font-heading text-lg font-medium text-white">{plan.name}</h2>
                   <p className="mt-1 text-sm text-neutral-500">{plan.description}</p>
@@ -175,38 +156,28 @@ export function PricingInteractive() {
                       )}
                     </>
                   ) : (
-                    <span className="font-heading text-4xl font-medium text-white">
-                      {plan.key === 'open-source' ? 'Free' : 'Custom'}
-                    </span>
+                    <span className="font-heading text-4xl font-medium text-white">Free</span>
                   )}
                 </div>
-                {plan.features.length > 0 && (
-                  <ul className="mb-8 space-y-3">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-start gap-2.5 text-sm text-neutral-300"
-                      >
-                        <Check className="text-celune-500 mt-0.5 h-4 w-4 shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul className="mb-8 space-y-3">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5 text-sm text-neutral-300">
+                      <Check className="text-celune-500 mt-0.5 h-4 w-4 shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
                 <a
                   href={plan.ctaHref}
-                  className={cn(
-                    'mt-auto block w-full rounded-lg py-3 text-center text-sm font-medium transition-colors',
-                    plan.highlighted
-                      ? 'bg-celune-500 hover:bg-celune-400 text-black'
-                      : 'border border-white/[0.08] text-neutral-300 hover:border-white/[0.15] hover:text-white',
-                  )}
+                  className="mt-auto block w-full rounded-lg border border-white/[0.08] py-3 text-center text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
                 >
                   {plan.cta}
                 </a>
               </div>
             ))}
           </div>
+
+          <EnterpriseCallout />
         </div>
       </section>
 
@@ -223,7 +194,7 @@ export function PricingInteractive() {
             <p className="mt-4 text-neutral-400">See exactly what&apos;s included in each plan.</p>
           </div>
 
-          <div className="mx-auto max-w-5xl overflow-x-auto">
+          <div className="mx-auto max-w-3xl overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr>
@@ -231,25 +202,13 @@ export function PricingInteractive() {
                   {PLANS.map((plan) => (
                     <th
                       key={plan.key}
-                      className={cn(
-                        'pb-4 text-center text-xs font-semibold',
-                        plan.highlighted ? 'text-celune-400' : 'text-neutral-400',
-                      )}
+                      className="pb-4 text-center text-xs font-semibold text-neutral-400"
                     >
                       <div className="font-heading text-base font-medium text-white">
                         {plan.name}
                       </div>
-                      <div
-                        className={cn(
-                          'mt-0.5',
-                          plan.highlighted ? 'text-celune-500' : 'text-neutral-500',
-                        )}
-                      >
-                        {plan.key === 'cloud'
-                          ? `${cloudPrice.price}${cloudPrice.period}`
-                          : plan.key === 'open-source'
-                            ? 'Free'
-                            : 'Custom'}
+                      <div className="mt-0.5 text-neutral-500">
+                        {plan.key === 'cloud' ? `${cloudPrice.price}${cloudPrice.period}` : 'Free'}
                       </div>
                     </th>
                   ))}
@@ -265,12 +224,7 @@ export function PricingInteractive() {
                     <td className="py-3 pr-4 text-sm text-neutral-400">{row.label}</td>
                     {PLANS.map((plan) => (
                       <td key={plan.key} className="py-3 text-center">
-                        <span
-                          className={cn(
-                            'block text-center text-xs',
-                            plan.highlighted ? 'text-white' : 'text-neutral-400',
-                          )}
-                        >
+                        <span className="block text-center text-xs text-neutral-400">
                           {row.values[plan.key]}
                         </span>
                       </td>

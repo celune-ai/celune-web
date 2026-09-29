@@ -14,6 +14,7 @@ const CLOUD_PRICE: Record<Interval, { price: string; suffix: string }> = {
 };
 
 // ─── Plan cards ─────────────────────────────────────────────────────────────────
+// Open source and Cloud only — Enterprise is a separate callout, not a plan card.
 
 const PLANS = [
   {
@@ -28,7 +29,6 @@ const PLANS = [
     ],
     cta: 'View on GitHub',
     ctaHref: SOCIAL_GITHUB,
-    highlighted: false,
   },
   {
     key: 'cloud',
@@ -41,16 +41,6 @@ const PLANS = [
     ],
     cta: 'Get Started',
     ctaHref: `${URL_APP}/signup`,
-    highlighted: true,
-  },
-  {
-    key: 'enterprise',
-    name: 'Enterprise',
-    description: 'Contact sales for pricing built around your team.',
-    features: [] as string[],
-    cta: 'Contact Sales',
-    ctaHref: 'mailto:sales@celune.ai',
-    highlighted: false,
   },
 ] as const;
 
@@ -101,22 +91,12 @@ export function CelunePricing() {
         </div>
 
         {/* Plan cards */}
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mx-auto mb-6 grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
           {PLANS.map((plan) => (
             <div
               key={plan.key}
-              className={cn(
-                'relative flex flex-col rounded-xl border p-6',
-                plan.highlighted
-                  ? 'border-celune-500/30 bg-celune-500/[0.04]'
-                  : 'border-white/[0.06] bg-white/[0.02]',
-              )}
+              className="relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] p-6"
             >
-              {plan.highlighted && (
-                <div className="bg-celune-500 absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-semibold text-black">
-                  Most Popular
-                </div>
-              )}
               <div className="mb-4">
                 <h3 className="font-heading text-lg font-medium text-white">{plan.name}</h3>
                 <p className="mt-1 text-sm text-neutral-500">{plan.description}</p>
@@ -136,33 +116,41 @@ export function CelunePricing() {
                     </span>
                   </>
                 ) : (
-                  <span className="font-heading text-3xl font-medium text-white">
-                    {plan.key === 'open-source' ? 'Free' : 'Custom'}
-                  </span>
+                  <span className="font-heading text-3xl font-medium text-white">Free</span>
                 )}
               </div>
-              {plan.features.length > 0 && (
-                <ul className="mb-6 space-y-2.5">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="text-sm text-neutral-300">
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="mb-6 space-y-2.5">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="text-sm text-neutral-300">
+                    {feature}
+                  </li>
+                ))}
+              </ul>
               <a
                 href={plan.ctaHref}
-                className={cn(
-                  'mt-auto block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors',
-                  plan.highlighted
-                    ? 'bg-celune-500 hover:bg-celune-400 text-black'
-                    : 'border border-white/[0.08] text-neutral-300 hover:border-white/[0.15] hover:text-white',
-                )}
+                className="mt-auto block w-full rounded-lg border border-white/[0.08] py-2.5 text-center text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
               >
                 {plan.cta}
               </a>
             </div>
           ))}
+        </div>
+
+        {/* Enterprise callout */}
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-xl border border-white/[0.04] bg-white/[0.015] p-5 text-center sm:flex-row sm:justify-between sm:text-left">
+          <div>
+            <p className="text-sm font-medium text-neutral-300">Enterprise</p>
+            <p className="mt-1 text-sm text-neutral-500">
+              Need SSO, custom terms, or dedicated support? Talk to us about Enterprise. Custom
+              pricing.
+            </p>
+          </div>
+          <a
+            href="mailto:sales@celune.ai"
+            className="shrink-0 rounded-lg border border-white/[0.08] px-5 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
+          >
+            Contact Sales
+          </a>
         </div>
       </div>
     </section>
