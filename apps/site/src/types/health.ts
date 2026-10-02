@@ -1,11 +1,5 @@
 export type SystemStatus =
-  | 'ok'
-  | 'online'
-  | 'connected'
-  | 'warning'
-  | 'offline'
-  | 'error'
-  | 'not_found';
+  'ok' | 'online' | 'connected' | 'warning' | 'offline' | 'error' | 'not_found';
 
 export interface HealthData {
   timestamp: string;
