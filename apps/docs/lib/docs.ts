@@ -1,11 +1,5 @@
 export type DocCategory =
-  | 'Getting Started'
-  | 'Concepts'
-  | 'Guides'
-  | 'API Reference'
-  | 'Support'
-  | 'Public'
-  | 'Internal';
+  'Getting Started' | 'Concepts' | 'Guides' | 'API Reference' | 'Support' | 'Public' | 'Internal';
 
 export interface DocMeta {
   slug: string;

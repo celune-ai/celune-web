@@ -10,6 +10,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { format, resolveConfig } from 'prettier';
 import { createHash } from 'crypto';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -349,7 +350,7 @@ function syncVaultPages() {
   console.log(`[sync-vault] Done. ${synced} synced, ${skipped} unchanged.`);
 }
 
-function generateDocsTs() {
+async function generateDocsTs() {
   const allDocs = [
     ...vaultManifest.map((e) => ({
       slug: e.slug,
@@ -383,7 +384,7 @@ function generateDocsTs() {
     })
     .join(',\n');
 
-  const content = `export type DocCategory =
+  const raw = `export type DocCategory =
   | "Getting Started"
   | "Concepts"
   | "Guides"
@@ -432,6 +433,8 @@ export function getDocHref(doc: DocMeta): string {
 `;
 
   const destPath = join(APP_ROOT, 'lib', 'docs.ts');
+  // Format like the committed file so a build does not rewrite it.
+  const content = await format(raw, { ...(await resolveConfig(destPath)), filepath: destPath });
 
   if (existsSync(destPath)) {
     const existing = readFileSync(destPath, 'utf-8');
@@ -447,4 +450,4 @@ export function getDocHref(doc: DocMeta): string {
 
 // Run
 syncVaultPages();
-generateDocsTs();
+await generateDocsTs();
