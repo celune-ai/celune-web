@@ -324,7 +324,7 @@ export const searchIndex: SearchEntry[] = [
     description: 'Font families, sizes, weights, and typographic scale.',
     href: '/design/typography',
     section: 'Design',
-    keywords: ['typography', 'fonts', 'text', 'soehne', 'inter', 'heading'],
+    keywords: ['typography', 'fonts', 'text', 'inter', 'jetbrains mono', 'heading'],
   },
   {
     title: 'Spacing',
