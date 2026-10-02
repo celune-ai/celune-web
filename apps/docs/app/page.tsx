@@ -73,10 +73,7 @@ export default function DocsHome() {
               <div className="bg-surface-200 text-foreground-lighter mb-4 flex h-10 w-10 items-center justify-center rounded-lg">
                 <Icon size={20} />
               </div>
-              <h2
-                className="text-foreground mb-1 text-base"
-                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
-              >
+              <h2 className="text-foreground mb-1 text-base" style={{ fontWeight: 500 }}>
                 {title}
               </h2>
               <p
@@ -87,7 +84,7 @@ export default function DocsHome() {
               </p>
               <span
                 className="text-brand group-hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
-                style={{ fontFamily: 'var(--font-soehne-kraftig)' }}
+                style={{ fontWeight: 500 }}
               >
                 Read more <ArrowRight size={14} />
               </span>

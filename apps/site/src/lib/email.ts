@@ -104,8 +104,9 @@ export async function sendReferralInvite(toEmail: string, referrerEmail: string)
       if (tmpl.data?.html) {
         // Replace template variables in the fetched HTML
         let templateHtml = tmpl.data.html;
-        templateHtml = templateHtml.replace(/\{\{referrer_email\}\}/g, referrerEmail);
-        templateHtml = templateHtml.replace(/\{\{signup_url\}\}/g, signupUrl);
+        // Templates use {{{var}}} (Resend's current syntax); older copies used {{var}}.
+        templateHtml = templateHtml.replace(/\{\{\{?\s*referrer_email\s*\}?\}\}/gi, referrerEmail);
+        templateHtml = templateHtml.replace(/\{\{\{?\s*signup_url\s*\}?\}\}/gi, signupUrl);
 
         await resend.emails.send({
           from: FROM_EMAIL,
