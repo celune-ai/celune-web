@@ -75,7 +75,7 @@ const FAQS = [
   {
     question: 'What does Enterprise include?',
     answer:
-      'Enterprise is for teams that need pricing or terms outside the standard Cloud plan. Contact sales@celune.ai and we will work out what fits.',
+      'Enterprise is for teams that need pricing or terms outside the standard Cloud plan. Contact hello@celune.ai and we will work out what fits.',
   },
 ];
 
@@ -157,7 +157,7 @@ export default function PricingPage() {
                   Get Started
                 </a>
                 <a
-                  href="mailto:sales@celune.ai"
+                  href="mailto:hello@celune.ai?subject=Celune%20Enterprise"
                   className="rounded-lg border border-white/[0.08] px-6 py-3 text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
                 >
                   Talk to Sales

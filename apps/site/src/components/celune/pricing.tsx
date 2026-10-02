@@ -146,7 +146,7 @@ export function CelunePricing() {
             </p>
           </div>
           <a
-            href="mailto:sales@celune.ai"
+            href="mailto:hello@celune.ai?subject=Celune%20Enterprise"
             className="shrink-0 rounded-lg border border-white/[0.08] px-5 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:border-white/[0.15] hover:text-white"
           >
             Contact Sales
