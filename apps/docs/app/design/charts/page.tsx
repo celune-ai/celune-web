@@ -290,7 +290,7 @@ const config: ChartConfig = {
               <code>string</code>
             </td>
             <td>
-              <code>'No data available'</code>
+              <code>&apos;No data available&apos;</code>
             </td>
             <td>Text shown in empty state</td>
           </tr>
@@ -453,7 +453,7 @@ const data = [
               <code>string</code>
             </td>
             <td>
-              <code>'name'</code>
+              <code>&apos;name&apos;</code>
             </td>
             <td>Key used for the category axis</td>
           </tr>
@@ -462,10 +462,10 @@ const data = [
               <code>layout</code>
             </td>
             <td>
-              <code>'horizontal' | 'vertical'</code>
+              <code>&apos;horizontal&apos; | &apos;vertical&apos;</code>
             </td>
             <td>
-              <code>'horizontal'</code>
+              <code>&apos;horizontal&apos;</code>
             </td>
             <td>
               <code>horizontal</code> = vertical bars (standard); <code>vertical</code> = horizontal

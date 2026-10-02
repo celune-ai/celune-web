@@ -193,7 +193,7 @@ export default function DesignSubscriptionPage() {
           <section className="container mt-24 max-w-4xl">
             <p className="text-celune-500/70 font-mono text-xs tracking-widest uppercase">Scope</p>
             <h2 className="mt-2 text-2xl font-bold text-white md:text-3xl">
-              What's in. What's out.
+              What&apos;s in. What&apos;s out.
             </h2>
             <p className="mt-3 max-w-2xl text-neutral-400">
               Clarity on scope prevents disappointment. Read this before subscribing.

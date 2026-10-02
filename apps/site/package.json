@@ -6,7 +6,7 @@
     "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start -p 3003",
-    "lint": "next lint",
+    "lint": "eslint",
     "type-check": "tsc --noEmit",
     "generate-images": "tsx scripts/generate-hero-images.ts",
     "generate-images:dry-run": "tsx scripts/generate-hero-images.ts --dry-run"
@@ -54,6 +54,8 @@
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.3.6",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.1.10",

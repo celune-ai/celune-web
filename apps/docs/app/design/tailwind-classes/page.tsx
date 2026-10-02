@@ -377,7 +377,7 @@ export default async function TailwindClassesPage() {
             <td>
               <code>var(--border-default)</code>
             </td>
-            <td>Default border - the double "border" is intentional</td>
+            <td>Default border - the double &quot;border&quot; is intentional</td>
           </tr>
           <tr>
             <td>

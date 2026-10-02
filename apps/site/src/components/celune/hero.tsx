@@ -29,19 +29,6 @@ interface HeroTask {
   agent: Agent;
 }
 
-const STATUS_COLOR: Record<TaskStatus, string> = {
-  Planned: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
-  'In Progress': 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-  Review: 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
-  Done: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
-};
-
-const PRIORITY_COLOR: Record<Priority, string> = {
-  High: 'border-red-500/30 bg-red-500/10 text-red-400',
-  Normal: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
-  Low: 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400',
-};
-
 const AGENT_COLOR: Record<Agent, string> = {
   RICK: 'border-celune-500/30 bg-celune-500/10 text-celune-400',
   SCAN: 'border-celune-500/30 bg-celune-500/10 text-celune-400',

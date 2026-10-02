@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
+import { motion, useReducedMotion, useInView } from 'framer-motion';
 import { cn } from '@/lib/cn';
 import { SectionLabel } from './grid-frame';
 import { staggerContainer, fadeUp, scaleIn, reducedVariants, scrollTrigger } from '@/lib/motion';

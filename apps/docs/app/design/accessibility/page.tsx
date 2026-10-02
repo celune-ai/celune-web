@@ -45,7 +45,7 @@ export default async function AccessibilityPage() {
           <tr>
             <td>Disabled elements</td>
             <td>
-              Use <code>tabIndex={'{-1}'}</code> and <code>aria-disabled="true"</code>
+              Use <code>tabIndex={'{-1}'}</code> and <code>aria-disabled=&quot;true&quot;</code>
             </td>
           </tr>
           <tr>
@@ -132,43 +132,43 @@ className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-in
           <tr>
             <td>Decorative icon</td>
             <td>
-              <code>aria-hidden="true"</code>
+              <code>aria-hidden=&quot;true&quot;</code>
             </td>
           </tr>
           <tr>
             <td>Icon-only button</td>
             <td>
-              <code>aria-label="Delete task"</code> on the button
+              <code>aria-label=&quot;Delete task&quot;</code> on the button
             </td>
           </tr>
           <tr>
             <td>Image with content</td>
             <td>
-              <code>alt="Descriptive text"</code>
+              <code>alt=&quot;Descriptive text&quot;</code>
             </td>
           </tr>
           <tr>
             <td>Purely decorative image</td>
             <td>
-              <code>alt=""</code>
+              <code>alt=&quot;&quot;</code>
             </td>
           </tr>
           <tr>
             <td>Visually hidden label</td>
             <td>
-              <code>className="sr-only"</code> on a span
+              <code>className=&quot;sr-only&quot;</code> on a span
             </td>
           </tr>
           <tr>
             <td>Loading state</td>
             <td>
-              <code>aria-busy="true"</code> on the container
+              <code>aria-busy=&quot;true&quot;</code> on the container
             </td>
           </tr>
           <tr>
             <td>Live region (toast)</td>
             <td>
-              <code>role="status"</code> or <code>aria-live="polite"</code>
+              <code>role=&quot;status&quot;</code> or <code>aria-live=&quot;polite&quot;</code>
             </td>
           </tr>
         </tbody>

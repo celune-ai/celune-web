@@ -58,7 +58,7 @@ import * as Icons from "lucide-react";`}
               <code>size={'{14}'}</code>
             </td>
             <td>
-              <code>className="h-3.5 w-3.5"</code>
+              <code>className=&quot;h-3.5 w-3.5&quot;</code>
             </td>
           </tr>
           <tr>
@@ -67,7 +67,7 @@ import * as Icons from "lucide-react";`}
               <code>size={'{16}'}</code>
             </td>
             <td>
-              <code>className="h-4 w-4"</code>
+              <code>className=&quot;h-4 w-4&quot;</code>
             </td>
           </tr>
           <tr>
@@ -76,7 +76,7 @@ import * as Icons from "lucide-react";`}
               <code>size={'{18}'}</code>
             </td>
             <td>
-              <code>className="h-[18px] w-[18px]"</code>
+              <code>className=&quot;h-[18px] w-[18px]&quot;</code>
             </td>
           </tr>
           <tr>
@@ -85,7 +85,7 @@ import * as Icons from "lucide-react";`}
               <code>size={'{20}'}</code>
             </td>
             <td>
-              <code>className="h-5 w-5"</code>
+              <code>className=&quot;h-5 w-5&quot;</code>
             </td>
           </tr>
           <tr>
@@ -94,7 +94,7 @@ import * as Icons from "lucide-react";`}
               <code>size={'{24}'}</code>
             </td>
             <td>
-              <code>className="h-6 w-6"</code>
+              <code>className=&quot;h-6 w-6&quot;</code>
             </td>
           </tr>
         </tbody>
@@ -149,7 +149,8 @@ import * as Icons from "lucide-react";`}
 
       <p>
         Decorative icons (those next to a text label) must be hidden from assistive technology with{' '}
-        <code>aria-hidden="true"</code>. Interactive icons (standalone icon buttons) need a label.
+        <code>aria-hidden=&quot;true&quot;</code>. Interactive icons (standalone icon buttons) need
+        a label.
       </p>
 
       <table>
@@ -164,7 +165,7 @@ import * as Icons from "lucide-react";`}
           <tr>
             <td>Icon beside text label</td>
             <td>
-              <code>aria-hidden="true"</code>
+              <code>aria-hidden=&quot;true&quot;</code>
             </td>
             <td>
               <code>{'<Plus size={14} aria-hidden="true" />'}</code>

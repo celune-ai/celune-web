@@ -131,8 +131,6 @@ function StatCard({ stat }: StatCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   // Trigger once when 30 % of the card is visible — mirrors scrollTrigger.default
   const inView = useInView(ref, { once: true, amount: 0.3 });
-  // useReducedMotion is SSR-safe and avoids hydration mismatches
-  const reduced = useReducedMotion();
 
   return (
     <div

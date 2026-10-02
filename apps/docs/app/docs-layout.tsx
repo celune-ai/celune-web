@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import DocsNav from './docs-nav';
 
 const URL_APP = 'https://app.celune.ai';
@@ -36,7 +37,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
         <aside className="bg-surface-75 border-border flex w-[269px] shrink-0 flex-col border-r">
           {/* Logo container - matches platform app */}
           <div className="border-border flex h-14 shrink-0 items-center border-b px-4">
-            <a href="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <Image
                 src="/celune_light.svg"
                 alt="Celune"
@@ -45,7 +46,7 @@ export function DocsLayout({ children }: { children: ReactNode }) {
                 className="h-5 w-auto"
                 priority
               />
-            </a>
+            </Link>
           </div>
 
           {/* Nav scrollable area */}

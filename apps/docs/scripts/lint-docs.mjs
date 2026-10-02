@@ -61,17 +61,13 @@ const mdxFiles = collectFiles(DOCS_DIR, '.mdx');
 for (const file of mdxFiles) {
   const relPath = relative(APP_ROOT, file);
   let content = readFileSync(file, 'utf-8');
-  let fileIssues = 0;
   let modified = false;
 
   for (const rule of rules) {
     const matches = content.match(rule.pattern);
     if (!matches) continue;
 
-    for (const match of matches) {
-      fileIssues++;
-      totalIssues++;
-    }
+    totalIssues += matches.length;
 
     if (fix) {
       const before = content;

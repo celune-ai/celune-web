@@ -31,4 +31,3 @@ pnpm format:check # Prettier check
 ## Known Issues
 
 - `@sentry/nextjs` ships Next 15 types that conflict with docs app (Next 16). Workaround: `typescript.ignoreBuildErrors: true` in `apps/docs/next.config.ts`. Will resolve when Sentry ships Next 16 support.
-- Site ESLint config references `@repo/config` which is not yet created. `pnpm lint` fails for site app.

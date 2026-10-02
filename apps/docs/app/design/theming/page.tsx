@@ -23,7 +23,7 @@ export default async function ThemingPage() {
       <h2>Always dark</h2>
 
       <p>
-        The admin app and this docs site both apply <code>class="dark"</code> to the{' '}
+        The admin app and this docs site both apply <code>class=&quot;dark&quot;</code> to the{' '}
         <code>{'<html>'}</code> element in their root layouts. This is not a user preference toggle
         - it is the intended aesthetic. The dark selector activates all semantic token overrides
         immediately on page load with no flash of light content.
@@ -75,9 +75,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <h3>Layer 2: Semantic tokens</h3>
 
       <p>
-        Named by intent, not by value. <code>--background-surface-100</code> means "the first-level
-        card surface" regardless of what color that actually is. Light mode defines values in{' '}
-        <code>:root</code>; dark mode overrides them in the <code>.dark</code> selector.
+        Named by intent, not by value. <code>--background-surface-100</code> means &quot;the
+        first-level card surface&quot; regardless of what color that actually is. Light mode defines
+        values in <code>:root</code>; dark mode overrides them in the <code>.dark</code> selector.
       </p>
 
       <CodeBlock
@@ -179,8 +179,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <ol>
         <li>
-          Remove <code>className="dark"</code> from the <code>{'<html>'}</code> element (or make it
-          conditional on a user preference).
+          Remove <code>className=&quot;dark&quot;</code> from the <code>{'<html>'}</code> element
+          (or make it conditional on a user preference).
         </li>
         <li>
           Audit component-level styles for any that hardcode dark-specific assumptions not captured

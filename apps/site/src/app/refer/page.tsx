@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -155,11 +156,17 @@ function ReferForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-8 text-center">
-        <img src="/celune_light.png" alt="Celune" className="mx-auto mb-6 h-10" />
+        <Image
+          src="/celune_light.svg"
+          alt="Celune"
+          width={200}
+          height={40}
+          className="mx-auto mb-6 h-10 w-auto"
+        />
         <h1 className="font-heading text-3xl font-medium text-white">Invite Your Friends</h1>
         <p className="mt-3 text-white/60">
-          Share early access to Celune with up to 5 friends. They'll get priority placement on the
-          waitlist.
+          Share early access to Celune with up to 5 friends. They&apos;ll get priority placement on
+          the waitlist.
         </p>
       </div>
 
