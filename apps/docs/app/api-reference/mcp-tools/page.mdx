@@ -1,0 +1,105 @@
+# MCP Tool Reference
+
+Celune serves a [Model Context Protocol](https://modelcontextprotocol.io) server so AI coding agents can read and update your board with tool calls. This page lists every tool, the scope it needs, and where it is available.
+
+For connecting an IDE, see [MCP Setup](/guides/mcp-setup).
+
+---
+
+## Endpoints
+
+| Where                  | MCP endpoint                    | Tools                                                                                                             |
+| ---------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Celune Cloud           | `https://app.celune.ai/api/mcp` | All tools on this page                                                                                            |
+| Self-hosted API server | `http://localhost:3010/v1/mcp`  | The 19 core tools                                                                                                 |
+| Self-hosted web app    | `http://localhost:3000/api/mcp` | All tools on this page. Memory tools need a provider key for embeddings, and `sync_pr_review` needs a GitHub App. |
+
+The server uses stateless Streamable HTTP. Send JSON-RPC requests with `POST`. `GET` and `DELETE` answer `405`.
+
+**Authentication.** Use an API key: `Authorization: Bearer celune_live_...`. A host JWT without a `permissions` claim also works. Embed tokens, which are host JWTs that carry `permissions`, are refused with the message "Embed tokens cannot call MCP. Use an API key."
+
+**Scopes.** Tools are filtered by the credential's scope. A `read` key sees `public` and `read` tools. A `write` or `admin` key sees every tool. `public` tools are available to any valid credential.
+
+**Workspace.** Most tools accept an optional `workspace_id` argument to act on another workspace the credential can reach. Host JWTs cannot switch workspaces.
+
+---
+
+## Core Tools
+
+These 19 tools run on the shared task service, so they behave the same on every endpoint. Status moves, dependency checks, and activity entries match the [REST API](/api-reference/v1).
+
+### Tasks
+
+| Tool            | Scope   | What it does                                                                                                   |
+| --------------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| `list_tasks`    | `read`  | List tasks in the workspace, with filters                                                                      |
+| `get_task`      | `read`  | Get one task with its comments, recent activity, and assignee status. Accepts a full id or a unique id prefix. |
+| `create_task`   | `write` | Create a task                                                                                                  |
+| `claim_task`    | `write` | Claim a task and move it to `in_progress`                                                                      |
+| `complete_task` | `write` | Mark a task done with an optional outcome. The outcome is saved to memory.                                     |
+| `block_task`    | `write` | Flag a task as blocked with a reason                                                                           |
+| `add_comment`   | `write` | Add a comment to a task                                                                                        |
+
+### Projects
+
+| Tool             | Scope   | What it does                        |
+| ---------------- | ------- | ----------------------------------- |
+| `list_projects`  | `read`  | List projects in the workspace      |
+| `get_project`    | `read`  | Get a project with its task summary |
+| `create_project` | `write` | Create a project                    |
+
+### Workspace
+
+| Tool                    | Scope    | What it does                                                                                        |
+| ----------------------- | -------- | --------------------------------------------------------------------------------------------------- |
+| `whoami`                | `public` | Call this first. Returns identity, workspace, scopes, and the workspaces this credential can reach. |
+| `get_workspace_info`    | `public` | Workspace name, slug, and plan                                                                      |
+| `get_workspace_pulse`   | `public` | Live summary: active tasks, agent states, recent completions, and blockers                          |
+| `find_task_by_branch`   | `public` | Find the task linked to the current git branch name                                                 |
+| `list_available_agents` | `read`   | Agents enabled in this workspace. Check it before assigning or delegating.                          |
+
+### Jobs
+
+These tools run the [job queue](/api-reference/agent-protocol). They need an API key because a claim is recorded against the key.
+
+| Tool                | Scope   | What it does                                                                     |
+| ------------------- | ------- | -------------------------------------------------------------------------------- |
+| `poll_pending_jobs` | `read`  | List jobs waiting in the queue                                                   |
+| `claim_job`         | `write` | Claim a job. Returns the full payload, including messages and the system prompt. |
+| `heartbeat`         | `write` | Report progress on a claimed job. Call it on the job's heartbeat interval.       |
+| `submit_job_result` | `write` | Submit the result. Must include the `job_hmac` and `nonce` from the claim.       |
+
+---
+
+## Web App Tools
+
+The web app adds these tools to the core set. The self-hosted API server does not serve them yet, because they depend on the memory store, the onboarding agent, or the GitHub App.
+
+| Tool                          | Scope   | What it does                                                                                   |
+| ----------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `recall_memory`               | `read`  | Search memory with semantic and keyword matching, including related memories                   |
+| `list_memories`               | `read`  | List recent memories, optionally by category                                                   |
+| `store_memory`                | `write` | Save a memory. Generates an embedding and links it to related memories.                        |
+| `graph_context`               | `read`  | Get a memory with the memories connected to it (supports, contradicts, supersedes, elaborates) |
+| `search_code_examples`        | `read`  | Search code examples extracted from installed skills                                           |
+| `get_onboarding_conversation` | `read`  | Read the onboarding conversation history                                                       |
+| `send_onboarding_message`     | `write` | Send a message in the onboarding conversation. The reply also appears in the web dashboard.    |
+| `sync_pr_review`              | `write` | Reply to pull request review comments and resolve GitHub threads                               |
+
+The web app also replaces `whoami` with a version that reports onboarding status and next steps.
+
+---
+
+## Example
+
+```bash
+curl -X POST http://localhost:3010/v1/mcp -H "Authorization: Bearer $CELUNE_API_KEY" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+---
+
+## Related Pages
+
+- [MCP Setup](/guides/mcp-setup) - Connect Claude Code, Cursor, Windsurf, or Cline.
+- [Agent Protocol](/api-reference/agent-protocol) - How agents claim, report, and complete work.
+- [REST API v1](/api-reference/v1) - The same operations over HTTP.

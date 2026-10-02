@@ -1,0 +1,215 @@
+# REST API v1
+
+The v1 API is the stable contract for tasks, projects, comments, activity, agents, jobs, attachments, and server runs. The embeddable React components, the MCP server, and the Celune web app's task board all use it.
+
+| Deployment             | Base URL                                  |
+| ---------------------- | ----------------------------------------- |
+| Celune Cloud           | `https://app.celune.ai/api/v1`            |
+| Self-hosted API server | `http://localhost:3010/v1` (or your host) |
+
+Every path below is relative to the base URL.
+
+---
+
+## Conventions
+
+- **Authentication.** Every route except `GET /health` needs `Authorization: Bearer <credential>`, where the credential is an API key or a host JWT. `X-API-Key: <key>` is also accepted. See [Authentication](/api-reference/authentication).
+- **Scopes.** `GET` routes need the `read` scope. Every other method needs `write`. `admin` includes `write`, and `write` includes `read`.
+- **Permission keys.** When a host JWT carries a `permissions` claim, write routes also require the key listed in the tables below, and reads require a read key: `tasks:read` for tasks, jobs, and executions, `projects:read` for projects, `agents:read` for agents, and `analytics:read` for the workspace-wide activity feed. See [Authentication](/api-reference/authentication).
+- **Workspace.** Requests act on the credential's workspace. Add `?workspace_id=<id>` to act on another workspace. This works only for API keys, and only when the server grants access (Celune Cloud checks workspace membership). Host JWTs are pinned to one workspace, and naming another answers `403`.
+- **Bodies.** Request and response bodies are JSON, except attachment uploads, which use `multipart/form-data`. Field names use `snake_case`.
+- **Task statuses.** `backlog`, `inbox`, `scoping`, `planning`, `in_progress`, `review`, `done`, `archived`. Blocked is a flag in task metadata and never appears as a status. See [Agent Protocol](/api-reference/agent-protocol) for allowed moves.
+
+---
+
+## Health
+
+| Method | Path      | Auth | Response                                  |
+| ------ | --------- | ---- | ----------------------------------------- |
+| GET    | `/health` | None | `{ "ok": true, "service": "celune-api" }` |
+
+---
+
+## Tasks
+
+| Method | Path                                   | Permission key | Description                                                                                                                                             |
+| ------ | -------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/tasks`                               |                | List tasks. Returns an array.                                                                                                                           |
+| GET    | `/tasks/count`                         |                | Count tasks. Returns `{ "count": n }`.                                                                                                                  |
+| POST   | `/tasks`                               | `tasks:create` | Create a task. Returns the task with `201`.                                                                                                             |
+| PUT    | `/tasks/reorder`                       | `tasks:update` | Move tasks between columns and set their order.                                                                                                         |
+| GET    | `/tasks/:id`                           |                | Get one task.                                                                                                                                           |
+| PATCH  | `/tasks/:id`                           | `tasks:update` | Update fields or status. Returns the task.                                                                                                              |
+| DELETE | `/tasks/:id`                           | `tasks:delete` | Delete a task. Returns `204`.                                                                                                                           |
+| GET    | `/tasks/:id/dependencies`              |                | Tasks this task depends on. Returns `{ "dependencies": [...] }`.                                                                                        |
+| GET    | `/tasks/:id/children`                  |                | Subtasks. Returns `{ "children": [...], "all_complete": bool }`.                                                                                        |
+| GET    | `/tasks/:id/spawned`                   |                | Follow-up tasks this task created. Returns `{ "tasks": [...] }`.                                                                                        |
+| GET    | `/tasks/:id/context`                   |                | Resolves the task's `context_keys`. Returns `{ "context_keys": [...], "entries": [...] }`.                                                              |
+| GET    | `/tasks/:id/usage`                     |                | Token and cost totals, or `{ "hasUsage": false }`.                                                                                                      |
+| POST   | `/tasks/:id/initiate`                  | `tasks:update` | Start work from the UI: assign an agent, move to `in_progress`, and queue a server run when the host supports it. Returns the task with `execution_id`. |
+| POST   | `/tasks/:id/claim`                     | `tasks:update` | Claim a task. See [Agent Protocol](/api-reference/agent-protocol).                                                                                      |
+| POST   | `/tasks/:id/complete`                  | `tasks:update` | Mark done with an optional outcome.                                                                                                                     |
+| POST   | `/tasks/:id/block`                     | `tasks:update` | Flag as blocked with a reason.                                                                                                                          |
+| POST   | `/tasks/:id/unblock`                   | `tasks:update` | Clear the blocked flag.                                                                                                                                 |
+| GET    | `/tasks/:id/comments`                  |                | List comments.                                                                                                                                          |
+| POST   | `/tasks/:id/comments`                  | `tasks:update` | Add a comment. Returns the comment with `201`.                                                                                                          |
+| GET    | `/tasks/:id/attachments`               |                | List attachments.                                                                                                                                       |
+| POST   | `/tasks/:id/attachments`               | `tasks:update` | Upload files. Returns `201` with `{ "attachments": [...], "errors": [...] }`.                                                                           |
+| DELETE | `/tasks/:id/attachments/:attachmentId` | `tasks:update` | Delete an attachment. Returns `204`.                                                                                                                    |
+
+### List query parameters
+
+| Parameter          | Type    | Notes                            |
+| ------------------ | ------- | -------------------------------- |
+| `status`           | string  | One task status                  |
+| `project_id`       | string  | Tasks in one project             |
+| `assignee`         | string  | Agent name or user handle        |
+| `limit`            | integer | 1 to 2000                        |
+| `offset`           | integer | 0 or more                        |
+| `include_archived` | boolean | `true` to include archived tasks |
+| `top_level_only`   | boolean | `true` to exclude subtasks       |
+
+`GET /tasks/count` accepts `status`, `project_id`, and `top_level_only`.
+
+### Create and update fields
+
+`POST /tasks` requires `title`. `PATCH /tasks/:id` accepts any subset of these fields.
+
+| Field                   | Type                               | Notes                                                                                                              |
+| ----------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `title`                 | string                             | Required on create                                                                                                 |
+| `status`                | task status                        | Checked against the allowed transitions                                                                            |
+| `description`           | string or null                     | Markdown                                                                                                           |
+| `outcome`               | string or null                     | What the work produced                                                                                             |
+| `priority`              | `urgent`, `high`, `normal`, `low`  |                                                                                                                    |
+| `assignee`              | string                             | Must be an enabled agent when the host checks this; otherwise `422`                                                |
+| `project_id`            | uuid or null                       | Must be a project in this workspace; otherwise `404`                                                               |
+| `parent_id`             | uuid or null                       | Makes this a subtask. Must be a top-level task in this workspace other than this one; subtasks nest one level only |
+| `depends_on`            | uuid array                         | Each id must exist in this workspace, differ from the task, and not already depend on this task                    |
+| `category`              | string array                       | Tags                                                                                                               |
+| `due_date`              | string or null                     | ISO date                                                                                                           |
+| `effort`                | `S`, `M`, `L`, or null             |                                                                                                                    |
+| `time_estimate_minutes` | integer or null                    |                                                                                                                    |
+| `source_ref`            | string or null                     | External reference, such as an issue URL                                                                           |
+| `metadata`              | object or null                     | Merged into existing metadata on update                                                                            |
+| `subtasks`              | array of `{ title, done }` or null | Checklist items                                                                                                    |
+| `success_criteria`      | object or null                     |                                                                                                                    |
+| `sort_order`            | number                             | Position within the column                                                                                         |
+
+Create also accepts `source` (default `api`), `spawned_by`, `vault_path`, `time_spent_minutes`, and `context_keys`. Update also accepts `completed_at`.
+
+```bash
+curl -X POST https://app.celune.ai/api/v1/tasks -H "Authorization: Bearer $CELUNE_API_KEY" -H "Content-Type: application/json" -d '{"title":"Write release notes","priority":"high","status":"inbox"}'
+```
+
+### Action bodies
+
+| Route                         | Body                                                         |
+| ----------------------------- | ------------------------------------------------------------ |
+| `PUT /tasks/reorder`          | Array of `{ id, status, sort_order }`, 1 to 500 items        |
+| `POST /tasks/:id/claim`       | `{ "agent_id"?: string }`. Defaults to the caller's user id. |
+| `POST /tasks/:id/complete`    | `{ "outcome"?: string, "agent_id"?: string }`                |
+| `POST /tasks/:id/block`       | `{ "reason": string }` (required)                            |
+| `POST /tasks/:id/comments`    | `{ "content": string, "author"?: string }`                   |
+| `POST /tasks/:id/attachments` | Form fields `files` (one or more) and optional `uploaded_by` |
+
+---
+
+## Projects
+
+| Method | Path                         | Permission key    | Description                                              |
+| ------ | ---------------------------- | ----------------- | -------------------------------------------------------- |
+| GET    | `/projects`                  |                   | List projects. Query: `name_prefix`, `limit` (1 to 500). |
+| POST   | `/projects`                  | `projects:create` | Create a project. Returns `201`.                         |
+| GET    | `/projects/progress`         |                   | Task counts per project.                                 |
+| PUT    | `/projects/reorder`          | `projects:update` | Array of `{ id, sort_order }`, 1 to 500 items.           |
+| GET    | `/projects/:id`              |                   | Project with its `tasks` array.                          |
+| GET    | `/projects/:id/progress-log` |                   | Progress entries. Returns `{ "entries": [...] }`.        |
+| PATCH  | `/projects/:id`              | `projects:update` | Update fields. Returns the project.                      |
+| DELETE | `/projects/:id`              | `projects:delete` | Delete a project. Returns `204`.                         |
+
+Project fields: `name` (required on create), `description`, `project_type` (`feature`, `system`, `research`, `plan`), `status` (default `active`), `priority`, `category`, `target_date`, `group_id`, `metadata`, `prd_content`, and `sort_order` on update.
+
+---
+
+## Activity
+
+| Method | Path        | Description                                                                              |
+| ------ | ----------- | ---------------------------------------------------------------------------------------- |
+| GET    | `/activity` | Activity feed. Query: `event_type`, `task_id`, `agent_id`, `limit` (1 to 500), `offset`. |
+
+---
+
+## Agents
+
+| Method | Path                   | Permission key     | Description                                                                                                              |
+| ------ | ---------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| GET    | `/agents/status`       | `agents:read`      | Current status of every agent in the workspace.                                                                          |
+| PUT    | `/agents/:name/status` | `agents:configure` | Set status. Body: `{ "status": "online" \| "offline" \| "working" \| "idle", "current_task_id"?: uuid }`. Returns `204`. |
+| POST   | `/agents/heartbeat`    | `agents:configure` | Record a heartbeat event. Body: `{ "agent_id", "event_type", "metadata"? }`. Returns `202`.                              |
+
+---
+
+## Jobs
+
+The job queue hands AI work to external runners, such as a developer's IDE agent. Claiming, heartbeats, and results need an **API key**: host JWTs answer `403` on those three routes. Reads need `tasks:read` and cancel needs `tasks:update` when a host JWT carries permission keys. See [Agent Protocol](/api-reference/agent-protocol) for the full flow.
+
+| Method | Path                  | Description                                                                                                                                             |
+| ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/jobs`               | List jobs. Query: `runner` (`external`, `server`), `status` (comma list), `target_type` (`task`, `project`), `target_id`, `limit` (1 to 200), `offset`. |
+| GET    | `/jobs/pending`       | Jobs ready to claim. Query: `queue_name`, `job_types` (comma list), `limit` (1 to 50).                                                                  |
+| GET    | `/jobs/:id`           | One job. Encrypted payload columns and the HMAC are removed.                                                                                            |
+| POST   | `/jobs/:id/claim`     | Claim a job. Returns the decrypted payload, or `{ "claimed": false, "reason" }`.                                                                        |
+| POST   | `/jobs/:id/heartbeat` | Report progress. Returns `{ "continue": bool }`. Stop when `continue` is `false`.                                                                       |
+| POST   | `/jobs/:id/result`    | Submit `completed` or `failed`. Requires `job_hmac` and `nonce` from the claim.                                                                         |
+| POST   | `/jobs/:id/cancel`    | Cancel an active job. Answers `409` when the job is not active.                                                                                         |
+
+---
+
+## Executions
+
+Server runs are jobs the host executes itself (runner `server`), such as the run queued by `POST /tasks/:id/initiate`.
+
+| Method | Path                 | Permission key | Description                                                                                                         |
+| ------ | -------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/executions`        |                | List runs. Query: `task_id`, `status`, `limit` (1 to 200), `offset`. Returns `{ "executions": [...], "total": n }`. |
+| POST   | `/executions/cancel` | `tasks:update` | Body: `{ "task_id"?, "execution_id"? }`, one required. Returns `{ "cancelled": bool }`.                             |
+
+---
+
+## MCP
+
+| Method | Path   | Description                                                                                                     |
+| ------ | ------ | --------------------------------------------------------------------------------------------------------------- |
+| POST   | `/mcp` | MCP over stateless Streamable HTTP. `GET` and `DELETE` answer `405`. See [MCP tools](/api-reference/mcp-tools). |
+
+---
+
+## Errors
+
+Errors return JSON with an `error` message. Some add a `code`, an `issues` list, or other details.
+
+| Status | When                                                                                           | Body                                                                                                         |
+| ------ | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `400`  | Body or query failed validation                                                                | `{ "error": "Invalid request body", "issues": [...] }` or `{ "error": "Invalid query", "issues": [...] }`    |
+| `400`  | Invalid value in the service layer, or an invalid dependency (missing, self, or circular)      | `{ "error", "code": "validation" }` or `"dependency"`                                                        |
+| `401`  | Missing, malformed, invalid, revoked, or expired credential                                    | `{ "error": "Authentication required" }` and similar                                                         |
+| `402`  | A plan limit was reached (Celune Cloud only)                                                   | Gate details, including the feature and reason                                                               |
+| `403`  | Missing scope, missing permission key, wrong workspace, or a feature check refused the request | `{ "error": "Insufficient scope. Required: write" }`, `{ "error": "Forbidden", "required": "tasks:delete" }` |
+| `404`  | The resource does not exist in this workspace                                                  | `{ "error": "Resource not found" }`                                                                          |
+| `409`  | Status move not allowed, task is blocked, or job is not in a state that allows the action      | `{ "error", "code": "invalid_transition" }` or `"task_blocked"`                                              |
+| `422`  | The assignee is not an enabled agent in this workspace                                         | `{ "error" }`                                                                                                |
+| `429`  | API key rate limit reached                                                                     | `{ "error" }` with `Retry-After` and `X-RateLimit-*` headers                                                 |
+| `500`  | Unexpected server error                                                                        | `{ "error": "Internal server error" }`                                                                       |
+| `501`  | The server has not configured this feature, such as attachment storage or job encryption       | `{ "error", "code": "unavailable" }`                                                                         |
+
+A resource in another workspace answers `404` or `403`. It never reveals whether the id exists.
+
+---
+
+## Related Pages
+
+- [Authentication](/api-reference/authentication) - API keys, host JWTs, scopes, and permission keys.
+- [Agent Protocol](/api-reference/agent-protocol) - Task lifecycle, claims, heartbeats, and the job queue.
+- [MCP tools](/api-reference/mcp-tools) - The same operations as MCP tools.
+- [Embed Celune](/guides/embed) - React components built on this API.

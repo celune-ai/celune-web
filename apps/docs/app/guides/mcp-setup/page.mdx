@@ -1,72 +1,61 @@
 # MCP Setup
 
-Connect your IDE to your Celune workspace via the Model Context Protocol - in about two minutes.
+Connect your AI coding tool to your Celune workspace with the Model Context Protocol. Setup takes about two minutes.
 
 ---
 
 ## What is MCP?
 
-**Model Context Protocol (MCP)** is an open standard that lets AI assistants connect to external tools and services. Celune's MCP server gives your IDE's AI assistant direct access to your workspace: tasks, projects, memory, and agent configuration.
+**Model Context Protocol (MCP)** is an open standard that lets AI assistants call tools in external services. Celune's MCP server gives your coding agent direct access to your workspace: tasks, projects, agents, the job queue, and memory.
 
 ---
 
 ## Quick Setup
 
-Open your terminal and run:
+Run this in your terminal:
 
 ```bash
-npx @celune/cli setup
+npx @celuneai/cli setup
 ```
 
-The CLI auto-detects your IDE (Cursor, VS Code, or Windsurf) and writes the correct MCP configuration file. No manual editing required.
+The CLI finds the AI tools installed on your machine (Claude Code, Cursor, Windsurf, and Cline in VS Code), opens your browser to sign in, and writes the MCP configuration for each tool. To configure one tool only:
 
-### What Happens Under the Hood
+```bash
+npx @celuneai/cli setup --tool cursor
+```
 
-1. An API key is generated for your workspace.
-2. The CLI writes an MCP server entry pointing to `https://app.celune.ai/api/mcp` with your API key.
-3. Your IDE picks up the new server on its next restart (or reload).
+`--tool` accepts `claude-code`, `cursor`, `windsurf`, or `cline`. In CI or other non-interactive shells, set `CELUNE_API_KEY` and pass `--non-interactive`, or pass the key with `--token`.
+
+### What setup does
+
+1. The CLI signs you in and gets an API key for your workspace.
+2. It writes an MCP server entry that points to `https://app.celune.ai/api/mcp` with that key.
+3. Your tool loads the new server the next time it starts or reloads.
 
 ---
 
-## Supported Editors
+## Supported Tools
 
-- **Cursor**
-- **VS Code** (with Copilot or compatible extension)
-- **Windsurf**
+| Tool        | Config file the CLI writes                               |
+| ----------- | -------------------------------------------------------- |
+| Claude Code | `~/.claude.json`                                         |
+| Cursor      | `~/.cursor/mcp.json`                                     |
+| Windsurf    | `~/.codeium/windsurf/mcp_config.json`                    |
+| Cline       | `.vscode/cline_mcp_settings.json` in the current project |
 
 ---
 
 ## Available MCP Tools
 
-Once connected, your IDE's AI assistant gains access to these tools:
+Once connected, your agent can list, create, claim, block, and complete tasks, manage projects, check which agents are enabled, run jobs from the queue, and search memory. Call `whoami` first; it returns your identity, workspace, and scopes.
 
-| Tool                 | Description                           |
-| -------------------- | ------------------------------------- |
-| `whoami`             | Show current user and role            |
-| `get_workspace_info` | Workspace details and plan            |
-| `list_tasks`         | List tasks (with filters)             |
-| `get_task`           | Get a single task by ID               |
-| `create_task`        | Create a new task                     |
-| `claim_task`         | Assign a task to yourself             |
-| `complete_task`      | Mark a task as done                   |
-| `block_task`         | Flag a task as blocked                |
-| `add_comment`        | Add a comment to a task               |
-| `list_projects`      | List projects in the workspace        |
-| `get_project`        | Get project details with task summary |
-| `create_project`     | Create a new project                  |
-| `recall_memory`      | Search agent memory                   |
-| `list_memories`      | Browse memory entries                 |
-| `store_memory`       | Save a new memory entry               |
+The [MCP tool reference](/api-reference/mcp-tools) lists every tool, the scope it needs, and which tools a self-hosted server provides.
 
 ---
 
-## Manual Setup (Advanced)
+## Manual Setup
 
-If you prefer to configure manually, add this entry to your IDE's MCP config:
-
-**Cursor** - `~/.cursor/mcp.json`
-**VS Code** - `~/.vscode/mcp.json`
-**Windsurf** - `~/.codeium/windsurf/mcp_config.json`
+To configure by hand, create an API key in **Settings > API Keys** and add this entry to your tool's MCP config:
 
 ```json
 {
@@ -74,27 +63,46 @@ If you prefer to configure manually, add this entry to your IDE's MCP config:
     "celune": {
       "url": "https://app.celune.ai/api/mcp",
       "headers": {
-        "Authorization": "Bearer YOUR_API_KEY"
+        "Authorization": "Bearer celune_live_..."
       }
     }
   }
 }
 ```
 
-Generate an API key from **Settings > API Keys** in the Celune dashboard.
+---
+
+## Self-Hosted Installs
+
+Point the CLI at your own web app:
+
+```bash
+CELUNE_API_URL=http://localhost:3000 npx @celuneai/cli setup
+```
+
+Or use one of these URLs in a manual config:
+
+| Server                 | MCP URL                         |
+| ---------------------- | ------------------------------- |
+| Self-hosted web app    | `http://localhost:3000/api/mcp` |
+| Self-hosted API server | `http://localhost:3010/v1/mcp`  |
+
+See [Self-Hosting](/guides/self-host) for setup.
 
 ---
 
 ## Troubleshooting
 
-- **"Could not check connection"** - Restart your IDE after setup. MCP servers are loaded at startup.
-- **Tools not appearing** - Verify your API key is active in Settings > API Keys. Revoked keys will silently fail.
-- **Wrong workspace** - Each API key is scoped to one workspace. If you switch workspaces, run `npx @celune/cli setup` again.
+- **Tools not appearing.** Restart your tool after setup. MCP servers load at startup.
+- **`401` or "API key required".** Check that the key is active in **Settings > API Keys**. Revoked and expired keys stop working immediately.
+- **Write tools missing.** The key has the `read` scope. Create a key with `write`.
+- **Wrong workspace.** Each key belongs to one workspace. Pass `workspace_id` to a tool to reach another workspace you belong to, or run setup again for that workspace.
+- **"Embed tokens cannot call MCP".** You passed a token minted for an embedded UI. Use an API key.
 
 ---
 
 ## Next Steps
 
 - **[Getting Started](/getting-started)** - Full onboarding walkthrough if you have not set up your workspace yet.
-- **[Concepts: Agents](/concepts/agents)** - Understand agent roles and how task routing works.
-- **[API Reference](/api-reference/overview)** - Direct REST API access for custom integrations.
+- **[Agent Protocol](/api-reference/agent-protocol)** - How agents claim, report, and complete work.
+- **[REST API v1](/api-reference/v1)** - Direct HTTP access for custom integrations.

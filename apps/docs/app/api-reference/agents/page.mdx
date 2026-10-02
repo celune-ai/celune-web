@@ -48,7 +48,7 @@ GET /api/agents/configs?workspace_id=<uuid>
 
 ```bash
 curl https://app.celune.ai/api/agents/configs \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Authorization: Bearer celune_live_xxxxxxxxxxxx" \
   -G \
   --data-urlencode "workspace_id=3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c"
 ```
@@ -123,7 +123,7 @@ POST /api/agents/configs
 
 ```bash
 curl -X POST https://app.celune.ai/api/agents/configs \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Authorization: Bearer celune_live_xxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{
     "workspace_id": "3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
@@ -206,7 +206,7 @@ Any subset of the fields from [Create Agent](#create-agent). `workspace_id` and 
 
 ```bash
 curl -X PATCH "https://app.celune.ai/api/agents/configs?agent_id=nova" \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Authorization: Bearer celune_live_xxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{
     "display_name": "NOVA v2",
@@ -277,7 +277,7 @@ DELETE /api/agents/configs?agent_id=<agent_id>
 
 ```bash
 curl -X DELETE "https://app.celune.ai/api/agents/configs?agent_id=nova" \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx"
+  -H "Authorization: Bearer celune_live_xxxxxxxxxxxx"
 ```
 
 ### Example Response
@@ -316,7 +316,7 @@ Returns an array of agents with their current `status` (`idle`, `working`, `offl
 
 ```bash
 curl https://app.celune.ai/api/agents/status \
-  -H "Authorization: Bearer clne_live_xxxxxxxxxxxx" \
+  -H "Authorization: Bearer celune_live_xxxxxxxxxxxx" \
   -G \
   --data-urlencode "workspace_id=3f2a1b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c"
 ```

@@ -1,0 +1,214 @@
+# Self-Hosting
+
+Run Celune on your own infrastructure. The self-hosted build is the **community edition**: every feature in this repository, no billing, no plan limits, and AI calls made only with provider keys your workspaces add themselves.
+
+There are two ways to run it:
+
+| Mode               | What runs where                                                                       | Good for                                     |
+| ------------------ | ------------------------------------------------------------------------------------- | -------------------------------------------- |
+| **Link Supabase**  | Your existing Supabase project holds the data. You run the web app and API with Node. | Teams already on Supabase, local development |
+| **Docker Compose** | One compose file runs Postgres, the Supabase services, the API, and the web app.      | A single server you control end to end       |
+
+`npx @celuneai/cli init` sets up either mode. The CLI installs the command as `celune`, so after `npm install -g @celuneai/cli` you can run `celune init` instead.
+
+---
+
+## Requirements
+
+- The Celune repository, cloned locally. `celune init` looks for the repository root from the current directory.
+- Node.js 22.18 or later and pnpm.
+- **Link Supabase mode:** a Supabase project (URL, anon key, service role key, and a Postgres connection string) and the `psql` client on your PATH.
+- **Docker Compose mode:** Docker with Compose v2.
+
+---
+
+## Run `celune init`
+
+From the repository root:
+
+```bash
+pnpm install
+npx @celuneai/cli init
+```
+
+The command asks which mode you want. Pass `--mode supabase` or `--mode docker` to skip the question.
+
+**What it writes**
+
+| File                       | Contents                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| `docker/.env`              | Docker mode only. Supabase and Celune secrets for the compose stack.                 |
+| `apps/platform/.env.local` | Web app settings: Supabase URL and keys, app URL, edition, and Celune secrets.       |
+| `apps/api/.env`            | API server settings: Supabase URL, service role key, port, and the secrets it needs. |
+
+Secrets are generated with a cryptographic random source and written only to these files, with file mode `0600`. The command never prints a secret value. Its output lists the key names it generated or kept.
+
+Run it again at any time. Values that are already set are kept, so encryption keys are never replaced by accident. If you remove `JWT_SECRET` in Docker mode, the next run generates a new one and re-signs the anon and service role keys with it.
+
+### Mode A: link an existing Supabase project
+
+```bash
+npx @celuneai/cli init --mode supabase --supabase-url https://<project-ref>.supabase.co --db-url "postgresql://postgres:<password>@<host>:5432/postgres"
+```
+
+The anon key and service role key are read from `--anon-key` and `--service-role-key`, from the environment variables `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`, or from a hidden prompt. After writing the env files, `init` applies every migration with `packages/db/scripts/boot-local.sh`. Applied migrations are recorded, so an interrupted run resumes where it stopped.
+
+Pass `--skip-migrations` to write the env files only. Then start the apps:
+
+```bash
+pnpm dev                  # web app at http://localhost:3002
+pnpm --filter api dev     # API at http://localhost:3010
+```
+
+### Mode B: Docker Compose
+
+```bash
+npx @celuneai/cli init --mode docker
+docker compose -f docker/docker-compose.yml up -d --build
+```
+
+Open `http://localhost:3000`, sign up, and create your workspace. New accounts are confirmed without email by default, so anyone who can reach the page can sign up. Once your team has signed up, set `DISABLE_SIGNUP=true` in `docker/.env` and run `docker compose -f docker/docker-compose.yml up -d` again.
+
+---
+
+## What the Compose Stack Runs
+
+| Service          | Image or build          | Port (host)            | Role                                                          |
+| ---------------- | ----------------------- | ---------------------- | ------------------------------------------------------------- |
+| `db`             | `supabase/postgres`     | `54322` on `127.0.0.1` | Postgres                                                      |
+| `auth`           | `supabase/gotrue`       | internal               | Sign-in and sessions                                          |
+| `rest`           | `postgrest/postgrest`   | internal               | Database REST access for the web app                          |
+| `realtime`       | `supabase/realtime`     | internal               | Live board updates                                            |
+| `storage`        | `supabase/storage-api`  | internal               | Task attachments                                              |
+| `kong`           | `kong`                  | `8000`                 | Gateway in front of the Supabase services                     |
+| `migrate`        | `postgres`              | none                   | Runs every migration once, then exits                         |
+| `api`            | `docker/api.Dockerfile` | `3010`                 | REST API at `/v1`, MCP at `/v1/mcp`, health at `/health`      |
+| `web`            | repository `Dockerfile` | `3000`                 | The Celune web app. Server-side agent runs also execute here. |
+| `studio`, `meta` | Supabase Studio         | `54323`                | Optional database UI. Start with `--profile studio`.          |
+
+The `api` and `web` services wait for `migrate` to finish. Check the API with:
+
+```bash
+curl http://localhost:3010/health
+# {"ok":true,"service":"celune-api","edition":"community"}
+```
+
+---
+
+## Environment Reference
+
+`celune init` fills every secret below. To configure by hand, copy `docker/.env.example` to `docker/.env`. The example file includes the generation command for each value.
+
+### Public URLs and ports (`docker/.env`)
+
+| Variable              | Default                 | Purpose                                     |
+| --------------------- | ----------------------- | ------------------------------------------- |
+| `SITE_URL`            | `http://localhost:3000` | Public URL of the web app                   |
+| `SUPABASE_PUBLIC_URL` | `http://localhost:8000` | Public URL of the Kong gateway              |
+| `APP_DOMAIN`          | `localhost`             | Domain the web app serves                   |
+| `SUPPORT_EMAIL`       | `admin@localhost`       | Contact address shown in the app            |
+| `WEB_PORT`            | `3000`                  | Host port for the web app                   |
+| `API_PORT`            | `3010`                  | Host port for the API                       |
+| `KONG_HTTP_PORT`      | `8000`                  | Host port for the gateway                   |
+| `POSTGRES_HOST_PORT`  | `54322`                 | Host port for Postgres (bound to 127.0.0.1) |
+| `STUDIO_PORT`         | `54323`                 | Host port for Supabase Studio               |
+
+### Supabase secrets
+
+| Variable            | Purpose                                                         |
+| ------------------- | --------------------------------------------------------------- |
+| `POSTGRES_PASSWORD` | Database password                                               |
+| `JWT_SECRET`        | Signs Supabase session tokens and the two keys below            |
+| `JWT_EXPIRY`        | Session token lifetime in seconds. Default `3600`.              |
+| `ANON_KEY`          | Public Supabase key, an HS256 JWT with role `anon`              |
+| `SERVICE_ROLE_KEY`  | Server-only Supabase key, an HS256 JWT with role `service_role` |
+| `SECRET_KEY_BASE`   | Realtime service secret                                         |
+
+### Sign-in
+
+| Variable                                                                                   | Default                              | Purpose                                                                                     |
+| ------------------------------------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `ENABLE_EMAIL_AUTOCONFIRM`                                                                 | `true`                               | Confirms new accounts without email. Set `false` and fill `SMTP_*` to require confirmation. |
+| `DISABLE_SIGNUP`                                                                           | `false`                              | Recommended: set `true` after your team has signed up                                       |
+| `AUTH_PROVIDERS`                                                                           | `email`                              | Sign-in methods shown on the login page                                                     |
+| `ADDITIONAL_REDIRECT_URLS`                                                                 | (empty)                              | Extra allowed redirect URLs                                                                 |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_ADMIN_EMAIL`, `SMTP_SENDER_NAME` | (empty), except `SMTP_PORT` is `587` | Outgoing mail for confirmations and password resets                                         |
+
+### Celune secrets
+
+| Variable                      | Purpose                                                                                                                                                    |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PROVIDER_KEY_ENCRYPTION_KEY` | AES-256-GCM key for workspace AI provider keys. The job queue derives its signing key from it.                                                             |
+| `CREDENTIAL_ENCRYPTION_KEY`   | AES-256-GCM key for stored integration credentials                                                                                                         |
+| `CELUNE_HOST_JWT_SECRET`      | HS256 secret for host JWTs accepted by `/v1` and `/v1/mcp`. At least 32 bytes; the server refuses to start with a shorter one. See [Embed](/guides/embed). |
+| `WEBHOOK_ENCRYPTION_KEY`      | AES-256-GCM key for bot token encryption                                                                                                                   |
+| `CRON_SECRET`, `HOOK_SECRET`  | Shared secrets for scheduled jobs and hook endpoints                                                                                                       |
+| `CELUNE_API_KEY_PREFIX`       | Prefix for new API keys. Default `celune`, which gives keys like `celune_live_...`.                                                                        |
+
+Changing `PROVIDER_KEY_ENCRYPTION_KEY` or `CREDENTIAL_ENCRYPTION_KEY` after data is stored makes the stored keys unreadable. Back them up with your database backups.
+
+### API server (`apps/api/.env`)
+
+| Variable                                             | Purpose                                                                 |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`          | Database access. Required.                                              |
+| `PORT`                                               | Listen port. Default `3010`.                                            |
+| `CELUNE_EDITION`                                     | `community` for self-host                                               |
+| `CELUNE_HOST_JWT_SECRET` or `CELUNE_HOST_JWKS_URL`   | Enables host JWTs. Leave both unset to accept API keys only.            |
+| `CELUNE_HOST_JWT_ISSUER`, `CELUNE_HOST_JWT_AUDIENCE` | Optional. Require matching `iss` and `aud` claims.                      |
+| `PROVIDER_KEY_ENCRYPTION_KEY`                        | Enables the job queue routes. Without it, claiming a job answers `501`. |
+
+---
+
+## Editions
+
+`CELUNE_EDITION` selects the edition. `celune init` and the compose file set it to `community`.
+
+| Behavior          | Community (self-host)                                   | Celune Cloud                                            |
+| ----------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| Plans and billing | None. Every workspace has unlimited use. Stripe is off. | Per-seat billing through Stripe                         |
+| AI provider keys  | Workspace or organization keys only (BYOK)              | Workspace keys, or Celune's keys within an AI allowance |
+| Feature checks    | Open. Every feature is available.                       | Subscription and role checks                            |
+
+When `CELUNE_EDITION` is not set, the app picks `cloud` if `STRIPE_SECRET_KEY` is present and `community` otherwise.
+
+### Bring your own key
+
+In the community edition, agents only call AI providers with keys a workspace adds in **Settings > Provider Keys**. There is no server-wide fallback key. Each workspace can also set a monthly token limit and a per-minute request limit from the same page. See [BYOK](/guides/byok).
+
+---
+
+## How Long It Takes
+
+| Link Supabase mode, measured on a new hosted project    | Time             |
+| ------------------------------------------------------- | ---------------- |
+| Clone to first task, total                              | About 28 minutes |
+| Of that, applying migrations over the connection pooler | About 24 minutes |
+
+Most of the time is the one-time migration run. Later upgrades apply only the new migration files. In Docker mode the `migrate` service runs the same files against the local database the first time the stack starts.
+
+---
+
+## Connect Agents and the API
+
+- **API keys:** create one in **Settings > API Keys** in your web app. Keys work against `http://localhost:3010/v1`. See [Authentication](/api-reference/authentication).
+- **MCP:** point your IDE at `http://localhost:3010/v1/mcp`, or run `CELUNE_API_URL=http://localhost:3000 npx @celuneai/cli setup` to configure it against the web app. See [MCP Setup](/guides/mcp-setup) and the [MCP tool reference](/api-reference/mcp-tools).
+- **Embedding:** mint host JWTs with the `CELUNE_HOST_JWT_SECRET` from your env file. See [Embed Celune](/guides/embed).
+
+---
+
+## Troubleshooting
+
+- **Compose stops with a `celune init` hint.** A required secret is missing from `docker/.env`. Run `npx @celuneai/cli init --mode docker`.
+- **`psql was not found`.** Install the PostgreSQL client (`brew install libpq` or `apt install postgresql-client`), or rerun with `--skip-migrations` and apply migrations later.
+- **Migrations stopped partway.** Run `npx @celuneai/cli init` again. Finished migrations are skipped.
+- **Agents do not answer.** Add a provider key in **Settings > Provider Keys**. The community edition has no fallback key.
+
+---
+
+## Related Pages
+
+- [Embed Celune](/guides/embed) - Use the self-hosted API from your own app.
+- [REST API v1](/api-reference/v1) - Routes served by the API container.
+- [BYOK](/guides/byok) - Provider keys and AI budgets.
+- [Security & Compliance](/security) - How Celune stores and protects data.

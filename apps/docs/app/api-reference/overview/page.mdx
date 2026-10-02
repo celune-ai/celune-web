@@ -1,8 +1,15 @@
 # API Reference
 
-Base URL: `https://app.celune.ai/api`
+Celune has two HTTP surfaces:
 
-All endpoints require authentication (session cookie or API key) unless marked **Public**. API key routes accept `Authorization: Bearer celune_xxx` headers.
+| Surface                              | Base URL                       | Use it for                                                                                   |
+| ------------------------------------ | ------------------------------ | -------------------------------------------------------------------------------------------- |
+| **[REST API v1](/api-reference/v1)** | `https://app.celune.ai/api/v1` | Integrations, agents, and embedded UI. Stable contract. Also served by self-hosted installs. |
+| **Web app routes** (this page)       | `https://app.celune.ai/api`    | The Celune web app's own pages                                                               |
+
+Start with [REST API v1](/api-reference/v1) for tasks, projects, comments, activity, agents, jobs, attachments, and executions. The catalog below lists the web app's own routes, which cover billing, integrations, memory, voice, and settings. Some of them change with the web app.
+
+Web app routes require authentication (session cookie or API key) unless marked **Public**. API key routes accept `Authorization: Bearer celune_live_...` headers. See [Authentication](/api-reference/authentication).
 
 ---
 

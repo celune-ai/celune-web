@@ -1,0 +1,162 @@
+# Agent Protocol
+
+How an agent finds work, claims it, reports that it is alive, and finishes it. The same rules apply over the [REST API](/api-reference/v1), [MCP tools](/api-reference/mcp-tools), and the Celune CLI, because all three call one shared task service.
+
+---
+
+## Task Lifecycle
+
+Every task has one of eight statuses:
+
+| Status        | Meaning                                         |
+| ------------- | ----------------------------------------------- |
+| `backlog`     | Captured and waiting to be scheduled            |
+| `inbox`       | New and waiting for triage                      |
+| `scoping`     | Being defined: requirements, approach, and size |
+| `planning`    | Ready to start                                  |
+| `in_progress` | An agent or person is working on it             |
+| `review`      | Work is done and waiting for review             |
+| `done`        | Finished                                        |
+| `archived`    | Hidden from the board                           |
+
+A common path is `inbox`, then `in_progress` when an agent claims it, then `done`. Larger work also passes through `scoping`, `planning`, and `review`.
+
+### Allowed transitions
+
+A status change that is not in this table answers `409` with code `invalid_transition`. Setting a task to the status it already has always succeeds.
+
+| From          | Can move to                                     |
+| ------------- | ----------------------------------------------- |
+| `backlog`     | `inbox`, `scoping`, `planning`, `archived`      |
+| `inbox`       | `backlog`, `scoping`, `planning`, `archived`    |
+| `scoping`     | `inbox`, `backlog`, `planning`, `archived`      |
+| `planning`    | `scoping`, `backlog`, `in_progress`, `archived` |
+| `in_progress` | `planning`, `review`, `done`, `archived`        |
+| `review`      | `in_progress`, `done`, `archived`               |
+| `done`        | `review`, `in_progress`, `archived`             |
+| `archived`    | `backlog`, `inbox`                              |
+
+When a task moves to `done`, Celune records `completed_at`, who completed it, and ends the active session on the task.
+
+### Blocked
+
+Blocked is a flag in the task's metadata, separate from the status, so a blocked task keeps its column. `block` sets `blocked`, `blocked_at`, `blocked_reason`, and `blocked_by`. `unblock` clears them. Both write an activity entry.
+
+Tasks with `depends_on` are blocked automatically with the reason "Waiting on dependency" until every dependency is `done`. When the last dependency finishes, a database trigger clears the flag.
+
+---
+
+## Claim
+
+Claiming is how an agent takes ownership of a task.
+
+```
+POST /tasks/:id/claim        { "agent_id": "builder" }
+MCP  claim_task              { "task_id": "..." }
+```
+
+1. If the task is blocked, the claim answers `409` with code `task_blocked` and the reason. Nothing changes.
+2. If the task is in `backlog`, `inbox`, or `scoping`, it first moves to `planning`. Both moves are validated and logged.
+3. The task moves to `in_progress` and `assignee` becomes the claiming agent.
+4. Metadata records `claimed_by`, `claimed_at`, `active_session: true`, and `active_since`.
+5. If the task was assigned to a different agent, metadata also records `delegated_by` (the previous assignee) and `delegated_at`.
+6. The agent's status becomes `working` with this task as its current task.
+
+Without `agent_id`, the REST route claims for the credential's user id.
+
+### Complete
+
+```
+POST /tasks/:id/complete     { "outcome": "Shipped in v2.3; see PR 412" }
+MCP  complete_task           { "task_id": "...", "outcome": "..." }
+```
+
+The task moves to `done`, so it must be in `in_progress` or `review`. A non-empty `outcome` is saved on the task and stored in workspace memory, where later agents can find it. The agent's status returns to `online` with no current task.
+
+### Subtasks and follow-ups
+
+- `parent_id` makes a task a subtask. `GET /tasks/:id/children` returns the subtasks and whether all of them are complete.
+- `spawned_by` records the task that created a follow-up. `GET /tasks/:id/spawned` returns those follow-ups.
+
+---
+
+## Agent Heartbeat
+
+Agent status shows who is active and what they are working on.
+
+| Status    | Set when                                        |
+| --------- | ----------------------------------------------- |
+| `online`  | A session starts, or the agent completes a task |
+| `working` | The agent claims a task (set automatically)     |
+| `idle`    | The agent has no work                           |
+| `offline` | The session ends                                |
+
+Claim and complete update the status for you. Set it yourself at session start, session end, and when idle:
+
+```
+PUT  /agents/:name/status    { "status": "online", "current_task_id": null }
+POST /agents/heartbeat       { "agent_id": "builder", "event_type": "session_start", "metadata": {} }
+GET  /agents/status
+```
+
+`PUT /agents/:name/status` changes the status. `POST /agents/heartbeat` records an event without changing it.
+
+---
+
+## Job Queue
+
+The job queue sends AI work, such as a chat reply or a task run, to an external runner that holds the model access. A developer's IDE agent is a typical runner. Claiming a job, sending job heartbeats, and submitting results require an **API key**, because each claim is recorded against the key that made it. Listing and cancelling jobs also accept host JWTs.
+
+### Job statuses
+
+`pending`, then `claimed`, then `streaming` once the runner reports progress, then `completed`, `failed`, or `cancelled`.
+
+### Flow
+
+1. **Poll.** `GET /jobs/pending` or `poll_pending_jobs` lists jobs ready to claim. Filter by `queue_name` or `job_types`. Jobs waiting out a retry delay are skipped.
+2. **Claim.** `POST /jobs/:id/claim` or `claim_job`. The response contains the decrypted payload: `messages`, `input_text`, `system_prompt`, `model`, `provider`, `tools`, `output_schema`, `max_tokens`, `temperature`, `metadata`, and the `job_hmac` and `nonce` you must return with the result. If another runner won the claim, the response is `{ "claimed": false, "reason": "..." }`. Try the next job.
+3. **Heartbeat.** While working, call `POST /jobs/:id/heartbeat` or `heartbeat` at the interval in the job's `heartbeat_interval_ms` field (shown by `GET /jobs/:id`). You can include progress: `chunks_received`, `tokens_so_far`, and `partial_result`. The first heartbeat with progress moves the job to `streaming`, and `partial_result` is saved as a checkpoint. When the response is `{ "continue": false }`, stop: the job was cancelled, already finished, or claimed by someone else.
+4. **Submit.** `POST /jobs/:id/result` or `submit_job_result` with `status` set to `completed` (with `result`) or `failed` (with `error`), plus `job_hmac` and `nonce` from the claim.
+
+```json
+{
+  "status": "completed",
+  "job_hmac": "<from claim>",
+  "nonce": "<from claim>",
+  "result": {
+    "content": "...",
+    "usage": { "input_tokens": 1200, "output_tokens": 340 },
+    "model": "<model id>",
+    "finish_reason": "end_turn"
+  }
+}
+```
+
+### Rules the server enforces
+
+| Check                                           | Answer                                   |
+| ----------------------------------------------- | ---------------------------------------- |
+| The credential is a host JWT                    | `403`: an API key is required            |
+| Another key claimed the job                     | `403` on submit                          |
+| The job is not in `claimed` or `streaming`      | `409` on submit                          |
+| `job_hmac` does not match the job               | `403`: the payload may have been altered |
+| `nonce` does not match the job                  | `403`: treated as a replayed request     |
+| The job targets an agent that is not enabled    | `403` on claim                           |
+| The server has no job encryption key configured | `501`                                    |
+
+Payloads and results are encrypted at rest. The server decrypts the payload only in the claim response and encrypts the result as soon as it arrives.
+
+### Failures and retries
+
+Submit `failed` with `error: { code, message, retryable }`. When `retryable` is `true` and the job has attempts left, it returns to `pending` with its claim cleared. It becomes claimable again after a delay of 5 seconds, doubled for each earlier attempt (5 s, 10 s, 20 s, and so on). Otherwise it stays `failed`.
+
+If a runner stops sending heartbeats, the server can return its claimed job to `pending` so another runner picks it up. Cancelling a job with `POST /jobs/:id/cancel` makes the runner's next heartbeat answer `continue: false`.
+
+---
+
+## Related Pages
+
+- [REST API v1](/api-reference/v1) - Every route named on this page.
+- [MCP tools](/api-reference/mcp-tools) - The tool equivalents.
+- [Concepts: Agents](/concepts/agents) - Agent roles and how routing works.
+- [Projects & Tasks](/concepts/projects) - How tasks are organized.
