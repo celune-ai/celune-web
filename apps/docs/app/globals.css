@@ -481,8 +481,8 @@ button,
 /* ============================================================
    Shiki syntax highlighting
    Covers both:
-     .shiki-block pre  — CodeBlock component wrapper (tsx pages)
-     pre.shiki         — rehypeShiki output in MDX pages
+     .shiki-block pre: CodeBlock component wrapper
+     pre.shiki: the pre element shiki renders inside it
    Background overrides the inline style Shiki injects via !important.
    ============================================================ */
 .shiki-block pre,
