@@ -135,7 +135,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   /* Typography */
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-source-code-pro);
+  --font-mono: var(--font-jetbrains-mono);
 }`}
         lang="css"
       />
@@ -154,7 +154,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 @theme inline {
   /* Docs uses Inter; admin uses a different font */
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-source-code-pro);
+  --font-mono: var(--font-jetbrains-mono);
 
   /* Override a surface color for docs-specific depth */
   /* --color-surface-75: var(--background-surface-75); */
