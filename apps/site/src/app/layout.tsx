@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
@@ -15,25 +16,18 @@ const urwDockExt = localFont({
   weight: '500',
 });
 
-const soehne = localFont({
-  src: '../../public/fonts/soehne-buch.woff2',
-  variable: '--font-soehne',
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
-  weight: '400',
 });
 
-const soehneMono = localFont({
-  src: '../../public/fonts/soehne-mono-buch.woff2',
-  variable: '--font-soehne-mono',
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
   display: 'swap',
-  weight: '400',
-});
-
-const soehneMonoLeicht = localFont({
-  src: '../../public/fonts/soehne-mono-leicht.woff2',
-  variable: '--font-soehne-mono-leicht',
-  display: 'swap',
-  weight: '300',
 });
 
 export const metadata: Metadata = {
@@ -80,7 +74,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${urwDockExt.variable} ${soehne.variable} ${soehneMono.variable} ${soehneMonoLeicht.variable} bg-[#08080A] font-sans text-white antialiased`}
+        className={`${urwDockExt.variable} ${inter.variable} ${jetbrainsMono.variable} bg-[#08080A] font-sans text-white antialiased`}
       >
         <PostHogProvider>
           <SmoothScrollProvider>{children}</SmoothScrollProvider>
