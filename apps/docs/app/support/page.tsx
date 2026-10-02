@@ -88,8 +88,8 @@ export default function SupportPage() {
           </div>
           <p className="text-foreground-lighter text-xs">
             Save this number for your records. You can reference it in any follow-up emails to{' '}
-            <a href="mailto:support@celune.ai" className="text-brand hover:underline">
-              support@celune.ai
+            <a href="mailto:hello@celune.ai" className="text-brand hover:underline">
+              hello@celune.ai
             </a>
           </p>
         </div>
