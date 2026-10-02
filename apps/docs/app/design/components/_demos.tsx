@@ -54,14 +54,7 @@ export function DemoBadge({
 }: {
   children: React.ReactNode;
   variant?:
-    | 'default'
-    | 'secondary'
-    | 'outline'
-    | 'brand'
-    | 'success'
-    | 'warning'
-    | 'destructive'
-    | 'ghost';
+    'default' | 'secondary' | 'outline' | 'brand' | 'success' | 'warning' | 'destructive' | 'ghost';
 }) {
   const base =
     'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors';
