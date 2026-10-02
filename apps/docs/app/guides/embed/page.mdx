@@ -381,7 +381,7 @@ const api = createApi({
 
 Two additions turn this into a full server:
 
-- **API keys.** Pass `apiKeys` to `createAuthenticator`: an object with `findByPrefix(prefix)` that returns the matching `api_keys` row. Without it, API keys answer `401 API keys are not enabled on this host`.
+- **API keys.** Pass `apiKeys` to `createAuthenticator`: an object with `findByPrefix(prefix)` that returns every `api_keys` row with that stored prefix. Several keys can share a prefix, and the key hash picks the match. Throw when the lookup itself fails; the request then answers `503` with `Retry-After` instead of `401`. Without it, API keys answer `401 API keys are not enabled on this host`.
 - **Job queue.** Pass `host.jobs.crypto` with the job encryption functions. Without it, claiming a job answers `501`.
 
 `apps/api/src/host.ts` in the Celune repository implements both against Supabase. Every hook on the optional `host` option can be left out. The hooks let you grant API keys access to other workspaces (`resolveWorkspace`), check which agents are enabled (`agents`), react to task changes and resolve task context (`tasks`), queue server runs (`executions`), encrypt job payloads (`jobs`), and log MCP tool calls (`onToolCall`).
