@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CeluneLogo } from './logo';
 
 const AGENTS = [
   { name: 'RICK', role: 'Engineering Lead', color: '#22c55e', angle: 0 },

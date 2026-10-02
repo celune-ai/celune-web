@@ -291,7 +291,7 @@ export default function MetricsPage() {
               <code>string</code>
             </td>
             <td>
-              <code>'var(--brand-default)'</code>
+              <code>&apos;var(--brand-default)&apos;</code>
             </td>
             <td>Stroke and gradient fill color</td>
           </tr>

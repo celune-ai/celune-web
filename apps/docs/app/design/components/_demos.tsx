@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Mail,
-  MoreVertical,
-  Pencil,
-  AlertCircle,
-  Info,
-  CheckCircle,
-  AlertTriangle,
-  ChevronDown,
-} from 'lucide-react';
+import { Pencil, AlertCircle, Info, CheckCircle, AlertTriangle, ChevronDown } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
 /*  Shared inline demo components (hand-crafted to match design tokens) */

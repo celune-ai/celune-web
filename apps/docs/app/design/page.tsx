@@ -96,9 +96,9 @@ export default function IntroductionPage() {
 
       <h3>Dark-first</h3>
       <p>
-        Both the admin app and this docs site apply <code>class="dark"</code> to the HTML element.
-        The token system defines light mode values in <code>:root</code> and dark overrides under
-        the <code>.dark</code> selector. Dark is the default; light mode support is available
+        Both the admin app and this docs site apply <code>class=&quot;dark&quot;</code> to the HTML
+        element. The token system defines light mode values in <code>:root</code> and dark overrides
+        under the <code>.dark</code> selector. Dark is the default; light mode support is available
         whenever it is needed.
       </p>
 
