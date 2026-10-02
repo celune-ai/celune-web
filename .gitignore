@@ -45,3 +45,6 @@ node-compile-cache/
 # secrets (never commit)
 .mcp.json
 
+
+# Written by turbo on each run
+AGENTS.md
