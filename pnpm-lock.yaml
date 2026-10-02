@@ -38,9 +38,6 @@ importers:
       '@sentry/nextjs':
         specifier: ^10.40.0
         version: 10.42.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.63.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(webpack@5.105.4)
-      '@shikijs/rehype':
-        specifier: ^3.23.0
-        version: 3.23.0
       '@tailwindcss/typography':
         specifier: ^0.5.19
         version: 0.5.20(tailwindcss@4.3.3)
@@ -2284,9 +2281,6 @@ packages:
   '@shikijs/langs@3.23.0':
     resolution: {integrity: sha512-2Ep4W3Re5aB1/62RSYQInK9mM3HsLeB91cHqznAJMuylqjzNVAVCMnNWRHFtcNHXsoNRayP9z1qj4Sq3nMqYXg==}
 
-  '@shikijs/rehype@3.23.0':
-    resolution: {integrity: sha512-GepKJxXHbXFfAkiZZZ+4V7x71Lw3s0ALYmydUxJRdvpKjSx9FOMSaunv6WRLFBXR6qjYerUq1YZQno+2gLEPwA==}
-
   '@shikijs/themes@3.23.0':
     resolution: {integrity: sha512-5qySYa1ZgAT18HR/ypENL9cUSGOeI2x+4IvYJu4JgVJdizn6kG4ia5Q1jDEOi7gTbN4RbuYtmHh0W3eccOrjMA==}
 
@@ -3719,9 +3713,6 @@ packages:
 
   hast-util-to-jsx-runtime@2.3.6:
     resolution: {integrity: sha512-zl6s8LwNyo1P9uw+XJGvZtdFF1GdAkOg8ujOw+4Pyb76874fLps4ueHXDhXWdk6YHQ6OgUtinliG7RsYvCbbBg==}
-
-  hast-util-to-string@3.0.1:
-    resolution: {integrity: sha512-XelQVTDWvqcl3axRfI0xSeoVKzyIFPwsAGSLIsKdJKQMXDYJS4WYrBNF/8J7RdhIcFI2BOHgAifggsvsxp/3+A==}
 
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
@@ -7348,15 +7339,6 @@ snapshots:
     dependencies:
       '@shikijs/types': 3.23.0
 
-  '@shikijs/rehype@3.23.0':
-    dependencies:
-      '@shikijs/types': 3.23.0
-      '@types/hast': 3.0.4
-      hast-util-to-string: 3.0.1
-      shiki: 3.23.0
-      unified: 11.0.5
-      unist-util-visit: 5.1.0
-
   '@shikijs/themes@3.23.0':
     dependencies:
       '@shikijs/types': 3.23.0
@@ -8981,10 +8963,6 @@ snapshots:
       vfile-message: 4.0.3
     transitivePeerDependencies:
       - supports-color
-
-  hast-util-to-string@3.0.1:
-    dependencies:
-      '@types/hast': 3.0.4
 
   hast-util-whitespace@3.0.0:
     dependencies:
