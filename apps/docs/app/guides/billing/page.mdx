@@ -6,74 +6,48 @@
 
 ## Plans Overview
 
-Celune offers three plan tiers:
+Celune is open source. You can run it yourself for free, or let us run it for you on Celune Cloud.
 
-|                    | Builder (Free)       | Pro ($19/mo) | Unlimited ($49/mo + $10/seat) |
-| ------------------ | -------------------- | ------------ | ----------------------------- |
-| **Agents**         | 5                    | 20           | Unlimited                     |
-| **Workspaces**     | 3                    | 10           | Unlimited                     |
-| **Projects**       | 50                   | 1,000        | Unlimited                     |
-| **Tasks/month**    | 200                  | Unlimited    | Unlimited                     |
-| **Memory entries** | 0 (seed & core only) | Unlimited    | Unlimited                     |
-| **Multi-user**     | --                   | --           | Yes                           |
-| **Audit log**      | --                   | --           | Yes                           |
+|                | Open source         | Celune Cloud                                                      |
+| -------------- | ------------------- | ----------------------------------------------------------------- |
+| **Price**      | Free (Apache-2.0)   | $25 per seat per month, or $20 per seat per month billed annually |
+| **Hosting**    | Your infrastructure | Managed by Celune                                                 |
+| **Agents**     | Unlimited           | Unlimited, and agents never count as seats                        |
+| **Workspaces** | Unlimited           | Unlimited                                                         |
+| **Memories**   | Unlimited           | Unlimited                                                         |
+| **Model keys** | Bring your own      | Bring your own                                                    |
 
-Enterprise plans with SSO, custom integrations, and dedicated support are available on request.
+Celune Cloud has fair use and no hard caps. There is no free tier and no trial; billing starts when you subscribe.
+
+Enterprise pricing is set with you. For custom terms or a dedicated contract, email [sales@celune.ai](mailto:sales@celune.ai).
 
 ---
 
-## What's Included
+## Seats
 
-### Builder (Free)
+A seat is one active human member of your organization. Agents are not members, so they never use a seat.
 
-- Basic dashboard and task management
-- 5 AI agents
-- 3 workspaces, 50 projects, 200 tasks/month
-- Memory: seed & core entries only (0 custom memories)
-- Integrations (GitHub, Slack)
-- BYOK support (Bring Your Own Key)
-
-### Pro ($19/mo)
-
-Everything in Builder, plus:
-
-- 20 AI agents, 10 workspaces, 1,000 projects
-- Unlimited tasks and unlimited memory entries
-- Voice (text-to-speech)
-- Analytics dashboard
-- API access
-- Agent personalities
-- Higher limits across the board
-
-### Unlimited ($49/mo + $10/seat)
-
-Everything in Pro, plus:
-
-- Unlimited agents, workspaces, projects
-- Multi-user support (invite collaborators)
-- AFK modes (agents work while you're away)
-- Webhooks
-- Audit log
-- Plugins
-- Brain sharing (share knowledge bases across workspaces)
+- The subscription belongs to the organization owner and covers every organization that owner holds. Each active member is counted once, even if they belong to several of those organizations.
+- Every subscription has at least one seat.
+- When you add, remove, activate, or deactivate a member, Celune updates the seat count in Stripe. The change is prorated on your next invoice.
 
 ---
 
 ## BYOK (Bring Your Own Key)
 
-All plans include BYOK support. You provide your own API keys for AI providers (Anthropic, OpenAI, etc.) and the platform routes requests through your keys directly. When using BYOK:
+Celune Cloud and every self-hosted install include BYOK support. You provide your own API keys for AI providers (Anthropic, OpenAI, etc.) and the platform routes requests through your keys directly. When using BYOK:
 
 - **No AI usage charges from Celune** -- you pay the AI provider directly at their rates.
 - Your keys are encrypted at rest and never logged.
 - Manage keys in **Settings > Connections > Provider Keys**.
 
-BYOK is the recommended setup during beta. It gives you full control over your AI spend and model selection.
+BYOK gives you full control over your AI spend and model selection.
 
 ---
 
 ## Usage Tracking
 
-Celune tracks five usage metrics against your plan limits:
+Celune tracks five usage metrics so you can see your spend and activity. Celune Cloud has no hard caps on them.
 
 | Metric         | Unit         | Description                                                |
 | -------------- | ------------ | ---------------------------------------------------------- |
@@ -85,37 +59,32 @@ Celune tracks five usage metrics against your plan limits:
 
 ### Analytics Dashboard
 
-The **Analytics** section (available on Pro and Unlimited plans) provides:
+The **Analytics** section provides:
 
 - **Cost tracking** -- view LLM spend, TTS costs, and trends over time.
 - **Agent performance** -- utilization, health, and error rates per agent.
 - **Task velocity** -- completion rates and time-to-complete metrics.
-- **Usage meters** -- visual progress bars showing current usage against plan limits.
+- **Usage meters** -- current usage for each metric.
 
-Usage meters are also visible in **Settings > Billing** on all plans.
+Usage meters are also visible in **Settings > Billing**.
 
 ---
 
-## Upgrading and Downgrading
-
-To change your plan:
+## Subscribing and Managing Your Subscription
 
 1. Go to **Settings > Billing**.
-2. Review the plan comparison cards showing your current plan and available upgrades.
-3. Click **Upgrade** or **Change Plan** to start a Stripe checkout session.
-4. To downgrade or cancel, use the **Manage Subscription** button which opens the Stripe customer portal.
+2. Choose monthly or annual billing and click **Subscribe** to start a Stripe checkout session. The seat count is set from your active members.
+3. To switch between monthly and annual, update your payment method, see invoices, or cancel, click **Manage Subscription**. It opens the Stripe customer portal.
 
-Plan changes take effect immediately. When upgrading, you get instant access to the new tier's limits and features. When downgrading, your current billing cycle completes before the change applies.
+Switching between monthly and annual is prorated. When you cancel, your subscription stays active until the end of the current billing period.
+
+If a payment fails, you keep access while Stripe retries the charge, and Celune shows a billing notice until the payment goes through.
 
 ---
 
 ## Access Codes
 
-During beta, Celune offers **access codes** that grant sponsored plan access:
+Access codes grant Celune Cloud at no cost. The Celune team issues them for Enterprise agreements and complimentary accounts only.
 
-- Access codes are redeemable strings that unlock a specific plan tier for a workspace.
 - Enter your access code during onboarding or in **Settings > Billing**.
-- Codes may be time-limited or permanent depending on the sponsorship.
-- Access codes are managed by the Celune team and distributed through partnerships, events, and early-access programs.
-
-If you have an access code, it overrides the default free tier and grants the associated plan's full limits and features at no cost to you.
+- Codes may be time-limited or permanent, depending on the agreement.

@@ -164,11 +164,11 @@ Changing `PROVIDER_KEY_ENCRYPTION_KEY` or `CREDENTIAL_ENCRYPTION_KEY` after data
 
 `CELUNE_EDITION` selects the edition. `celune init` and the compose file set it to `community`.
 
-| Behavior          | Community (self-host)                                   | Celune Cloud                                        |
-| ----------------- | ------------------------------------------------------- | --------------------------------------------------- |
-| Plans and billing | None. Every workspace has unlimited use. Stripe is off. | Plan limits, trials, and billing                    |
-| AI provider keys  | Workspace or organization keys only (BYOK)              | Workspace keys, or Celune's keys within plan limits |
-| Feature checks    | Open. Every feature is available.                       | Plan, trial, and role checks                        |
+| Behavior          | Community (self-host)                                   | Celune Cloud                                            |
+| ----------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| Plans and billing | None. Every workspace has unlimited use. Stripe is off. | Per-seat billing through Stripe                         |
+| AI provider keys  | Workspace or organization keys only (BYOK)              | Workspace keys, or Celune's keys within an AI allowance |
+| Feature checks    | Open. Every feature is available.                       | Subscription and role checks                            |
 
 When `CELUNE_EDITION` is not set, the app picks `cloud` if `STRIPE_SECRET_KEY` is present and `community` otherwise.
 
