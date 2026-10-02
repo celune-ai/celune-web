@@ -13,7 +13,7 @@ export default async function TypographyPage() {
       <h1>Typography</h1>
 
       <p className="lead">
-        The type system uses Inter 300 for all UI text and Source Code Pro for monospace content.
+        The type system uses Inter 300 for all UI text and JetBrains Mono for monospace content.
         Both fonts are loaded at the app level via Next.js <code>next/font</code> and exposed as CSS
         variables that feed into the <code>@theme inline</code> token bridge.
       </p>
@@ -40,16 +40,16 @@ export default async function TypographyPage() {
             <td>
               <code>--font-mono</code>
             </td>
-            <td>Source Code Pro</td>
+            <td>JetBrains Mono</td>
             <td>Code blocks, inline code, terminal output, token names</td>
           </tr>
         </tbody>
       </table>
 
       <p>
-        Inter is loaded from Google Fonts via <code>next/font/google</code> at weight 300. Source
-        Code Pro is also loaded from Google Fonts. Both use the <code>variable</code> option to emit
-        CSS custom properties that feed into the Tailwind token bridge. All text uses{' '}
+        Inter is loaded from Google Fonts via <code>next/font/google</code> at weight 300. JetBrains
+        Mono is also loaded from Google Fonts. Both use the <code>variable</code> option to emit CSS
+        custom properties that feed into the Tailwind token bridge. All text uses{' '}
         <code>letter-spacing: 0.001em</code> (0.1% text spacing) for improved readability.
       </p>
 
@@ -57,29 +57,29 @@ export default async function TypographyPage() {
 
       <CodeBlock
         code={`// apps/docs/app/layout.tsx
-import { Inter, Source_Code_Pro } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: "300",
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
-const sourceCodePro = Source_Code_Pro({
-  variable: "--font-source-code-pro",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-// Applied to <body>:
-// className={\`\${inter.variable} \${sourceCodePro.variable} font-sans antialiased\`}`}
+// Applied to <html> so the :root font tokens can resolve them:
+// className={\`\${inter.variable} \${jetbrainsMono.variable} dark\`}`}
         lang="tsx"
       />
 
       <p>
         The <code>variable</code> option on each font emits a CSS custom property (
-        <code>--font-inter</code>, <code>--font-source-code-pro</code>) scoped to the element the
+        <code>--font-inter</code>, <code>--font-jetbrains-mono</code>) scoped to the element the
         class is applied to. The <code>@theme inline</code> block then maps these to the
         Tailwind-facing tokens:
       </p>
@@ -88,14 +88,14 @@ const sourceCodePro = Source_Code_Pro({
         code={`/* globals.css @theme inline block */
 @theme inline {
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-source-code-pro);
+  --font-mono: var(--font-jetbrains-mono);
 }`}
         lang="css"
       />
 
       <p>
         Using <code>font-sans</code> in any Tailwind class therefore resolves to Inter, and{' '}
-        <code>font-mono</code> resolves to Source Code Pro. Each app can point these tokens at
+        <code>font-mono</code> resolves to JetBrains Mono. Each app can point these tokens at
         different fonts by overriding the mapping in its own <code>globals.css</code>.
       </p>
 

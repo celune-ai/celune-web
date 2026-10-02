@@ -151,7 +151,7 @@ When an agent scopes a Planned task and realizes it's actually five discrete pie
 
 1. Create a project with the original task's title and description
 2. Create five child tasks, each with its own scope and assignee
-3. Transition the original task to `Cancelled` with the reason "converted to project: {project_id}"
+3. Transition the original task to `Cancelled` with the reason "converted to project: \{project_id\}"
 4. Link each child task to the project via `project_id`
 
 The admin dashboard then shows the project with a progress bar: 3/5 Done, 1 In Progress, 1 Planned. Completing the last child task automatically updates the project's computed status.

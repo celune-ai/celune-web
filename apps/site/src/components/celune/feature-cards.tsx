@@ -803,7 +803,7 @@ export function CeluneFeatureCards() {
       {/* Carousel track — full viewport width, no scrollbar */}
       <div
         ref={trackRef}
-        className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto md:snap-none"
+        className="flex snap-x snap-mandatory scrollbar-none overflow-x-auto md:snap-none"
         style={{ scrollBehavior: 'auto' }}
       >
         {LOOP_ITEMS.map((card, i) => (
