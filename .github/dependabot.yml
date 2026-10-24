@@ -9,9 +9,13 @@ updates:
       timezone: 'America/Los_Angeles'
     open-pull-requests-limit: 5
     versioning-strategy: 'increase-if-necessary'
+    # One weekly PR for every npm update, majors included, plus one for security fixes.
     groups:
-      minor-and-patch:
-        update-types: ['minor', 'patch']
+      npm-all:
+        patterns: ['*']
+      npm-security:
+        applies-to: security-updates
+        patterns: ['*']
     labels:
       - 'dependencies'
     commit-message:
@@ -24,6 +28,9 @@ updates:
       interval: 'weekly'
       day: 'monday'
     open-pull-requests-limit: 3
+    groups:
+      actions-all:
+        patterns: ['*']
     labels:
       - 'dependencies'
       - 'ci'
