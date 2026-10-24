@@ -4,15 +4,9 @@ Celune is built with enterprise security from the ground up. This page covers ou
 
 ---
 
-## SOC 2 Type II
+## Compliance status
 
-Celune is SOC 2 Type II compliant, covering all five Trust Service Criteria:
-
-- **Security** - Immutable audit logging, role-based access controls, API key hashing, and automated security scanning across every deployment.
-- **Availability** - Infrastructure monitoring, automated health checks, and incident response procedures with defined SLAs.
-- **Processing Integrity** - Input validation at every API boundary, idempotent operations, and deterministic agent task execution.
-- **Confidentiality** - Encryption at rest and in transit, workspace isolation, and strict data classification policies.
-- **Privacy** - GDPR-ready data handling, consent management, data retention policies, and right-to-deletion support.
+Celune has not completed a SOC 2 audit or a formal GDPR assessment. This page describes the controls the product runs today. The infrastructure vendors Celune runs on hold their own certifications, listed under Vendor Management below.
 
 ---
 
@@ -111,14 +105,14 @@ Celune maintains a documented incident response procedure:
 
 All third-party services used by Celune are evaluated for security posture:
 
-| Vendor        | Purpose                      | Compliance      |
-| ------------- | ---------------------------- | --------------- |
-| **Supabase**  | Database, auth, real-time    | SOC 2 Type II   |
-| **Vercel**    | Hosting, edge network, CI/CD | SOC 2 Type II   |
-| **Anthropic** | AI model provider            | SOC 2 Type II   |
-| **Sentry**    | Error monitoring             | SOC 2 Type II   |
-| **Stripe**    | Billing and payments         | PCI DSS Level 1 |
-| **GitHub**    | Source control, CI/CD        | SOC 2 Type II   |
+| Vendor        | Purpose                   | Compliance      |
+| ------------- | ------------------------- | --------------- |
+| **Supabase**  | Database, auth, real-time | SOC 2 Type II   |
+| **Railway**   | Application hosting       | SOC 2 Type II   |
+| **Anthropic** | AI model provider         | SOC 2 Type II   |
+| **Sentry**    | Error monitoring          | SOC 2 Type II   |
+| **Stripe**    | Billing and payments      | PCI DSS Level 1 |
+| **GitHub**    | Source control, CI/CD     | SOC 2 Type II   |
 
 Vendor risk assessments are reviewed annually and whenever a new vendor is introduced.
 
@@ -136,9 +130,9 @@ All code changes follow a controlled release process:
 
 ---
 
-## GDPR & Data Privacy
+## Data Privacy
 
-Celune is designed to be GDPR-ready:
+Celune handles personal data with these controls:
 
 - **Data minimization** - We collect only what is necessary for the service to function.
 - **Right to access** - Users can export their workspace data.

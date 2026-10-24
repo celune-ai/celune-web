@@ -690,12 +690,8 @@ export function CeluneHero() {
                   <path d="M8 1.5L2.5 4v4c0 3.5 2.3 6 5.5 7 3.2-1 5.5-3.5 5.5-7V4L8 1.5z" />
                   <path d="M5.5 8.5L7 10l3.5-3.5" />
                 </svg>
-                <span className="text-xs">SOC 2 Type II</span>
+                <span className="text-xs">AES-256 encryption</span>
               </div>
-              <span className="text-white/40">|</span>
-              <span className="text-xs">AES-256 encryption</span>
-              <span className="text-white/40">|</span>
-              <span className="text-xs">GDPR ready</span>
             </div>
           </div>
 
