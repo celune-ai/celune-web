@@ -38,7 +38,7 @@
     "react-dom": "^19.2.6",
     "recharts": "^3.8.1",
     "resend": "^6.9.3",
-    "shiki": "^3.23.0",
+    "shiki": "^4.5.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "three": "^0.186.1"
