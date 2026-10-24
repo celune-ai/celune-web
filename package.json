@@ -26,6 +26,13 @@
       "source-map-js": "^1.2.2",
       "dompurify": "^3.4.17",
       "zod@4": "^4.6.6"
+    },
+    "packageExtensions": {
+      "@next/mdx": {
+        "peerDependencies": {
+          "next": "*"
+        }
+      }
     }
   }
 }
