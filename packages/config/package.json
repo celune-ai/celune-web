@@ -10,7 +10,7 @@
     "./eslint.base.mjs": "./eslint.base.mjs"
   },
   "dependencies": {
-    "eslint": "^9",
-    "eslint-config-next": "16.3.6"
+    "eslint": "^10",
+    "eslint-config-next": "16.4.3"
   }
 }
